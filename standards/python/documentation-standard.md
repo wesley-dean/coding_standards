@@ -9,18 +9,18 @@ architectural relationships from executable code alone.
 
 This standard follows the same documentation philosophy used for maintained Bash
 and AWK projects while adopting Python-native docstrings as the maintained source
-of truth.  It is designed to work with Python documentation and linting tools,
-including Pylint documentation checks, while remaining suitable for Doxygen-based
-reference generation.
+of truth.  It is intentionally compatible with Python documentation and linting
+tools, including Pylint documentation checks, and with Doxygen reference
+generation through the `python-doxygen` input filter described by this standard.
 
 Python has a different documentation model from Bash and AWK.  Modules, classes,
 functions, and methods expose runtime docstrings through `__doc__`; type
-annotations can carry interface type information; exceptions are part of the
-call contract; generators yield values rather than returning them conventionally;
-and decorators, descriptors, context managers, asynchronous functions, and class
-inheritance introduce Python-specific interface semantics.  This standard
-therefore preserves the documentation philosophy of the other language standards
-without mechanically copying their syntax.
+annotations carry machine-readable interface type information; exceptions form
+part of the call contract; generators yield values; and decorators, descriptors,
+context managers, asynchronous functions, protocols, and class inheritance
+introduce Python-specific interface semantics.  This standard therefore preserves
+the documentation philosophy of the other language standards without mechanically
+copying their syntax.
 
 Maintainers should not reduce source documentation merely to optimize package or
 wheel size.  If a project strips docstrings, generates optimized artifacts, or
@@ -38,24 +38,57 @@ history or the consequences of prior decisions.
 
 Repository-specific requirements, accepted Architecture Decision Records (ADRs),
 documented public interfaces, compatibility requirements, security requirements,
-and project-specific Python standards take precedence over this general Python
-documentation standard.
+and project-specific Python standards take precedence over this standard.
 
 Do not perform unrelated documentation rewrites or refactoring solely to bring
 existing code into compliance unless that work is part of the requested scope.
+
+## Maintained Source of Truth
+
+Python docstrings are the maintained source of truth for generated API
+reference documentation.
+
+Do not maintain a second Doxygen-specific documentation block beside a Python
+docstring.  Do not duplicate parameter, return, exception, or behavioral
+contracts in separate comments merely to satisfy Doxygen.
+
+The maintained source should remain idiomatic Python and should be consumable by
+Python-native tooling without first passing through `python-doxygen`.
+
+`python-doxygen` exists at the documentation-generation boundary.  Its job is to
+translate the supported maintained docstring structure into a Doxygen-friendly
+representation without changing the executable Python source.
+
+Conceptually:
+
+```text
+maintained Python source
+        |
+        | PEP 257 docstrings
+        | Sphinx/reStructuredText fields
+        v
+   python-doxygen
+        |
+        | Doxygen-compatible translated representation
+        v
+      Doxygen
+```
+
+The generated representation is derivative.  It is not a maintained source of
+truth and must not be edited as though it were authoritative documentation.
 
 ## Docstring Syntax
 
 Maintained Python documentation must use Python docstrings rather than Doxygen
 comment blocks as the primary source of API documentation.
 
-Use triple double quotes for docstrings:
+Use triple double quotes:
 
 ```python
 """Describe the documented object."""
 ```
 
-For multi-line docstrings, use a one-line summary, a blank line, substantive
+For multi-line docstrings, use a concise summary line, a blank line, substantive
 explanation, and a closing triple quote on its own line:
 
 ```python
@@ -78,7 +111,11 @@ length.  When no stricter project rule exists, prefer 80-character documentation
 lines where practical.  Long URLs, literal values, generated identifiers, and
 other unbreakable content may exceed that limit.
 
-## Documentation Markup
+Do not use the Doxygen-specific `"""!` form in maintained source under this
+standard.  Structured Doxygen conversion belongs to `python-doxygen`, not to a
+second source dialect embedded in the Python program.
+
+## Structured Documentation Fields
 
 This standard uses Sphinx/reStructuredText field syntax for structured function
 and method contracts.
@@ -94,10 +131,12 @@ Use:
 
 When type annotations are present and authoritative, do not repeat the same type
 information in `:type:` or `:rtype:` fields merely to satisfy documentation
-formatting.  Type hints and prose serve different purposes: annotations express
-the machine-readable type contract, while the docstring explains semantics,
-units, accepted ranges, ownership, mutation, special values, and behavior that a
-type alone cannot express.
+formatting.
+
+Type hints and prose serve different purposes.  Annotations express the
+machine-readable type contract.  Docstrings explain semantics, units, accepted
+ranges, ownership, mutation, special values, ordering, failure behavior,
+security interpretation, and other meaning that the type alone cannot express.
 
 When a maintained interface intentionally lacks type annotations and type
 information is necessary for a linter or generated documentation, a project may
@@ -117,56 +156,74 @@ The documentation format must remain consumable by the project's configured
 Python linters.
 
 At minimum, maintained public modules, classes, functions, and methods should have
-docstrings.  Projects that enable stricter Pylint documentation extensions may
-also require complete parameter, return, yield, and raised-exception
-specification.
+docstrings.  Projects that enable stricter documentation extensions may require
+complete parameter, return, yield, and raised-exception documentation.
+
+When Pylint is used, projects adopting this standard should configure compatible
+docstring checking, including `pylint.extensions.docparams` when parameter,
+return, yield, and exception contract checking is desired.  Projects may also
+enable stricter docstring-style checks when those checks agree with this standard.
 
 Documentation must agree with the executable signature.  Parameter names in
 structured fields must match the actual parameter names.  Do not document
 parameters that do not exist, omit meaningful public parameters, or preserve
 stale names after a signature change.
 
+A function that returns a meaningful value should document that value with
+`:returns:`.  A generator should document yielded values with `:yields:`.
+Caller-visible exceptions that form part of the function's meaningful contract
+should be documented with `:raises` fields.
+
 When a linter reports disagreement between code and documentation, treat the
 mismatch as a defect to investigate.  Do not automatically rewrite the docstring
 to match the current implementation; the implementation may be the part that has
 drifted from the intended contract.
 
-## Relationship to Doxygen
+## Relationship to python-doxygen
 
-Doxygen can extract Python docstrings directly.  Python docstrings remain the
-maintained source of truth; projects must not maintain a second parallel Doxygen
-comment block for the same object merely to satisfy Doxygen.
+`python-doxygen` is the designated Doxygen input filter for projects adopting
+this standard when structured Doxygen reference output is required.
 
-A baseline Doxygen integration may consume Python docstrings as ordinary Python
-docstrings.  When a project requires structured Doxygen parameter, return,
-yield, exception, or custom-section output, the preferred integration is a
-source-preserving input filter that translates the maintained
-Sphinx/reStructuredText fields into equivalent Doxygen commands for generated
-reference documentation.
+The filter is intentionally narrow.  It is a documentation translator, not a
+replacement Python parser, type checker, or linter.  It must not infer behavior
+that is absent from the maintained source.
 
-Conceptually, a filter may translate:
+At minimum, the filter should translate supported Sphinx/reStructuredText fields
+into equivalent Doxygen commands.
 
-```text
-:param path: Configuration file to read.
-:returns: Validated configuration.
-:raises ValueError: The file contains invalid configuration.
+For example, maintained source such as:
+
+```python
+def load_configuration(path: Path) -> Configuration:
+    """Load and validate configuration from ``path``.
+
+    :param path: Configuration file to read.
+    :returns: A validated configuration object.
+    :raises ValueError: The configuration is invalid.
+    """
 ```
 
-into a generated Doxygen representation equivalent to:
+may be translated for Doxygen into a representation equivalent to:
 
 ```text
 @param path Configuration file to read.
-@return Validated configuration.
-@exception ValueError The file contains invalid configuration.
+@return A validated configuration object.
+@exception ValueError The configuration is invalid.
 ```
 
-That generated representation is derivative.  It is not maintained source and
-must not become an independent documentation authority.
+The filter should also preserve ordinary descriptive prose, examples, notes,
+warnings, and other documentation content that Doxygen can render meaningfully.
 
-Where practical, a Doxygen filter should preserve source line correspondence and
-should translate only the documented structure it actually understands.  It
-should not claim to be a complete Python parser or invent semantic certainty that
-is absent from the source.
+`python-doxygen` must not require maintainers to duplicate the same contract in
+both Sphinx-style and Doxygen-style forms.
+
+Where practical, the filter should preserve source line correspondence so that
+Doxygen diagnostics and generated references remain close to the original Python
+locations.
+
+The filter should translate only structures it explicitly supports.  Unsupported
+or ambiguous markup should remain visible rather than being silently rewritten
+into a meaning the source did not establish.
 
 ## Module Docstrings
 
@@ -236,7 +293,7 @@ affect callers.
 Use one `:param name:` field for each meaningful documented parameter.
 
 Do not document `self` or `cls` as ordinary caller-supplied parameters unless a
-specific documentation tool or repository convention requires it.
+specific repository convention requires it.
 
 For `*args` and `**kwargs`, document the accepted contents and semantics rather
 than merely saying "additional arguments":
@@ -278,8 +335,7 @@ input or internal state.
 
 A function that intentionally returns `None` and exists for side effects may omit
 `:returns:` when project linter configuration permits it.  When explicit return
-documentation is required, state the contract clearly rather than pretending that
-`None` is meaningful data.
+documentation is required, state the contract clearly.
 
 If a function may return multiple semantic forms, document the conditions that
 select them.  Prefer precise return types in annotations and avoid prose that hides
@@ -506,63 +562,82 @@ Do not contradict annotations in prose.  If the type contract and documented
 behavior disagree, resolve the inconsistency rather than choosing whichever form
 is more convenient for a tool.
 
+## Examples
+
+Examples are strongly preferred for public, parsing, transformation, security,
+serialization, persistence, network, configuration, or otherwise non-trivial
+interfaces.
+
+Use reStructuredText-compatible examples that remain readable in the source:
+
+```python
+def normalize_key(value: str) -> str:
+    """Normalize a lookup key.
+
+    :param value: Untrusted key supplied by the caller.
+    :returns: Lowercase normalized key suitable for lookup.
+
+    Example::
+
+        normalized = normalize_key("Demo")
+    """
+```
+
+Examples should demonstrate intended use, not manufacture a second test suite
+inside docstrings.
+
+If an example relies on omitted setup, make that omission obvious rather than
+presenting incomplete code as directly executable.
+
 ## Security-Sensitive Documentation
 
-For parsing, validation, authentication, authorization, redaction, persistence,
-subprocess, filesystem, network, serialization, and output code, documentation
-should make it possible for a reviewer to determine:
+For parsing, validation, authentication, authorization, redaction,
+serialization, filesystem, subprocess, network, persistence, and output code,
+docstrings should make it possible for a reviewer to answer questions such as:
 
-- what untrusted or sensitive data enters the interface;
-- whether values are interpreted as text, paths, regular expressions, templates,
-  shell arguments, SQL, URLs, or serialized objects;
-- what validation or normalization occurs and when;
-- whether original sensitive input may reach logs, exceptions, or output;
-- what external systems or privilege boundaries are crossed;
-- what happens on partial failure;
-- whether retries can duplicate side effects;
-- whether mutable state retains sensitive data after the call;
-- whether concurrency affects the security guarantee; and
-- which ADR establishes the relevant security promise when applicable.
+- what untrusted or sensitive state the callable receives or accesses;
+- how input is interpreted;
+- what validation occurs before use;
+- whether values can reach logs, files, subprocesses, network services, or other
+  sinks;
+- whether failure can expose original sensitive input;
+- whether returned objects retain or alias sensitive state;
+- whether temporary files or caches retain information after use;
+- what concurrency assumptions affect protection;
+- which exceptions distinguish validation failure from infrastructure failure;
+- what platform or library assumptions affect the security promise; and
+- which ADR establishes the relevant security boundary when applicable.
 
-Do not describe ordinary Python objects as secure memory, private storage, or
-isolated state unless a real mechanism supports that claim.
+Do not use documentation to imply stronger runtime protection than Python or the
+implementation actually provides.
 
-## Internal Helpers
-
-Private naming conventions such as a leading underscore communicate intended API
-visibility; they are not a reason to omit documentation from complex,
-security-sensitive, stateful, or semantically important helpers.
-
-Document internal functions and methods when their contract, assumptions, side
-effects, failure behavior, architectural purpose, or interaction with shared state
-would otherwise need to be rediscovered from implementation.
-
-Trivial helpers may use concise docstrings when their complete contract is obvious
-from a short summary and signature.
+Terms such as "private," "secure memory," "isolated," "sanitized," or "escaped"
+must correspond to a real mechanism and an established contract.
 
 ## Document Intent, Not Syntax
 
-Avoid comments such as:
+Avoid comments or docstrings that merely restate executable syntax.
+
+Do not write prose equivalent to "increment the counter" above:
 
 ```python
-# Increment the counter.
 count += 1
 ```
 
 Prefer documentation that explains why the counter exists, what invariant it
-represents, why the update occurs at that point, or why a seemingly unusual
+represents, why the increment occurs at that stage, or why a seemingly unusual
 implementation is necessary.
 
-Docstrings describe caller-visible and maintainer-relevant contracts.  Ordinary
-comments explain local implementation intent that does not belong in the public or
-structural documentation.
+If code and documentation disagree, treat the disagreement as a defect to
+investigate.  Do not automatically rewrite the documentation to match current
+code; the code may be the part that drifted from the intended contract.
 
 ## Relationship to ADRs
 
-Docstrings own implementation-level and interface-level intent.  ADRs own durable
-architectural reasoning, promises, non-promises, compatibility and portability
-decisions, adversary or failure models, rejected alternatives, and accepted
-tradeoffs.
+Docstrings own implementation-level and caller-facing intent.  ADRs own durable
+architectural reasoning, promises, non-promises, compatibility decisions,
+security boundaries, adversary and failure models, rejected alternatives, and
+accepted tradeoffs.
 
 Source documentation may link to an ADR when a local implementation exists
 specifically to satisfy an architectural constraint.
@@ -572,61 +647,50 @@ when no source supports it.  State uncertainty or add an ADR when a new
 consequential decision is required.
 
 A project's `doc/decisions.md`, when present, provides concise ADR summaries and
-does not replace either the full ADR or local documentation contract.
+does not replace either the full ADR or local source documentation.
 
 ## Generated Reference Documentation
 
 Generated Doxygen output is derivative and is not a maintained source of truth.
-The maintained Python source, its docstrings, type annotations, and governing
+The maintained Python source, type annotations, docstrings, and governing
 repository documentation remain authoritative.
 
-A Doxygen integration may transform Sphinx/reStructuredText fields into Doxygen
-commands for presentation and indexing.  Such transformation must preserve the
-meaning of the maintained docstring and must not silently invent missing
-parameters, return values, exceptions, types, or guarantees.
+`python-doxygen` should preserve source intent while making only those
+translations required for Doxygen indexing and rendering.
 
-Projects should test the generated documentation path when changes affect the
-filter, Doxygen configuration, or supported docstring vocabulary.
+The filter must not manufacture parameter types, exception guarantees, ownership
+semantics, thread-safety promises, or other contracts absent from the maintained
+source.
 
-## Recommended Doxygen Integration
+Projects may build, package, optimize, or strip maintained Python source for
+distribution.  Those transformations must not become a reason to reduce the
+quality of maintained source documentation.
 
-For direct extraction without translation, Doxygen can consume standard Python
-docstrings.  Projects that need Doxygen special-command semantics should use a
-configured translation filter rather than embedding duplicate `@param` and
-`:param:` declarations in maintained source.
+## Guidance for Automated Agents
 
-The maintained-source rule is:
+When generating, modifying, or reviewing Python source:
 
-```text
-Python docstring -> optional translation filter -> Doxygen representation
-```
-
-not:
-
-```text
-Python docstring + duplicate Doxygen comment block
-```
-
-This preserves one documentation authority while supporting both Python-native
-linters and Doxygen output.
-
-## Recommended Linter Posture
-
-Projects adopting this standard should enable documentation checks that are
-consistent with their supported Python versions and tooling stack.
-
-When Pylint is used, projects should consider enabling its docstring and parameter
-documentation checks, including checks for missing module, class, and function
-docstrings and, where appropriate, the `pylint.extensions.docparams` and
-`pylint.extensions.docstyle` extensions.
-
-The project configuration remains authoritative for exactly which checks are
-enabled.  This standard does not require a particular Pylint version or require a
-repository to adopt every optional documentation warning.
-
-Projects may additionally use pydocstyle, Ruff documentation rules, or other
-linters.  Those tools should enforce the same maintained docstring contract rather
-than establishing competing documentation syntaxes.
+1. Preserve Python docstrings as the maintained documentation authority.
+2. Use triple-double-quoted PEP 257-style docstrings.
+3. Use Sphinx/reStructuredText fields for structured contracts.
+4. Keep parameter names synchronized with the executable signature.
+5. Prefer type annotations for machine-readable type information.
+6. Do not duplicate annotated types in docstring fields without a concrete need.
+7. Document meaningful return values with `:returns:`.
+8. Document generator output with `:yields:` rather than `:returns:`.
+9. Document caller-visible contract exceptions with `:raises ExceptionType:`.
+10. Document side effects, state ownership, lifecycle, and resource behavior when
+    they matter to callers or maintainers.
+11. Document async cancellation, cleanup, and concurrency behavior when relevant.
+12. Document security boundaries and untrusted-input interpretation explicitly.
+13. Do not add Doxygen `@param`, `@return`, or `@exception` commands directly to
+    maintained docstrings merely for generated documentation.
+14. Assume `python-doxygen` performs the Doxygen translation step.
+15. Do not maintain parallel Python-native and Doxygen-native documentation for
+    the same callable.
+16. Treat linter-reported documentation drift as a defect to investigate.
+17. Respect accepted ADRs and repository-specific documentation rules.
+18. Do not expand the requested scope merely to normalize unrelated docstrings.
 
 ## General Module Structure Pattern
 
@@ -635,109 +699,91 @@ A maintained Python module should generally follow this order where applicable:
 1. optional governed shebang;
 2. optional encoding declaration when actually required;
 3. module docstring;
-4. `from __future__` imports;
-5. imports;
-6. module constants and significant documented state;
-7. classes;
-8. functions; and
-9. executable entry-point logic guarded by `if __name__ == "__main__":` when
-   appropriate.
+4. future imports;
+5. standard-library imports;
+6. third-party imports;
+7. project imports;
+8. documented module constants and state;
+9. classes;
+10. functions; and
+11. executable entry-point logic, when applicable.
 
-Execution or framework requirements may justify another ordering.  Preserve
-correctness and repository governance rather than reordering mechanically.
+This is a documentation-oriented pattern, not a substitute for repository-specific
+Python formatting or import-order standards.
 
 ## General Function Docstring Structure Pattern
 
-A maintained non-trivial function or method should generally use:
+A maintained public or non-trivial function or method should generally contain:
 
-1. one-line imperative summary;
-2. blank line;
-3. substantive description of purpose, behavior, assumptions, and side effects;
-4. blank line;
+1. a one-line summary;
+2. a blank line;
+3. substantive details describing intent, assumptions, side effects, and
+   non-obvious behavior;
+4. a blank line;
 5. zero or more `:param name:` fields in signature order;
-6. `:returns:` when a meaningful value is returned;
-7. `:yields:` when the function is a generator;
-8. zero or more `:raises ExceptionType:` fields for caller-visible exception
-   contracts; and
-9. examples or notes when they materially improve understanding.
+6. one `:returns:` field when the callable returns meaningful data;
+7. one `:yields:` field when the callable is a generator and yields meaningful
+   data;
+8. zero or more `:raises ExceptionType:` fields for caller-visible contract
+   exceptions;
+9. additional prose sections for side effects, lifecycle, concurrency, security,
+   or compatibility when useful; and
+10. an example when it materially improves understanding.
 
-Do not add empty sections or placeholder fields merely to satisfy a visual
-template.
-
-## Examples
-
-A public or non-trivial interface should include an example when an example
-materially improves understanding.
-
-Examples may use Python's doctest-style prompts when executable examples are
-useful:
-
-```python
-def normalize_name(value: str) -> str:
-    """Normalize a repository name.
-
-    :param value: Repository name supplied by a user or external system.
-    :returns: Lowercase normalized name with surrounding whitespace removed.
-
-    Example::
-
-        >>> normalize_name(" Example ")
-        'example'
-    """
-```
-
-Do not manufacture a second test suite inside docstrings.  Examples illustrate
-the contract; executable tests remain responsible for comprehensive behavioral
-verification.
+A callable should not document both `:returns:` and `:yields:` merely to satisfy a
+pattern.  Use the field that reflects the executable contract.
 
 ## Review Standard
 
 Review documentation with the same seriousness as executable code.  Ask whether
-a maintainer unfamiliar with the implementation could understand:
+a maintainer unfamiliar with the current implementation could understand:
 
 - the responsibility of each module and class;
-- the contract of each public function and method;
-- important parameter semantics and default behavior;
-- return and yield semantics;
+- the contract of each public or non-trivial callable;
+- parameter semantics beyond their type annotations;
+- meaningful return or yield behavior;
 - caller-visible exceptions;
-- meaningful side effects and resource ownership;
-- mutation and aliasing behavior;
-- concurrency, cancellation, or lifecycle requirements;
+- state ownership and mutation;
+- resource lifecycle and cleanup;
+- async cancellation and concurrency behavior when applicable;
 - meaningful edge cases and failure modes;
 - security-sensitive state and output boundaries;
 - why non-obvious implementation choices exist;
-- which architectural decisions constrain future changes; and
+- which architectural decisions constrain future changes;
+- whether the docstring remains consumable by configured Python linters;
+- whether `python-doxygen` can translate the structured fields without requiring
+  a second maintained documentation dialect; and
 - what the implementation explicitly does not guarantee.
 
 There is no target docstring-to-code ratio.  The desired amount is "enough to
-preserve the reasoning."  In infrastructure, security, parsing, and automation
-code, this may mean considerably more prose than teams accustomed to terse Python
-docstrings expect, and that is intentional.
+preserve the reasoning."  In infrastructure, security, parsing, and integration
+code, that may mean substantially more prose than teams accustomed to terse
+Python docstrings expect, and that is intentional.
 
 ## Structural Checklist
 
-Before considering a maintained Python module adequately documented, verify as
+Before considering a maintained Python file adequately documented, verify as
 applicable:
 
 - the module contains a meaningful module docstring;
-- public classes have meaningful class docstrings;
-- public functions and methods have docstrings;
-- complex, security-sensitive, or semantically important private helpers are also
-  documented;
-- docstrings use triple double quotes;
-- multi-line docstrings have a summary line followed by a blank line;
-- parameter names in documentation match the executable signature;
-- meaningful public parameters are documented with `:param name:`;
-- type annotations and prose do not contradict one another;
+- public classes have docstrings describing their abstraction and lifecycle;
+- public and non-trivial functions and methods have PEP 257-style docstrings;
+- maintained docstrings use triple double quotes;
+- structured contracts use Sphinx/reStructuredText fields;
+- parameter names match the executable signature;
+- meaningful parameters are documented in signature order where practical;
 - meaningful return values use `:returns:`;
-- generators document yielded values with `:yields:`;
-- caller-visible exceptions use `:raises ExceptionType:`;
-- mutation, resource ownership, and material side effects are documented;
-- async, context-manager, decorator, and descriptor semantics are documented when
-  material;
-- examples are present when they materially improve understanding;
-- documentation remains compatible with the repository's configured linters;
-- Doxygen output is generated from the maintained docstrings rather than a second
-  duplicate documentation authority; and
+- generator output uses `:yields:`;
+- caller-visible contract exceptions use `:raises ExceptionType:`;
+- type annotations remain authoritative and are not duplicated without reason;
+- side effects and external interactions are documented when material;
+- resource ownership and cleanup are explicit where relevant;
+- async cancellation and concurrency semantics are documented where relevant;
 - security-sensitive code documents assumptions a future reviewer would otherwise
-  have to infer.
+  have to infer;
+- examples are present where they materially improve understanding;
+- documentation agrees with accepted ADRs and repository-specific contracts;
+- maintained source does not contain a second Doxygen-specific documentation
+  block for the same object; and
+- `python-doxygen` is treated as a translation boundary rather than a second
+  documentation authority.
