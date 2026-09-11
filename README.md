@@ -45,6 +45,8 @@ standards/
 │   ├── documentation-standard.md
 │   ├── testing-standard.md
 │   └── tooling-standard.md
+├── python/
+│   └── documentation-standard.md
 ├── markdown/
 │   └── markdown-standard.md
 ├── repository/
@@ -63,6 +65,7 @@ examples/
 │   ├── documentation/
 │   ├── testing/
 │   └── tooling/
+├── python/
 ├── markdown/
 ├── repository/
 └── adr/
@@ -114,6 +117,11 @@ The repository currently includes:
   including `bash-doxygen` conventions, file and function contracts, STDIN,
   STDOUT, STDERR, return and exit-status semantics, side effects, security
   boundaries, ADR relationships, and generated reference documentation.
+- [Python Documentation Standard](standards/python/documentation-standard.md), a
+  language-specific source-documentation standard using PEP 257 structure and
+  Sphinx/reStructuredText fields so maintained docstrings remain compatible with
+  Python linting while supporting Doxygen extraction and optional structured
+  translation.
 
 Related examples include:
 
@@ -140,7 +148,8 @@ doc/
     ├── awk-documentation-standard.md
     ├── bash-coding-standard.md
     ├── bash-documentation-standard.md
-    └── bash-testing-standard.md
+    ├── bash-testing-standard.md
+    └── python-documentation-standard.md
 ```
 
 The standards manifest is an ordinary bashdeps manifest.  For example:
