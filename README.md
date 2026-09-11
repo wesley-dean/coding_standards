@@ -34,6 +34,8 @@ The anticipated structure is:
 
 ```text
 standards/
+├── general/
+│   └── clean-coding-standard.md
 ├── bash/
 │   ├── coding-standard.md
 │   ├── documentation-standard.md
@@ -48,6 +50,9 @@ standards/
     └── adr-standard.md
 
 examples/
+├── general/
+│   └── clean-coding/
+│       └── bash.md
 ├── bash/
 │   ├── coding/
 │   ├── documentation/
@@ -61,6 +66,11 @@ examples/
 This structure is intentionally extensible.  Additional languages, formats, or
 engineering concerns can be added without changing the basic organization.
 
+The `standards/general/` tree contains standards that apply across languages or
+engineering contexts unless a more specific standard takes precedence.
+Language-specific standards may refine those general standards and should state
+their precedence relationship explicitly when necessary.
+
 The `standards/` tree contains normative guidance.  The `examples/` tree contains
 illustrative material that demonstrates how the standards may be applied.
 
@@ -71,6 +81,19 @@ A standard should link to relevant examples when those examples materially help 
 reader understand or apply the rule.  Examples may include conforming code,
 non-conforming code, before-and-after comparisons, complete small projects,
 configuration fragments, or other useful demonstrations.
+
+## Current Standards
+
+The repository currently includes:
+
+- [Clean Coding Standard](standards/general/clean-coding-standard.md), a
+  language-independent standard covering function responsibilities,
+  Command-Query Separation, levels of abstraction, side effects, naming, control
+  flow, duplication, comments, error behavior, and readability.
+
+Related examples include:
+
+- [Clean Coding Examples for Bash](examples/general/clean-coding/bash.md).
 
 ## Consuming Standards with bashdeps
 
@@ -87,6 +110,7 @@ dependencies-standards.txt
 
 doc/
 └── standards/
+    ├── clean-coding-standard.md
     ├── bash-coding-standard.md
     ├── bash-documentation-standard.md
     └── bash-testing-standard.md
@@ -95,14 +119,14 @@ doc/
 The standards manifest is an ordinary bashdeps manifest.  For example:
 
 ```text
+id=wesley-dean/coding_standards/clean-coding@<ref> \
+  url=https://raw.githubusercontent.com/wesley-dean/coding_standards/<ref>/standards/general/clean-coding-standard.md \
+  dest=doc/standards/clean-coding-standard.md \
+  digest=sha256:<sha256-digest>
+
 id=wesley-dean/coding_standards/bash-coding@<ref> \
   url=https://raw.githubusercontent.com/wesley-dean/coding_standards/<ref>/standards/bash/coding-standard.md \
   dest=doc/standards/bash-coding-standard.md \
-  digest=sha256:<sha256-digest>
-
-id=wesley-dean/coding_standards/bash-documentation@<ref> \
-  url=https://raw.githubusercontent.com/wesley-dean/coding_standards/<ref>/standards/bash/documentation-standard.md \
-  dest=doc/standards/bash-documentation-standard.md \
   digest=sha256:<sha256-digest>
 ```
 
