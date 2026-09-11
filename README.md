@@ -38,6 +38,8 @@ standards/
 │   ├── clean-architecture-standard.md
 │   ├── clean-coding-standard.md
 │   └── conventional-commit-release-governance.md
+├── awk/
+│   └── documentation-standard.md
 ├── bash/
 │   ├── coding-standard.md
 │   ├── documentation-standard.md
@@ -55,6 +57,7 @@ examples/
 ├── general/
 │   └── clean-coding/
 │       └── bash.md
+├── awk/
 ├── bash/
 │   ├── coding/
 │   ├── documentation/
@@ -101,6 +104,11 @@ The repository currently includes:
   a repository-wide governance standard for Conventional Commit titles, pull
   request and merge title semantics, trusted release classification, and
   deterministic Semantic Versioning significance.
+- [AWK Documentation Standard](standards/awk/documentation-standard.md), a
+  language-specific source-documentation standard for maintained AWK files,
+  including `awk-doxygen` conventions, function and rule contracts, global state,
+  portability, `getline`, record semantics, subprocess boundaries, and generated
+  reference documentation.
 
 Related examples include:
 
@@ -124,6 +132,7 @@ doc/
     ├── clean-architecture-standard.md
     ├── clean-coding-standard.md
     ├── conventional-commit-release-governance.md
+    ├── awk-documentation-standard.md
     ├── bash-coding-standard.md
     ├── bash-documentation-standard.md
     └── bash-testing-standard.md
