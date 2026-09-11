@@ -35,6 +35,7 @@ The anticipated structure is:
 ```text
 standards/
 ├── general/
+│   ├── clean-architecture-standard.md
 │   └── clean-coding-standard.md
 ├── bash/
 │   ├── coding-standard.md
@@ -86,6 +87,11 @@ configuration fragments, or other useful demonstrations.
 
 The repository currently includes:
 
+- [Clean Architecture Standard](standards/general/clean-architecture-standard.md),
+  a language-independent architectural standard covering dependency direction,
+  separation of policy from mechanism, explicit boundaries, dependency inversion,
+  stable dependencies, replaceability, testability, domain language, and durable
+  architectural decisions.
 - [Clean Coding Standard](standards/general/clean-coding-standard.md), a
   language-independent standard covering function responsibilities,
   Command-Query Separation, levels of abstraction, side effects, naming, control
@@ -110,6 +116,7 @@ dependencies-standards.txt
 
 doc/
 └── standards/
+    ├── clean-architecture-standard.md
     ├── clean-coding-standard.md
     ├── bash-coding-standard.md
     ├── bash-documentation-standard.md
