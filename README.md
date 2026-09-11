@@ -118,10 +118,10 @@ The repository currently includes:
   STDOUT, STDERR, return and exit-status semantics, side effects, security
   boundaries, ADR relationships, and generated reference documentation.
 - [Python Documentation Standard](standards/python/documentation-standard.md), a
-  language-specific source-documentation standard using PEP 257 structure and
-  Sphinx/reStructuredText fields so maintained docstrings remain compatible with
-  Python linting while supporting Doxygen extraction and optional structured
-  translation.
+  language-specific source-documentation standard using PEP 257 structure,
+  Sphinx/reStructuredText fields, type annotations, and a `python-doxygen`
+  translation boundary so maintained docstrings remain native to Python tooling
+  while producing structured Doxygen reference documentation.
 
 Related examples include:
 
