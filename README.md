@@ -36,7 +36,8 @@ The anticipated structure is:
 standards/
 ├── general/
 │   ├── clean-architecture-standard.md
-│   └── clean-coding-standard.md
+│   ├── clean-coding-standard.md
+│   └── conventional-commit-release-governance.md
 ├── bash/
 │   ├── coding-standard.md
 │   ├── documentation-standard.md
@@ -96,6 +97,10 @@ The repository currently includes:
   language-independent standard covering function responsibilities,
   Command-Query Separation, levels of abstraction, side effects, naming, control
   flow, duplication, comments, error behavior, and readability.
+- [Conventional Commit and Release Versioning Governance](standards/general/conventional-commit-release-governance.md),
+  a repository-wide governance standard for Conventional Commit titles, pull
+  request and merge title semantics, trusted release classification, and
+  deterministic Semantic Versioning significance.
 
 Related examples include:
 
@@ -118,6 +123,7 @@ doc/
 └── standards/
     ├── clean-architecture-standard.md
     ├── clean-coding-standard.md
+    ├── conventional-commit-release-governance.md
     ├── bash-coding-standard.md
     ├── bash-documentation-standard.md
     └── bash-testing-standard.md
