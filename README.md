@@ -109,6 +109,11 @@ The repository currently includes:
   including `awk-doxygen` conventions, function and rule contracts, global state,
   portability, `getline`, record semantics, subprocess boundaries, and generated
   reference documentation.
+- [Bash Documentation Standard](standards/bash/documentation-standard.md), a
+  language-specific source-documentation standard for maintained Bash files,
+  including `bash-doxygen` conventions, file and function contracts, STDIN,
+  STDOUT, STDERR, return and exit-status semantics, side effects, security
+  boundaries, ADR relationships, and generated reference documentation.
 
 Related examples include:
 
