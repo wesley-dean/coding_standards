@@ -62,9 +62,12 @@ examples/
 │   └── clean-coding/
 │       └── bash.md
 ├── awk/
+│   └── documentation/
+│       └── example.awk
 ├── bash/
 │   ├── coding/
 │   ├── documentation/
+│   │   └── example.bash
 │   ├── testing/
 │   └── tooling/
 ├── php/
@@ -168,6 +171,12 @@ Pylint rather than with the AWK translation filter.
 Related examples include:
 
 - [Clean Coding Examples for Bash](examples/general/clean-coding/bash.md).
+- [AWK Documentation Example](examples/awk/documentation/example.awk), a
+  non-normative AWK program demonstrating file, function, global-state, and rule
+  documentation from the AWK standard.
+- [Bash Documentation Example](examples/bash/documentation/example.bash), a
+  non-normative Bash file demonstrating file, variable, function, stream, return,
+  and exit-status documentation from the Bash standard.
 - [PHP Documentation Example](examples/php/documentation/example.php), a
   non-normative PHP file demonstrating representative Doxygen-first DocBlocks
   using the common PHPDoc-compatible subset.
