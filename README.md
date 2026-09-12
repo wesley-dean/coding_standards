@@ -66,6 +66,8 @@ examples/
 │   ├── testing/
 │   └── tooling/
 ├── python/
+│   └── documentation/
+│       └── example.py
 ├── markdown/
 ├── repository/
 └── adr/
@@ -119,9 +121,8 @@ The repository currently includes:
   boundaries, ADR relationships, and generated reference documentation.
 - [Python Documentation Standard](standards/python/documentation-standard.md), a
   language-specific source-documentation standard using PEP 257 structure,
-  Sphinx/reStructuredText fields, type annotations, and a `python-doxygen`
-  translation boundary so maintained docstrings remain native to Python tooling
-  while producing structured Doxygen reference documentation.
+  Sphinx/reStructuredText fields, type annotations, Python-native linting, and
+  `python-doxygen` for the Doxygen-facing structured documentation contract.
 
 ## Documentation Tooling
 
@@ -133,19 +134,27 @@ Doxygen filters maintained in separate repositories:
 - [awk-doxygen](https://github.com/wesley-dean/awk-doxygen) translates the
   documented AWK subset into a Doxygen-friendly representation.
 - [python-doxygen](https://github.com/wesley-dean/python-doxygen) preserves
-  Python as the source language while translating the supported
-  Sphinx/reStructuredText docstring fields at the Doxygen boundary.
+  Python as the source language while implementing the Doxygen-facing structured
+  documentation portion of the Python standard.
 
 The standards in this repository remain authoritative for maintained source.
-Filter capability is intentionally narrower where conservative recognition is
-necessary.  A valid source-documentation form does not become invalid merely
-because a current filter release does not yet translate it structurally for
-Doxygen.  Filter repositories govern their supported syntax, diagnostics,
-generated representation, and release behavior through their own ADRs and tests.
+Each filter repository governs its supported syntax, conservative recognition
+boundary, diagnostics, generated representation, and release behavior through its
+own ADRs and tests.
+
+For Python, `python-doxygen` implements the standard's governed Doxygen-facing
+structured documentation forms, including parameter, return, exception, yield,
+and intentionally unannotated type fields.  Semantic validation of Python
+signatures, annotations, type correctness, return or exception behavior, and
+documentation/signature agreement remains with Python-native tooling such as
+Pylint rather than with the AWK translation filter.
 
 Related examples include:
 
 - [Clean Coding Examples for Bash](examples/general/clean-coding/bash.md).
+- [Python Documentation Example](examples/python/documentation/example.py), a
+  non-normative module demonstrating representative forms from the Python
+  documentation standard.
 
 ## Consuming Standards with bashdeps
 
