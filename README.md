@@ -123,6 +123,26 @@ The repository currently includes:
   translation boundary so maintained docstrings remain native to Python tooling
   while producing structured Doxygen reference documentation.
 
+## Documentation Tooling
+
+The language-specific documentation standards are paired with documentation-led
+Doxygen filters maintained in separate repositories:
+
+- [bash-doxygen](https://github.com/wesley-dean/bash-doxygen) translates the
+  documented Bash subset into a Doxygen-friendly representation.
+- [awk-doxygen](https://github.com/wesley-dean/awk-doxygen) translates the
+  documented AWK subset into a Doxygen-friendly representation.
+- [python-doxygen](https://github.com/wesley-dean/python-doxygen) preserves
+  Python as the source language while translating the supported
+  Sphinx/reStructuredText docstring fields at the Doxygen boundary.
+
+The standards in this repository remain authoritative for maintained source.
+Filter capability is intentionally narrower where conservative recognition is
+necessary.  A valid source-documentation form does not become invalid merely
+because a current filter release does not yet translate it structurally for
+Doxygen.  Filter repositories govern their supported syntax, diagnostics,
+generated representation, and release behavior through their own ADRs and tests.
+
 Related examples include:
 
 - [Clean Coding Examples for Bash](examples/general/clean-coding/bash.md).
