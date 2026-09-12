@@ -68,6 +68,8 @@ examples/
 │   ├── testing/
 │   └── tooling/
 ├── php/
+│   └── documentation/
+│       └── example.php
 ├── python/
 │   └── documentation/
 │       └── example.py
@@ -166,6 +168,9 @@ Pylint rather than with the AWK translation filter.
 Related examples include:
 
 - [Clean Coding Examples for Bash](examples/general/clean-coding/bash.md).
+- [PHP Documentation Example](examples/php/documentation/example.php), a
+  non-normative PHP file demonstrating representative Doxygen-first DocBlocks
+  using the common PHPDoc-compatible subset.
 - [Python Documentation Example](examples/python/documentation/example.py), a
   non-normative module demonstrating representative forms from the Python
   documentation standard.
