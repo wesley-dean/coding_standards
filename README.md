@@ -45,6 +45,8 @@ standards/
 │   ├── documentation-standard.md
 │   ├── testing-standard.md
 │   └── tooling-standard.md
+├── php/
+│   └── documentation-standard.md
 ├── python/
 │   └── documentation-standard.md
 ├── markdown/
@@ -65,6 +67,7 @@ examples/
 │   ├── documentation/
 │   ├── testing/
 │   └── tooling/
+├── php/
 ├── python/
 │   └── documentation/
 │       └── example.py
@@ -119,6 +122,11 @@ The repository currently includes:
   including `bash-doxygen` conventions, file and function contracts, STDIN,
   STDOUT, STDERR, return and exit-status semantics, side effects, security
   boundaries, ADR relationships, and generated reference documentation.
+- [PHP Documentation Standard](standards/php/documentation-standard.md), a
+  Doxygen-first PHP documentation standard using PHPDoc/Javadoc-style DocBlocks,
+  the common Doxygen/phpDocumentor tag subset, native PHP type declarations, and
+  direct Doxygen consumption without a translation filter.  phpDocumentor
+  compatibility is preferred where it does not conflict with Doxygen.
 - [Python Documentation Standard](standards/python/documentation-standard.md), a
   language-specific source-documentation standard using PEP 257 structure,
   Sphinx/reStructuredText fields, type annotations, Python-native linting, and
@@ -126,8 +134,8 @@ The repository currently includes:
 
 ## Documentation Tooling
 
-The language-specific documentation standards are paired with documentation-led
-Doxygen filters maintained in separate repositories:
+The Bash, AWK, and Python documentation standards are paired with
+language-specific Doxygen filters maintained in separate repositories:
 
 - [bash-doxygen](https://github.com/wesley-dean/bash-doxygen) translates the
   documented Bash subset into a Doxygen-friendly representation.
@@ -136,6 +144,12 @@ Doxygen filters maintained in separate repositories:
 - [python-doxygen](https://github.com/wesley-dean/python-doxygen) preserves
   Python as the source language while implementing the Doxygen-facing structured
   documentation portion of the Python standard.
+
+PHP is intentionally different.  The PHP standard uses a Doxygen-first subset of
+PHPDoc/Javadoc-style DocBlocks that Doxygen can consume directly, so no PHP
+translation filter is part of the baseline architecture.  phpDocumentor
+compatibility is a secondary benefit of the shared syntax, not a governing
+requirement.
 
 The standards in this repository remain authoritative for maintained source.
 Each filter repository governs its supported syntax, conservative recognition
@@ -178,6 +192,7 @@ doc/
     ├── bash-coding-standard.md
     ├── bash-documentation-standard.md
     ├── bash-testing-standard.md
+    ├── php-documentation-standard.md
     └── python-documentation-standard.md
 ```
 
