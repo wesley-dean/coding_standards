@@ -11,7 +11,8 @@ This standard follows the same documentation philosophy used for maintained Bash
 and AWK projects while adopting Python-native docstrings as the maintained source
 of truth.  It is intentionally compatible with Python documentation and linting
 tools, including Pylint documentation checks, and with Doxygen reference
-generation through the `python-doxygen` input filter described by this standard.
+generation through the
+[`python-doxygen`](https://github.com/wesley-dean/python-doxygen) input filter.
 
 Python has a different documentation model from Bash and AWK.  Modules, classes,
 functions, and methods expose runtime docstrings through `__doc__`; type
@@ -55,9 +56,9 @@ contracts in separate comments merely to satisfy Doxygen.
 The maintained source should remain idiomatic Python and should be consumable by
 Python-native tooling without first passing through `python-doxygen`.
 
-`python-doxygen` exists at the documentation-generation boundary.  Its job is to
-translate the supported maintained docstring structure into a Doxygen-friendly
-representation without changing the executable Python source.
+`python-doxygen` exists at the documentation-generation boundary.  It translates
+the governed maintained docstring structure into a Doxygen-friendly
+representation without changing Python into another source language.
 
 Conceptually:
 
@@ -181,15 +182,46 @@ drifted from the intended contract.
 
 ## Relationship to python-doxygen
 
-`python-doxygen` is the designated Doxygen input filter for projects adopting
-this standard when structured Doxygen reference output is required.
+[`python-doxygen`](https://github.com/wesley-dean/python-doxygen) is the designated
+Doxygen input filter for projects adopting this standard when structured Doxygen
+reference output is required.
 
-The filter is intentionally narrow.  It is a documentation translator, not a
-replacement Python parser, type checker, or linter.  It must not infer behavior
-that is absent from the maintained source.
+The filter preserves Python as the filtered source language and translates only
+the governed documentation forms at the Doxygen boundary.  It remains a
+documentation translator rather than a replacement Python parser, type checker,
+or linter, and it does not infer behavior absent from maintained source.
 
-At minimum, the filter should translate supported Sphinx/reStructuredText fields
-into equivalent Doxygen commands.
+The implemented structured mappings are:
+
+```text
+:param name: description
+    -> @param name description
+
+:returns: description
+    -> @return description
+
+:raises ExceptionType: description
+    -> @exception ExceptionType description
+
+:yields: description
+    -> dedicated Doxygen paragraph titled "Yields"
+
+:type name: value
+    -> dedicated Doxygen paragraph titled "Type of name"
+
+:rtype: value
+    -> dedicated Doxygen paragraph titled "Return type"
+```
+
+The `:type:` and `:rtype:` mappings preserve maintained type information for
+intentionally unannotated interfaces.  `python-doxygen` does not decide whether a
+type field is redundant with an annotation, reconcile conflicting type
+information, or infer types from executable source.  Those responsibilities
+remain with Python-native tooling and repository policy.
+
+The `:yields:` mapping is deliberately distinct from `:returns:` so generated
+reference documentation does not describe generator output as an ordinary
+function return.
 
 For example, maintained source such as:
 
@@ -203,7 +235,7 @@ def load_configuration(path: Path) -> Configuration:
     """
 ```
 
-may be translated for Doxygen into a representation equivalent to:
+is translated for Doxygen into a representation equivalent to:
 
 ```text
 @param path Configuration file to read.
@@ -211,19 +243,51 @@ may be translated for Doxygen into a representation equivalent to:
 @exception ValueError The configuration is invalid.
 ```
 
-The filter should also preserve ordinary descriptive prose, examples, notes,
-warnings, and other documentation content that Doxygen can render meaningfully.
+The filter supports standards-conforming ordinary triple-double-quoted docstrings,
+raw `r"""..."""` and `R"""..."""` docstrings where literal backslashes are
+required, deterministic one-line prose docstrings in governed documentation
+positions, conventional multi-line `def`, `async def`, and `class` declaration
+headers, and representative property, async-function, generator, context-manager,
+and decorated-function forms without inferring decorator semantics.
+
+Continuation prose following governed structured fields remains source-visible and
+is preserved when Doxygen can retain the intended association.  Ordinary prose,
+examples, notes, warnings, unsupported markup, and ambiguous source remain visible
+rather than being assigned speculative semantics.
+
+Most supported translations preserve physical line count.  The dedicated titled
+paragraph representations for `:yields:`, `:type name:`, and `:rtype:` add one
+physical output line per translated field.  This is a generated-representation
+tradeoff and does not change the maintained-source contract.
+
+Doxygen integrations that rely on `python-doxygen` translating commands inside
+ordinary Python docstrings must configure:
+
+```ini
+PYTHON_DOCSTRING = NO
+```
+
+This causes Doxygen to interpret the translated commands structurally rather than
+preserving the docstring body as preformatted text.
 
 `python-doxygen` must not require maintainers to duplicate the same contract in
 both Sphinx-style and Doxygen-style forms.
 
-Where practical, the filter should preserve source line correspondence so that
-Doxygen diagnostics and generated references remain close to the original Python
-locations.
+### Tooling Boundary
 
-The filter should translate only structures it explicitly supports.  Unsupported
-or ambiguous markup should remain visible rather than being silently rewritten
-into a meaning the source did not establish.
+Conformance with this standard is defined by the maintained Python source, not by
+whether `python-doxygen` performs semantic program analysis.
+
+`python-doxygen` implements the Doxygen-facing structured documentation portion of
+this standard.  Semantic validation of Python signatures, annotations, return
+behavior, exception behavior, documentation/signature agreement, type correctness,
+and decorator semantics remains the responsibility of Python-native tooling such
+as Pylint and of repository-specific tests and policy.
+
+The filter should continue to prefer visible pass-through or a false negative over
+inventing source meaning it cannot establish safely.  Parser-boundary details,
+diagnostics, generated representation, and release behavior are governed by the
+`python-doxygen` repository's ADRs and regression tests.
 
 ## Module Docstrings
 
@@ -589,6 +653,11 @@ inside docstrings.
 If an example relies on omitted setup, make that omission obvious rather than
 presenting incomplete code as directly executable.
 
+A fuller illustrative module is available at
+[`examples/python/documentation/example.py`](../../examples/python/documentation/example.py).
+The example is non-normative; this standard remains authoritative if the two ever
+disagree.
+
 ## Security-Sensitive Documentation
 
 For parsing, validation, authentication, authorization, redaction,
@@ -655,7 +724,7 @@ Generated Doxygen output is derivative and is not a maintained source of truth.
 The maintained Python source, type annotations, docstrings, and governing
 repository documentation remain authoritative.
 
-`python-doxygen` should preserve source intent while making only those
+`python-doxygen` preserves Python source while making only the governed
 translations required for Doxygen indexing and rendering.
 
 The filter must not manufacture parameter types, exception guarantees, ownership
