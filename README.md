@@ -3,13 +3,13 @@
 This repository is the canonical home for reusable coding, documentation, and
 repository standards used across projects maintained by Wesley Dean.
 
-The standards are written primarily in Markdown so that they can be read directly
-by people, consumed by coding agents and LLMs, rendered as documentation, and
+The standards are written primarily in Markdown so they can be read directly by
+people, consumed by coding agents and LLMs, rendered as documentation, and
 materialized into other repositories as ordinary project files.
 
 The intent is to keep shared engineering guidance in one authoritative location
-while allowing each consuming repository to carry a pinned, reviewable copy of the
-standards that govern it.
+while allowing each consuming repository to carry a pinned, reviewable copy of a
+released standards profile.
 
 ## Goals
 
@@ -19,18 +19,20 @@ This repository is intended to provide standards that are:
 - reusable across multiple repositories;
 - inspectable and reviewable as ordinary text;
 - versionable through Git;
-- independently consumable rather than requiring the entire repository;
+- consumable as coherent released profiles;
 - suitable for offline use after synchronization; and
 - accompanied by concrete examples where examples improve understanding.
 
-A consuming project may adopt all of the standards in a category or only the
-specific standards that apply to that project.
+A consuming project may use a language-specific standards profile or the complete
+`all` profile when multiple languages are governed by the repository.
 
 ## Repository Structure
 
-Standards and examples are kept in parallel top-level trees.
+`standards/` is the distributable source root.  Normative standards and their
+non-normative examples live beneath the same namespace so consumers can
+materialize the complete governed tree beneath `doc/standards/`.
 
-The anticipated structure is:
+The current and anticipated structure is:
 
 ```text
 standards/
@@ -54,51 +56,62 @@ standards/
 ├── repository/
 │   ├── repository-standard.md
 │   └── github-standard.md
-└── adr/
-    └── adr-standard.md
-
-examples/
-├── general/
-│   └── clean-coding/
-│       └── bash.md
-├── awk/
-│   └── documentation/
-│       └── example.awk
-├── bash/
-│   ├── coding/
-│   ├── documentation/
-│   │   └── example.bash
-│   ├── testing/
-│   └── tooling/
-├── php/
-│   └── documentation/
-│       └── example.php
-├── python/
-│   └── documentation/
-│       └── example.py
-├── markdown/
-├── repository/
-└── adr/
+├── adr/
+│   └── adr-standard.md
+└── examples/
+    ├── general/
+    │   └── clean-coding/
+    │       └── bash.md
+    ├── awk/
+    │   └── documentation/
+    │       └── example.awk
+    ├── bash/
+    │   └── documentation/
+    │       └── example.bash
+    ├── php/
+    │   └── documentation/
+    │       └── example.php
+    ├── python/
+    │   └── documentation/
+    │       └── example.py
+    ├── markdown/
+    ├── repository/
+    └── adr/
 ```
 
-This structure is intentionally extensible.  Additional languages, formats, or
-engineering concerns can be added without changing the basic organization.
+Some anticipated categories may not yet contain tracked files.  Their place in
+the distribution model is nevertheless explicit so later additions do not
+require consumers to redesign how standards are acquired.
 
 The `standards/general/` tree contains standards that apply across languages or
 engineering contexts unless a more specific standard takes precedence.
 Language-specific standards may refine those general standards and should state
 their precedence relationship explicitly when necessary.
 
-The `standards/` tree contains normative guidance.  The `examples/` tree contains
-illustrative material that demonstrates how the standards may be applied.
+The language-independent cross-cutting profile categories are:
 
-Examples do not supersede the standards.  If an example and a standard disagree,
-the standard is authoritative and the example should be corrected.
+```text
+general
+markdown
+repository
+adr
+```
 
-A standard should link to relevant examples when those examples materially help a
-reader understand or apply the rule.  Examples may include conforming code,
-non-conforming code, before-and-after comparisons, complete small projects,
-configuration fragments, or other useful demonstrations.
+The currently published language profiles are:
+
+```text
+awk
+bash
+php
+python
+```
+
+The `standards/` category trees contain normative guidance.  The
+`standards/examples/` tree contains illustrative material demonstrating how the
+standards may be applied.
+
+Examples never supersede standards.  If an example and a standard disagree, the
+standard is authoritative and the example should be corrected.
 
 ## Current Standards
 
@@ -170,108 +183,206 @@ Pylint rather than with the AWK translation filter.
 
 Related examples include:
 
-- [Clean Coding Examples for Bash](examples/general/clean-coding/bash.md).
-- [AWK Documentation Example](examples/awk/documentation/example.awk), a
-  non-normative AWK program demonstrating file, function, global-state, and rule
+- [Clean Coding Examples for Bash](standards/examples/general/clean-coding/bash.md).
+- [AWK Documentation Example](standards/examples/awk/documentation/example.awk),
+  a non-normative AWK program demonstrating file, function, global-state, and rule
   documentation from the AWK standard.
-- [Bash Documentation Example](examples/bash/documentation/example.bash), a
-  non-normative Bash file demonstrating file, variable, function, stream, return,
-  and exit-status documentation from the Bash standard.
-- [PHP Documentation Example](examples/php/documentation/example.php), a
-  non-normative PHP file demonstrating representative Doxygen-first DocBlocks
+- [Bash Documentation Example](standards/examples/bash/documentation/example.bash),
+  a non-normative Bash file demonstrating file, variable, function, stream,
+  return, and exit-status documentation from the Bash standard.
+- [PHP Documentation Example](standards/examples/php/documentation/example.php),
+  a non-normative PHP file demonstrating representative Doxygen-first DocBlocks
   using the common PHPDoc-compatible subset.
-- [Python Documentation Example](examples/python/documentation/example.py), a
-  non-normative module demonstrating representative forms from the Python
+- [Python Documentation Example](standards/examples/python/documentation/example.py),
+  a non-normative module demonstrating representative forms from the Python
   documentation standard.
 
-## Consuming Standards with bashdeps
+## Distribution Bundles
 
-[bashdeps](https://github.com/wesley-dean/bashdeps) can materialize individual
-standards into another repository as pinned, SHA-256-verified external artifacts.
-This allows a consuming repository to carry the exact standards that govern it
-without using Git submodules or requiring network access during ordinary
-development.
+The preferred distribution interface is a released profile archive rather than a
+set of raw GitHub content URLs.
 
-A consuming repository might use this layout:
+The bundle design is governed by
+[ADR-001](doc/adr/ADR-001-standards-distribution-bundles.md).
 
-```text
-dependencies-standards.txt
+Each language bundle contains:
 
-doc/
-└── standards/
-    ├── clean-architecture-standard.md
-    ├── clean-coding-standard.md
-    ├── conventional-commit-release-governance.md
-    ├── awk-documentation-standard.md
-    ├── bash-coding-standard.md
-    ├── bash-documentation-standard.md
-    ├── bash-testing-standard.md
-    ├── php-documentation-standard.md
-    └── python-documentation-standard.md
-```
+1. every existing common category (`general`, `markdown`, `repository`, and
+   `adr`);
+2. the selected language category;
+3. examples for the included common categories; and
+4. examples for the selected language.
 
-The standards manifest is an ordinary bashdeps manifest.  For example:
+The `all` profile contains the complete contents of `standards/` and is the
+recommended profile for repositories governed by more than one language standard.
+
+Release assets use stable names because the release tag supplies the version:
 
 ```text
-id=wesley-dean/coding_standards/clean-coding@<ref> \
-  url=https://raw.githubusercontent.com/wesley-dean/coding_standards/<ref>/standards/general/clean-coding-standard.md \
-  dest=doc/standards/clean-coding-standard.md \
-  digest=sha256:<sha256-digest>
-
-id=wesley-dean/coding_standards/bash-coding@<ref> \
-  url=https://raw.githubusercontent.com/wesley-dean/coding_standards/<ref>/standards/bash/coding-standard.md \
-  dest=doc/standards/bash-coding-standard.md \
-  digest=sha256:<sha256-digest>
+coding-standards-all.tar.gz
+coding-standards-all.tar.gz.sha256
+coding-standards-awk.tar.gz
+coding-standards-awk.tar.gz.sha256
+coding-standards-bash.tar.gz
+coding-standards-bash.tar.gz.sha256
+coding-standards-php.tar.gz
+coding-standards-php.tar.gz.sha256
+coding-standards-python.tar.gz
+coding-standards-python.tar.gz.sha256
 ```
 
-`<ref>` should identify immutable reviewed source, such as a Git commit or an
-immutable release tag.  The committed SHA-256 digest remains the consuming
-repository's authority for the exact bytes it accepts.
+Archives do not contain an outer `standards/` directory.  For example, the Bash
+archive is rooted like this:
 
-The standards can then be synchronized with:
+```text
+general/
+bash/
+markdown/
+repository/
+adr/
+examples/
+```
+
+Only categories containing tracked files appear in a particular release.
+Extracting the archive beneath `doc/standards/` therefore produces paths such as:
+
+```text
+doc/standards/general/
+doc/standards/bash/
+doc/standards/examples/
+```
+
+This keeps examples of the shared standards distinct from any `doc/examples/`
+content owned by the consuming project.
+
+### Building Bundles Locally
+
+Generate all profile archives and checksum files with:
 
 ```bash
-vendor/bashdeps.bash sync \
-  --dest-root doc/standards \
-  dependencies-standards.txt
+make dist
 ```
 
-Existing local state can be verified without network access with:
+Verify that two builds from the same source tree produce the same archive digests
+with:
 
 ```bash
-vendor/bashdeps.bash verify \
-  --dest-root doc/standards \
-  dependencies-standards.txt
+make dist-check
 ```
 
-The explicit `--dest-root doc/standards` boundary is intentional.  It limits the
-standards manifest to managing files beneath the consuming repository's standards
-directory.
+Generated artifacts are written beneath `dist/` and are not committed.
 
-A project using Make may expose these operations as repository-level targets:
+The bundle builder normalizes archive ordering, timestamps, ownership metadata,
+and filesystem modes.  It rejects symbolic links in the distributable standards
+tree and validates generated paths before emitting checksums.
+
+### CI and Releases
+
+Pull requests and pushes to `main` run `make dist-check` and publish the generated
+bundles as short-lived GitHub Actions artifacts for inspection.
+
+Pushing a `v*` tag runs the same deterministic build and creates a GitHub Release
+containing the `.tar.gz` profiles and their `.sha256` files.  The release workflow
+refuses to replace an existing release.  A bad published artifact must be fixed in
+source and released under a new version.
+
+## Consuming a Released Profile with bashdeps
+
+[bashdeps](https://github.com/wesley-dean/bashdeps) remains responsible for
+acquiring and SHA-256-verifying the exact released archive.  The consuming
+repository's Make integration is responsible for interpreting that verified
+archive and materializing it beneath `doc/standards/`.
+
+The boundary is deliberate:
+
+```text
+bashdeps
+    acquires and verifies exact bytes
+
+Make
+    extracts and replaces the managed standards tree
+```
+
+A Bash consumer might declare one dependency in `dependencies-standards.txt`:
+
+```text
+id=wesley-dean/coding_standards/bash@v1.2.0 \
+  url=https://github.com/wesley-dean/coding_standards/releases/download/v1.2.0/coding-standards-bash.tar.gz \
+  dest=vendor/coding-standards-bash.tar.gz \
+  digest=sha256:<reviewed-sha256-digest>
+```
+
+The upstream `.sha256` file is useful release metadata, but the digest committed
+in the consuming repository remains that repository's authority for acceptable
+bytes.
+
+Synchronize the archive with:
+
+```bash
+vendor/bashdeps.bash sync dependencies-standards.txt
+```
+
+Verify the cached archive without network access with:
+
+```bash
+vendor/bashdeps.bash verify dependencies-standards.txt
+```
+
+### Materializing `doc/standards/`
+
+A consumer must replace the managed standards tree from a fresh extraction rather
+than extracting a new version over the existing directory.  Otherwise a standard
+removed from a later release could remain locally and appear current.
+
+A representative Make integration is:
 
 ```make
+BASHDEPS ?= vendor/bashdeps.bash
+STANDARDS_ARCHIVE := vendor/coding-standards-bash.tar.gz
+STANDARDS_DIR := doc/standards
+
 .PHONY: standards standards-check
 
-standards: $(BASHDEPS) dependencies-standards.txt
-	$(MAKE) --no-print-directory verify-bashdeps
-	"$(BASHDEPS)" sync \
-		--dest-root doc/standards \
-		dependencies-standards.txt
+standards: dependencies-standards.txt
+	"$(BASHDEPS)" sync dependencies-standards.txt
+	@set -eu; \
+	parent="$$(dirname -- "$(STANDARDS_DIR)")"; \
+	mkdir -p -- "$$parent"; \
+	tmp="$$(mktemp -d "$$parent/.standards.XXXXXX")"; \
+	trap 'rm -rf -- "$$tmp"' EXIT HUP INT TERM; \
+	tar -xzf "$(STANDARDS_ARCHIVE)" -C "$$tmp"; \
+	rm -rf -- "$(STANDARDS_DIR).new"; \
+	mv -- "$$tmp" "$(STANDARDS_DIR).new"; \
+	trap - EXIT HUP INT TERM; \
+	rm -rf -- "$(STANDARDS_DIR)"; \
+	mv -- "$(STANDARDS_DIR).new" "$(STANDARDS_DIR)"
 
-standards-check: verify-bashdeps dependencies-standards.txt
-	"$(BASHDEPS)" verify \
-		--dest-root doc/standards \
-		dependencies-standards.txt
+standards-check: dependencies-standards.txt
+	"$(BASHDEPS)" verify dependencies-standards.txt
+	@set -eu; \
+	tmp="$$(mktemp -d)"; \
+	trap 'rm -rf -- "$$tmp"' EXIT HUP INT TERM; \
+	tar -xzf "$(STANDARDS_ARCHIVE)" -C "$$tmp"; \
+	diff -r "$$tmp" "$(STANDARDS_DIR)"
 ```
 
-The exact Make integration belongs to the consuming repository.  bashdeps is
-responsible for determining whether the declared bytes are present and acceptable;
-the consuming project decides when and why its standards are synchronized.
+A consuming repository may use a different implementation if its platform or
+build system requires one.  The important contract is that the archive is first
+verified as an exact dependency, materialization starts from a fresh tree, and
+`doc/standards/` can be checked against the selected archive.
+
+For a repository that uses several governed languages, prefer
+`coding-standards-all.tar.gz` rather than overlaying several language bundles.
+This avoids duplicate common categories and ensures the complete standards tree
+comes from one release.
+
+Direct per-file bashdeps declarations remain technically possible, but they are
+not the preferred distribution interface.  Consumers should normally depend on a
+released profile rather than reproduce this repository's internal file inventory.
 
 ## Using Vendored Standards in a Project
 
-Once synchronized, the files under `doc/standards/` are ordinary repository files
+Once materialized, the files under `doc/standards/` are ordinary repository files
 and can be read by developers, reviewers, coding agents, CI jobs, or documentation
 tooling without contacting this repository.
 
@@ -279,13 +390,12 @@ A consuming repository may direct coding agents to them from `AGENTS.md`, for
 example:
 
 ```markdown
-Before modifying Bash source, read the applicable standards under
-`doc/standards/`.
+Before modifying source, read the applicable standards under `doc/standards/`.
 
-Files under `doc/standards/` are synchronized from the canonical standards
-repository through `dependencies-standards.txt` using bashdeps.  Do not modify
-synchronized standards locally.  Repository-specific exceptions or superseding
-decisions must be documented through this repository's normal governance process.
+Files under `doc/standards/` are materialized from a pinned coding-standards
+release archive.  Do not modify synchronized standards locally.
+Repository-specific exceptions or superseding decisions must be documented
+through this repository's normal governance process.
 ```
 
 Repository-specific requirements remain local to the consuming repository.  A
@@ -293,38 +403,47 @@ shared standard should not be edited locally to accommodate one project.
 Project-specific exceptions, refinements, or superseding decisions should instead
 be documented through that project's normal governance process.
 
+## Governance
+
+Consequential repository decisions are recorded as ADRs beneath `doc/adr/`.
+Concise decision summaries are maintained in [doc/decisions.md](doc/decisions.md).
+
+The current distribution and materialization contract is governed by
+[ADR-001: Distribute Standards as Profile Archives](doc/adr/ADR-001-standards-distribution-bundles.md).
+
 ## GitHub Pages
 
 The Markdown in this repository may also be published through GitHub Pages so the
 standards and examples are convenient to browse outside the GitHub source view.
 
 The published site should be treated as a presentation of repository content, not
-as a separate source of truth.  Standards should continue to be maintained in the
-`standards/` tree, examples should continue to be maintained in the `examples/`
-tree, and any site-generation layer should render or link to those files rather
-than maintain duplicate copies.
+as a separate source of truth.  Standards and examples continue to be maintained
+beneath `standards/`, and any site-generation layer should render or link to those
+files rather than maintain duplicate copies.
 
 A future GitHub Pages configuration may provide:
 
 - navigation by language or engineering concern;
 - links between each standard and its examples;
 - rendered code examples;
-- links back to the exact source files in GitHub; and
+- links back to exact source files in GitHub; and
 - clear identification of the revision or release represented by the site.
 
-The initial repository layout deliberately does not require a particular static
-site generator.  GitHub Pages can be added after the documentation structure and
-navigation needs are better established.
+The repository deliberately does not require a particular static-site generator.
+GitHub Pages can be added after documentation structure and navigation needs are
+better established.
 
 ## Source of Truth
 
-The files in this repository are the canonical standards.  Copies materialized
-into consuming repositories are pinned snapshots and should not be edited in
-place.
+The maintained files beneath `standards/` are the canonical shared standards and
+examples.  Generated bundle archives, published checksums, GitHub Actions
+artifacts, GitHub Release assets, and copies materialized into consuming
+repositories are derivative artifacts.
 
-Changes to a shared standard should be made here, reviewed here, and then adopted
-explicitly by consuming repositories by updating their bashdeps declarations and
-committed digests.
+Changes to a shared standard are made here, reviewed here, released here, and
+adopted explicitly by consuming repositories by updating the selected bundle
+version and committed digest.
 
 This keeps standards changes visible in both places: once when the shared standard
-changes, and again when an individual project chooses to adopt that change.
+changes, and again when an individual project chooses to adopt the released
+change.
