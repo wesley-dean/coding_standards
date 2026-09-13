@@ -343,7 +343,7 @@ These questions are heuristics.  They should support engineering judgment rather
 
 Language-specific examples demonstrating applications of this standard are maintained separately:
 
-- [Bash examples](../../examples/general/clean-coding/bash.md)
+- [Bash examples](../examples/general/clean-coding/bash.md)
 
 Examples are illustrative rather than normative.  Where an example conflicts with this standard, this standard governs.
 
