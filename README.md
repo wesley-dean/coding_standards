@@ -369,7 +369,44 @@ standards-check: dependencies-standards.txt
 A consuming repository may use a different implementation if its platform or
 build system requires one.  The important contract is that the archive is first
 verified as an exact dependency, materialization starts from a fresh tree, and
-`doc/standards/` can be checked against the selected archive.
+`doc/standards/` can be checked against the selected archive when that archive is
+available locally.
+
+### Committing the materialized standards
+
+The materialized `doc/standards/` tree should be committed to the consuming
+repository.  It is externally managed content, but it is intentionally part of
+the repository checkout rather than an ephemeral build product.
+
+This matters for coding agents and restricted development containers.  Such an
+environment may have no direct DNS or HTTPS access to GitHub even when the hosting
+product offers a GitHub connector.  Bashdeps is an ordinary local Bash program
+and cannot implicitly use that connector, so agent startup must not depend on a
+fresh network download of the standards bundle.
+
+The intended lifecycle is:
+
+```text
+networked maintainer workstation or CI
+    -> bashdeps acquires and verifies the pinned bundle
+    -> Make materializes a fresh doc/standards/ tree
+    -> the dependency declaration and standards tree are reviewed and committed
+
+coding agent or offline developer
+    -> repository checkout already contains doc/standards/
+    -> governing standards are available before work begins
+```
+
+A standards update should therefore produce an ordinary repository change showing
+both the selected release/digest update and the exact Markdown changes being
+adopted.  Project instructions such as `AGENTS.md` can then point directly at
+`doc/standards/` without requiring a network bootstrap step.
+
+The verified archive itself does not have to be committed.  If it is absent, an
+offline container cannot re-run a check that depends on the archive, but it can
+still perform normal development because the governing standards are already
+present in the checkout.  Re-materialization belongs on a network-capable
+maintainer system or CI runner.
 
 For a repository that uses several governed languages, prefer
 `coding-standards-all.tar.gz` rather than overlaying several language bundles.
@@ -382,9 +419,9 @@ released profile rather than reproduce this repository's internal file inventory
 
 ## Using Vendored Standards in a Project
 
-Once materialized, the files under `doc/standards/` are ordinary repository files
-and can be read by developers, reviewers, coding agents, CI jobs, or documentation
-tooling without contacting this repository.
+Once materialized and committed, the files under `doc/standards/` are ordinary
+repository files and can be read by developers, reviewers, coding agents, CI jobs,
+or documentation tooling without contacting this repository.
 
 A consuming repository may direct coding agents to them from `AGENTS.md`, for
 example:
@@ -442,7 +479,7 @@ repositories are derivative artifacts.
 
 Changes to a shared standard are made here, reviewed here, released here, and
 adopted explicitly by consuming repositories by updating the selected bundle
-version and committed digest.
+version, committed digest, and committed materialized `doc/standards/` tree.
 
 This keeps standards changes visible in both places: once when the shared standard
 changes, and again when an individual project chooses to adopt the released
