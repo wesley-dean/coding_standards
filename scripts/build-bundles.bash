@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 ## @file scripts/build-bundles.bash
-## @brief Builds deterministic release bundles for standards profiles.
+## @brief Builds the deterministic coding-standards release archive.
 ## @details
-## Produces one archive for each governed language profile plus an all-inclusive
-## archive.  Language profiles contain the explicitly configured common standard
-## categories, the selected language category, and the corresponding examples.
-## The archive root is the distributable standards namespace itself rather than
-## an outer `standards/` directory so consumers can materialize an archive
-## directly beneath `doc/standards/`.
+## Produces one archive containing the complete contents of `standards/`.  The
+## archive root is the distributable standards namespace itself rather than an
+## outer `standards/` directory so consumers can materialize the archive directly
+## beneath `doc/standards/`.
 ##
-## Bundle generation normalizes ordering, timestamps, ownership metadata, and
+## Archive generation normalizes ordering, timestamps, ownership metadata, and
 ## filesystem modes.  Symbolic links are rejected from the maintained standards
-## tree, and generated archive paths are validated before checksums are emitted.
+## tree, and generated archive paths are validated before the checksum is emitted.
 ## This script intentionally does not publish releases; release orchestration is
 ## owned by GitHub Actions.
 
@@ -24,11 +22,11 @@ readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly REPOSITORY_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd -P)"
 readonly STANDARDS_ROOT="${REPOSITORY_ROOT}/standards"
 readonly DIST_ROOT="${REPOSITORY_ROOT}/dist"
-readonly -a COMMON_CATEGORIES=(general markdown repository adr)
-readonly -a LANGUAGE_PROFILES=(awk bash php python)
+readonly ARCHIVE="${DIST_ROOT}/coding-standards.tar.gz"
+readonly CHECKSUM="${ARCHIVE}.sha256"
 
 ## @fn die()
-## @brief Writes an error message and terminates bundle generation.
+## @brief Writes an error message and terminates archive generation.
 ## @details
 ## Centralizes fatal diagnostics so failed preconditions and validation errors use
 ## one predictable format.  The function does not attempt recovery because a
@@ -45,7 +43,7 @@ readonly -a LANGUAGE_PROFILES=(awk bash php python)
 ##
 ## @returns Nothing is written to STDOUT.
 ##
-## @retval 1 Bundle generation cannot continue.
+## @retval 1 Archive generation cannot continue.
 ##
 ## @par Examples
 ## @code
@@ -63,7 +61,7 @@ die() {
 ## @details
 ## Fails before publication work begins when a required build capability cannot be
 ## located through PATH.  This keeps missing-tool failures separate from archive
-## composition or validation failures.
+## construction or validation failures.
 ##
 ## @param command_name Command that must resolve through PATH.
 ##
@@ -114,7 +112,7 @@ require_command() {
 ##
 ## @par Examples
 ## @code
-## digest="$(sha256_file dist/coding-standards-bash.tar.gz)"
+## digest="$(sha256_file dist/coding-standards.tar.gz)"
 ## @endcode
 sha256_file() {
   local path=$1
@@ -131,55 +129,49 @@ sha256_file() {
   printf '%s\n' "${output%% *}"
 }
 
-## @fn copy_category()
-## @brief Copies one tracked standards category into a staging tree when present.
+## @fn cleanup_tree()
+## @brief Removes a build-owned temporary directory without broad path deletion.
 ## @details
-## Missing categories are intentionally ignored because anticipated common
-## categories such as Markdown or ADR standards may exist in the distribution
-## contract before their first tracked files are added.  A present category is
-## copied as one subtree without interpreting individual standards files.
+## Deletes only descendants of the exact temporary directory supplied by the
+## caller and then removes that directory itself.  The helper refuses empty or
+## root paths so cleanup cannot accidentally expand beyond build-owned state.
 ##
-## @param source_root Directory containing category subdirectories.
-## @param category Category name to copy.
-## @param destination_root Staging directory that receives the category.
+## @param path Temporary directory created by this script.
 ##
 ## @par STDIN
 ## Nothing is read from STDIN.
 ## @par STDOUT
 ## Nothing is written to STDOUT.
 ## @par STDERR
-## Filesystem diagnostics from `mkdir` or `cp` may be written when copying fails.
+## Filesystem diagnostics may be written if cleanup fails.
 ##
 ## @returns Nothing is written to STDOUT.
 ##
-## @retval 0 The category was copied or was absent from the source tree.
-## @note Non-zero statuses from filesystem commands may be propagated.
+## @retval 0 The directory was absent or was removed successfully.
+## @retval 1 The supplied path was empty or `/`.
+## @note Non-zero statuses from `find` or `rmdir` may be propagated.
 ##
 ## @par Examples
 ## @code
-## copy_category standards general /tmp/profile
+## cleanup_tree "${work_root}"
 ## @endcode
-copy_category() {
-  local source_root=$1
-  local category=$2
-  local destination_root=$3
-  local source_path="${source_root}/${category}"
+cleanup_tree() {
+  local path=$1
 
-  if [[ ! -d ${source_path} ]]; then
-    return 0
-  fi
+  [[ -n ${path} && ${path} != / ]] || return 1
+  [[ -d ${path} ]] || return 0
 
-  mkdir -p -- "${destination_root}"
-  cp -R -- "${source_path}" "${destination_root}/"
+  find "${path}" -depth -mindepth 1 -delete
+  rmdir -- "${path}"
 }
 
 ## @fn verify_source_tree()
-## @brief Verifies source-tree properties required for safe bundle creation.
+## @brief Verifies source-tree properties required for safe archive creation.
 ## @details
 ## Rejects symbolic links anywhere beneath the distributable standards root.
 ## Archives are intended to contain ordinary files and directories only; allowing
 ## links would enlarge the extraction boundary and could make the resulting tree
-## depend on paths outside the bundle.
+## depend on paths outside the archive.
 ##
 ## @par STDIN
 ## Nothing is read from STDIN.
@@ -204,16 +196,17 @@ verify_source_tree() {
   [[ -d ${STANDARDS_ROOT} ]] || die "standards root not found: ${STANDARDS_ROOT}"
 
   first_link="$(find "${STANDARDS_ROOT}" -type l -print -quit)"
-  [[ -z ${first_link} ]] || die "symbolic links are not permitted in standards: ${first_link}"
+  [[ -z ${first_link} ]] || \
+    die "symbolic links are not permitted in standards: ${first_link}"
 }
 
 ## @fn verify_archive()
-## @brief Validates path safety and archive-root shape for one generated bundle.
+## @brief Validates path safety and archive-root shape for the generated archive.
 ## @details
 ## Rejects absolute paths, parent-directory traversal, and an accidental outer
-## `standards/` directory.  This check is performed on every generated archive
-## before its checksum is published so the release artifact preserves the
-## materialization contract established by ADR-001.
+## `standards/` directory.  This check runs before the checksum is published so
+## the release artifact preserves the materialization contract established by
+## ADR-001.
 ##
 ## @param archive Generated `.tar.gz` archive to inspect.
 ##
@@ -232,7 +225,7 @@ verify_source_tree() {
 ##
 ## @par Examples
 ## @code
-## verify_archive dist/coding-standards-bash.tar.gz
+## verify_archive dist/coding-standards.tar.gz
 ## @endcode
 verify_archive() {
   local archive=$1
@@ -256,15 +249,13 @@ verify_archive() {
   done < <(tar -tzf "${archive}")
 }
 
-## @fn build_profile()
-## @brief Builds and verifies one standards profile archive.
+## @fn build_archive()
+## @brief Builds and verifies the complete standards release archive.
 ## @details
-## The `all` profile copies the complete distributable standards tree.  A language
-## profile copies each configured common category, the selected language category,
-## and examples corresponding to those same categories.  Staged permissions are
-## normalized before GNU tar and gzip create deterministic archive metadata.
+## Copies the complete distributable standards tree into an isolated staging
+## directory, normalizes permissions, creates deterministic tar and gzip metadata,
+## verifies the generated archive, and writes its SHA-256 checksum file.
 ##
-## @param profile Language profile name or `all`.
 ## @param work_root Temporary directory used for isolated staging.
 ##
 ## @par STDIN
@@ -281,36 +272,15 @@ verify_archive() {
 ##
 ## @par Examples
 ## @code
-## build_profile bash /tmp/coding-standards-build
+## build_archive /tmp/coding-standards-build
 ## @endcode
-build_profile() {
-  local profile=$1
-  local work_root=$2
-  local stage="${work_root}/${profile}"
-  local archive="${DIST_ROOT}/coding-standards-${profile}.tar.gz"
-  local checksum="${archive}.sha256"
-  local category
+build_archive() {
+  local work_root=$1
+  local stage="${work_root}/standards"
   local digest
 
-  rm -rf -- "${stage}"
   mkdir -p -- "${stage}"
-
-  if [[ ${profile} == all ]]; then
-    cp -R -- "${STANDARDS_ROOT}/." "${stage}/"
-  else
-    [[ -d ${STANDARDS_ROOT}/${profile} ]] || \
-      die "language profile has no standards directory: ${profile}"
-
-    for category in "${COMMON_CATEGORIES[@]}"; do
-      copy_category "${STANDARDS_ROOT}" "${category}" "${stage}"
-    done
-    copy_category "${STANDARDS_ROOT}" "${profile}" "${stage}"
-
-    for category in "${COMMON_CATEGORIES[@]}"; do
-      copy_category "${STANDARDS_ROOT}/examples" "${category}" "${stage}/examples"
-    done
-    copy_category "${STANDARDS_ROOT}/examples" "${profile}" "${stage}/examples"
-  fi
+  cp -R -- "${STANDARDS_ROOT}/." "${stage}/"
 
   find "${stage}" -type d -exec chmod 0755 {} +
   find "${stage}" -type f -exec chmod 0644 {} +
@@ -322,34 +292,33 @@ build_profile() {
     --group=0 \
     --numeric-owner \
     -cf - \
-    -C "${stage}" . | gzip -n >"${archive}"
+    -C "${stage}" . | gzip -n >"${ARCHIVE}"
 
-  verify_archive "${archive}"
+  verify_archive "${ARCHIVE}"
 
-  digest="$(sha256_file "${archive}")"
-  printf '%s  %s\n' "${digest}" "$(basename -- "${archive}")" >"${checksum}"
-  printf 'built %s\n' "${archive#"${REPOSITORY_ROOT}/"}"
+  digest="$(sha256_file "${ARCHIVE}")"
+  printf '%s  %s\n' "${digest}" "$(basename -- "${ARCHIVE}")" >"${CHECKSUM}"
+  printf 'built %s\n' "${ARCHIVE#"${REPOSITORY_ROOT}/"}"
 }
 
 ## @fn main()
-## @brief Validates the build environment and generates all governed bundles.
+## @brief Validates the build environment and generates the release archive.
 ## @details
-## Performs preflight checks before replacing the local `dist/` directory, stages
-## each language profile and the all-inclusive profile in an isolated temporary
-## tree, and removes temporary state after successful generation.  The command
-## accepts no arguments so release automation and local builds use one unambiguous
-## distribution definition.
+## Performs preflight checks, stages the complete standards tree in an isolated
+## temporary directory, generates one deterministic archive and checksum, and
+## removes temporary state after success.  The command accepts no arguments so
+## release automation and local builds use one unambiguous distribution definition.
 ##
 ## @par STDIN
 ## Nothing is read from STDIN.
 ## @par STDOUT
-## Writes one informational line for each generated profile archive.
+## Writes one informational line naming the generated archive.
 ## @par STDERR
 ## Validation and underlying command diagnostics may be written on failure.
 ##
-## @returns One informational line per generated bundle.
+## @returns One informational line naming the generated archive.
 ##
-## @retval 0 Every governed bundle and checksum was generated successfully.
+## @retval 0 The archive and checksum were generated successfully.
 ## @retval 1 A precondition or validation rule failed.
 ## @note Non-zero statuses from required build utilities may be propagated.
 ##
@@ -359,7 +328,6 @@ build_profile() {
 ## @endcode
 main() {
   local work_root
-  local profile
 
   (($# == 0)) || die 'usage: build-bundles.bash'
 
@@ -371,25 +339,23 @@ main() {
   require_command grep
   require_command mkdir
   require_command mktemp
-  require_command rm
+  require_command rmdir
   require_command tar
 
-  tar --version | grep -q 'GNU tar' || die 'GNU tar is required for deterministic bundles'
+  tar --version | grep -q 'GNU tar' || \
+    die 'GNU tar is required for deterministic archives'
 
   verify_source_tree
 
-  rm -rf -- "${DIST_ROOT}"
   mkdir -p -- "${DIST_ROOT}"
+  rm -f -- "${ARCHIVE}" "${CHECKSUM}"
 
   work_root="$(mktemp -d "${TMPDIR:-/tmp}/coding-standards.XXXXXX")"
-  trap 'rm -rf -- "${work_root}"' EXIT HUP INT TERM
+  trap 'cleanup_tree "${work_root}"' EXIT HUP INT TERM
 
-  for profile in "${LANGUAGE_PROFILES[@]}"; do
-    build_profile "${profile}" "${work_root}"
-  done
-  build_profile all "${work_root}"
+  build_archive "${work_root}"
 
-  rm -rf -- "${work_root}"
+  cleanup_tree "${work_root}"
   trap - EXIT HUP INT TERM
 }
 
