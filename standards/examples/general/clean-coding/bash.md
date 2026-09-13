@@ -3,7 +3,7 @@
 ## Purpose
 
 This document provides Bash examples illustrating the
-[Clean Coding Standard](../../../standards/general/clean-coding-standard.md).
+[Clean Coding Standard](../../../general/clean-coding-standard.md).
 
 The examples are illustrative rather than normative.  They demonstrate ways the
 general principles may be expressed in Bash, but they do not replace a Bash-specific
