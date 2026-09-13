@@ -16,7 +16,9 @@ Bashdeps intentionally operates at a lower level.  One dependency record identif
 
 The repository also originally stored examples in a top-level `examples/` tree parallel to `standards/`.  When the canonical standards are materialized into another repository, that layout naturally suggests `doc/examples/`, which can be mistaken for examples belonging to the consuming project.  The examples are examples *of the standards* and should travel with those standards under the same namespace.
 
-The standards are small text artifacts.  Optimizing for the minimum number of downloaded bytes is less important than making the adopted standards set explicit, versioned, reviewable, easy to update, and difficult to assemble incorrectly.
+Development environments used by coding agents may not have direct DNS or HTTPS access to GitHub even when the hosting product itself exposes a GitHub connector.  A local Bash process such as bashdeps cannot use that connector implicitly.  The standards therefore cannot depend on a network bootstrap occurring inside every agent container.  The materialized standards tree must be available from the consuming repository checkout itself.
+
+The standards are small text artifacts.  Optimizing for the minimum number of downloaded bytes is less important than making the adopted standards set explicit, versioned, reviewable, easy to update, available offline, and difficult to assemble incorrectly.
 
 ## Decision
 
@@ -171,13 +173,44 @@ The consumer's materialization step extracts into a temporary directory and repl
 A consuming repository may expose targets such as `standards` and `standards-check`.  The exact Make integration belongs to that repository, but the intended responsibilities are:
 
 - `standards`: synchronize the pinned archive with bashdeps, safely extract it into a fresh tree, and replace the prior `doc/standards/` tree;
-- `standards-check`: verify the pinned archive with bashdeps and verify that `doc/standards/` matches the contents of that archive.
+- `standards-check`: verify the pinned archive with bashdeps and verify that `doc/standards/` matches the contents of that archive when the archive is locally available.
+
+### Committed consumer snapshots and agent access
+
+The materialized `doc/standards/` tree is intended to be committed to the consuming repository rather than treated as an ephemeral build output.
+
+This is a deliberate part of the distribution model.  Coding-agent containers and other restricted development environments may be unable to resolve or contact GitHub directly.  A GitHub connector available to the hosting product is not automatically available to a local Bash process and therefore cannot be assumed to make bashdeps network-capable inside the container.
+
+The normal lifecycle is:
+
+```text
+networked maintainer workstation or CI
+    -> bashdeps acquires and verifies the pinned release archive
+    -> Make materializes a fresh doc/standards/ tree
+    -> the dependency declaration and materialized tree are reviewed and committed
+
+coding agent or offline developer
+    -> repository checkout already contains doc/standards/
+    -> no standards network bootstrap is required
+```
+
+Committing the materialized tree has several intentional properties:
+
+- coding agents can read governing standards before making changes, even without network access;
+- ordinary Git review shows exactly which standards text changes when a consumer adopts a new release;
+- the consuming repository remains self-contained after checkout;
+- a standards update remains an explicit repository change rather than an implicit remote dependency resolution; and
+- project instructions such as `AGENTS.md` can point directly at stable local paths.
+
+Consumers should therefore treat `doc/standards/` as externally managed but repository-tracked content.  Local edits to those files are not the mechanism for changing shared standards; changes belong in the canonical coding-standards repository and are adopted through a later released bundle.
+
+The verified archive itself does not have to be committed to the consuming repository.  A network-restricted container may consequently be unable to run a check that requires re-fetching a missing archive.  That limitation does not prevent normal development because the committed standards tree is already present.  Consumers that require fully offline re-verification may additionally retain the verified archive or an independently governed content manifest, but that is not required by this ADR.
 
 ### Source of truth
 
 The maintained files beneath `standards/` remain the canonical source of truth.  Generated archives, published checksum files, and materialized copies in consuming repositories are derivative artifacts.
 
-Changes to shared standards are made and reviewed in this repository, released here, and adopted explicitly by consumers by updating their pinned bundle version and committed digest.
+Changes to shared standards are made and reviewed in this repository, released here, and adopted explicitly by consumers by updating their pinned bundle version, committed digest, and committed materialized standards tree.
 
 ## Alternatives Considered
 
@@ -194,6 +227,12 @@ Direct per-file declarations remain technically possible, but they are not the r
 This would let a consumer fetch `standards-bash.txt` and then invoke bashdeps on the downloaded manifest.
 
 It was rejected because it creates a recursive dependency workflow, introduces version coordination between the bootstrap manifest and its referenced files, increases the number of network requests, and makes the consumer understand two acquisition stages.  It also turns a release profile into a list of implementation files instead of one reviewable artifact.
+
+### Require agents to fetch standards during each development session
+
+This would keep generated standards out of consuming repositories and ensure every agent started from a freshly acquired bundle.
+
+It was rejected because the local execution environment of an agent may not have DNS or HTTPS access to GitHub even when the surrounding product has connector-level repository access.  Bashdeps is an ordinary Bash program and cannot call a hosting product's GitHub connector.  Requiring network bootstrap would therefore make access to governing standards depend on an environmental capability unrelated to the repository itself.
 
 ### Add archive extraction to bashdeps
 
@@ -230,6 +269,8 @@ This was rejected because it reintroduces composition and version-skew problems 
 - Removed standards do not remain behind when consumers use fresh-tree materialization.
 - Release bundles can be reviewed, archived, mirrored, and verified independently of GitHub's raw-content interface.
 - The `all` profile gives multi-language repositories a coherent single-version standards set.
+- Committed materialized standards remain available to coding agents and offline developers without network access.
+- Standards updates produce ordinary, reviewable Git diffs in consuming repositories.
 
 ### Negative
 
@@ -238,6 +279,8 @@ This was rejected because it reintroduces composition and version-skew problems 
 - A change to any common standard changes every language bundle's bytes and therefore requires consumers adopting a new release to update their committed digest.
 - Language bundles contain some standards a particular project may not actively use, trading a small amount of extra text for a much simpler adoption model.
 - Release correctness now includes archive composition and deterministic-generation behavior.
+- Consumers commit derivative standards files, increasing repository size modestly and causing standards-update commits to include generated-tree changes.
+- Network-restricted containers cannot re-fetch a missing release archive solely with bashdeps, so re-materialization belongs on a network-capable maintainer system or CI runner.
 
 ## Compatibility and Migration
 
@@ -248,8 +291,9 @@ Migration consists of:
 1. selecting the appropriate language profile or `all` profile;
 2. replacing individual standards declarations with one declaration for the released archive;
 3. adding consumer-side materialization into `doc/standards/`;
-4. verifying the resulting tree against the selected archive; and
-5. removing obsolete individually managed standard files.
+4. verifying the resulting tree against the selected archive;
+5. committing the materialized `doc/standards/` tree together with the updated dependency declaration; and
+6. removing obsolete individually managed standard files.
 
 The source-tree move from top-level `examples/` to `standards/examples/` changes repository paths for examples.  Internal links and repository documentation must be updated as part of the same migration.
 
@@ -257,6 +301,8 @@ No compatibility promise is made that raw GitHub content URLs for individual fil
 
 ## Expected Outcome
 
-A repository adopting the Bash standards, for example, should be able to identify one released `coding-standards-bash.tar.gz` artifact, pin its exact digest with bashdeps, and materialize a complete standards environment beneath `doc/standards/` without knowing the individual file inventory of this repository.
+A repository adopting the Bash standards, for example, should be able to identify one released `coding-standards-bash.tar.gz` artifact, pin its exact digest with bashdeps, materialize a complete standards environment beneath `doc/standards/`, and commit that materialized tree without knowing the individual file inventory of this repository.
+
+A later coding-agent session should receive that standards environment as part of the normal repository checkout and should not need network access to GitHub before it can read the project's governing standards.
 
 The resulting consumer tree should make provenance obvious: normative standards and their illustrative examples live together beneath `doc/standards/`, while project-owned documentation and examples remain outside that managed namespace.
