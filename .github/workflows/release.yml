@@ -1,0 +1,39 @@
+name: Release Standards Bundles
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish standards bundles
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+
+      - name: Build and verify deterministic bundles
+        run: make dist-check
+
+      - name: Publish immutable release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            printf 'error: release %s already exists; publish a new version instead\n' \
+              "${GITHUB_REF_NAME}" >&2
+            exit 1
+          fi
+
+          gh release create "${GITHUB_REF_NAME}" \
+            --verify-tag \
+            --generate-notes \
+            dist/*.tar.gz \
+            dist/*.sha256
