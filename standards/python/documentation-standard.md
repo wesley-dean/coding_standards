@@ -654,7 +654,7 @@ If an example relies on omitted setup, make that omission obvious rather than
 presenting incomplete code as directly executable.
 
 A fuller illustrative module is available at
-[`examples/python/documentation/example.py`](../../examples/python/documentation/example.py).
+[`standards/examples/python/documentation/example.py`](../examples/python/documentation/example.py).
 The example is non-normative; this standard remains authoritative if the two ever
 disagree.
 
