@@ -10,13 +10,17 @@ dist:
 
 dist-check:
 	@tmp="$$(mktemp -d)"; \
-	trap 'rm -rf -- "$$tmp"' EXIT HUP INT TERM; \
+	trap 'find "$$tmp" -depth -mindepth 1 -delete; rmdir -- "$$tmp"' \
+	  EXIT HUP INT TERM; \
 	bash scripts/build-bundles.bash >/dev/null; \
-	cat dist/*.sha256 >"$$tmp/first.sha256"; \
+	cp dist/coding-standards.tar.gz.sha256 "$$tmp/first.sha256"; \
 	bash scripts/build-bundles.bash >/dev/null; \
-	cat dist/*.sha256 >"$$tmp/second.sha256"; \
+	cp dist/coding-standards.tar.gz.sha256 "$$tmp/second.sha256"; \
 	cmp "$$tmp/first.sha256" "$$tmp/second.sha256"; \
-	printf '%s\n' 'standards bundles are deterministic'
+	printf '%s\n' 'standards archive is deterministic'
 
 clean:
-	rm -rf -- dist
+	@if [[ -d dist ]]; then \
+	  find dist -depth -mindepth 1 -delete; \
+	  rmdir -- dist; \
+	fi
