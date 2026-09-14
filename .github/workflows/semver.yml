@@ -44,7 +44,7 @@ jobs:
 
       - name: Generate release notes
         id: release-notes
-        uses: RedCrafter07/release-notes-action@31674bfa3a219e7c6618f44dd2e27cc8bfbfda # pin@v1.0.1
+        uses: RedCrafter07/release-notes-action@31674bfa3a219e7c661fc0c5b7b3851c741b9965 # pin@v1.0.1
         with:
           tag-name: "v${{ steps.calculate-version.outputs.version-string }}"
           token: "${{ secrets.GITHUB_TOKEN }}"
