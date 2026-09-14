@@ -7,7 +7,7 @@ CHECKSUM := $(ARCHIVE).sha256
 
 .PHONY: all clean dist-check
 
-all:
+all: clean
 	@command -v tar >/dev/null 2>&1 || { printf '%s\n' 'GNU tar is required' >&2; exit 1; }
 	@tar --version | grep -q 'GNU tar' || { printf '%s\n' 'GNU tar is required' >&2; exit 1; }
 	@command -v gzip >/dev/null 2>&1 || { printf '%s\n' 'gzip is required' >&2; exit 1; }
@@ -58,10 +58,11 @@ dist-check:
 	@tmp="$$(mktemp -d "$${TMPDIR:-/tmp}/coding_standards-check.XXXXXX")"; \
 	trap 'find "$$tmp" -depth -mindepth 1 -delete; rmdir -- "$$tmp"' EXIT HUP INT TERM; \
 	$(MAKE) --no-print-directory all >/dev/null; \
+	cp "$(ARCHIVE)" "$$tmp/first.tar.gz"; \
 	cp "$(CHECKSUM)" "$$tmp/first.sha256"; \
 	$(MAKE) --no-print-directory all >/dev/null; \
-	cp "$(CHECKSUM)" "$$tmp/second.sha256"; \
-	cmp "$$tmp/first.sha256" "$$tmp/second.sha256"; \
+	cmp "$$tmp/first.tar.gz" "$(ARCHIVE)"; \
+	cmp "$$tmp/first.sha256" "$(CHECKSUM)"; \
 	printf '%s\n' 'standards archive is deterministic'
 
 clean:
