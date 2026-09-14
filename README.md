@@ -40,6 +40,7 @@ standards/
 ├── general/
 ├── awk/
 ├── bash/
+├── javascript/
 ├── php/
 ├── python/
 ├── markdown/
@@ -69,6 +70,7 @@ The repository includes standards covering areas such as:
 - Conventional Commit and release-versioning governance;
 - AWK documentation;
 - Bash documentation;
+- JavaScript documentation;
 - PHP documentation;
 - Python documentation;
 - Markdown;
@@ -87,6 +89,7 @@ filters maintained in separate repositories:
 - [bash-doxygen](https://github.com/wesley-dean/bash-doxygen)
 - [awk-doxygen](https://github.com/wesley-dean/awk-doxygen)
 - [python-doxygen](https://github.com/wesley-dean/python-doxygen)
+- [javascript-doxygen](https://github.com/wesley-dean/javascript-doxygen)
 
 The standards in this repository govern the documentation expectations.  Each
 filter repository separately governs its supported syntax, diagnostics, generated
@@ -110,6 +113,7 @@ A representative archive root is therefore:
 general/
 awk/
 bash/
+javascript/
 php/
 python/
 markdown/
@@ -313,7 +317,11 @@ Concise decision summaries are maintained in [doc/decisions.md](doc/decisions.md
 The current release and consumer-adoption contract is governed by
 [ADR-003](doc/adr/ADR-003-release-artifacts-and-agent-mediated-adoption.md).
 
-Earlier ADRs remain as superseded architectural history.
+Language-specific standards may have additional accepted decisions.  The
+JavaScript documentation standard is governed by
+[ADR-004](doc/adr/ADR-004-add-javascript-documentation-standard.md).
+
+Earlier superseded distribution ADRs remain as architectural history.
 
 ## Source of Truth
 
