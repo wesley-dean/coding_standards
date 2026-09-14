@@ -1,5 +1,9 @@
 # Decisions
 
+## JavaScript Documentation Standard
+
+ADR-004 adds a reusable JavaScript documentation standard based on JSDoc and establishes JSDoc comments as the maintained source of truth for projects that adopt it.  The canonical required-parameter form is `@param {Type} name - Description.`, while the source standard also covers broader JSDoc constructs independently of the current `javascript-doxygen` implementation boundary.  `javascript-doxygen` is the designated Doxygen input-filter project when translation is required, but that repository separately governs and tests the subset it actually translates.  TypeScript and TSDoc remain outside this decision.  See [ADR-004: Add a JavaScript Documentation Standard Based on JSDoc](adr/ADR-004-add-javascript-documentation-standard.md).
+
 ## Release Artifacts and Standards Adoption
 
 The repository publishes one complete standards release archive and one SHA-256 checksum for each version.  `make all` is the canonical build interface and creates `dist/coding_standards.tar.gz` plus `dist/coding_standards.tar.gz.sha256`; generated files beneath `dist/` are ignored and are not committed.  Consuming repositories adopt or refresh a concrete released version by replacing their managed `doc/standards/` tree, recording provenance in `.codingstandardrc`, updating repository-facing governance so applicable standards are mandatory, and proposing the complete change through a pull request.  Consumers do not need permanent standards-fetching machinery such as updater workflows, Bashdeps manifests, or Make synchronization targets.  See [ADR-003: Release Artifacts and Agent-Mediated Standards Adoption](adr/ADR-003-release-artifacts-and-agent-mediated-adoption.md).
