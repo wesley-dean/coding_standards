@@ -26,6 +26,14 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Build release artifacts
+        run: make all
+
+      - name: Verify release artifacts
+        run: |
+          test -f dist/coding_standards.tar.gz
+          test -f dist/coding_standards.tar.gz.sha256
+
       - name: calculate version
         id: calculate-version
         uses: bitshifted/git-auto-semver@c4e8f005e839f822325356f141939cf6c76b5701 # pin@v1
@@ -51,3 +59,6 @@ jobs:
           tag_name: "v${{ steps.calculate-version.outputs.version-string }}"
           draft: false
           prerelease: false
+          files: |
+            dist/coding_standards.tar.gz
+            dist/coding_standards.tar.gz.sha256
