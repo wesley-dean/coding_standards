@@ -26,6 +26,14 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Build release artifacts
+        run: make all
+
+      - name: Verify release artifacts
+        run: |
+          test -f dist/coding_standards.tar.gz
+          test -f dist/coding_standards.tar.gz.sha256
+
       - name: calculate version
         id: calculate-version
         uses: bitshifted/git-auto-semver@c4e8f005e839f822325356f141939cf6c76b5701 # pin@v1
@@ -36,7 +44,7 @@ jobs:
 
       - name: Generate release notes
         id: release-notes
-        uses: RedCrafter07/release-notes-action@31674bfa3a219e7c661fc0c5b7b3851c741b9965 # pin@v1.0.1
+        uses: RedCrafter07/release-notes-action@31674bfa3a219e7c6618f44dd2e27cc8bfbfda # pin@v1.0.1
         with:
           tag-name: "v${{ steps.calculate-version.outputs.version-string }}"
           token: "${{ secrets.GITHUB_TOKEN }}"
@@ -51,3 +59,6 @@ jobs:
           tag_name: "v${{ steps.calculate-version.outputs.version-string }}"
           draft: false
           prerelease: false
+          files: |
+            dist/coding_standards.tar.gz
+            dist/coding_standards.tar.gz.sha256
