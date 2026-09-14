@@ -40,16 +40,16 @@ all: clean
 	  --numeric-owner \
 	  -cf - \
 	  -C "$$tmp" . | gzip -n >"$$archive_tmp"; \
-	mv -- "$$archive_tmp" "$(ARCHIVE)"; \
 	if command -v sha256sum >/dev/null 2>&1; then \
-	  digest="$$(sha256sum -- "$(ARCHIVE)" | awk '{print $$1}')"; \
+	  digest="$$(sha256sum -- "$$archive_tmp" | awk '{print $$1}')"; \
 	elif command -v shasum >/dev/null 2>&1; then \
-	  digest="$$(shasum -a 256 -- "$(ARCHIVE)" | awk '{print $$1}')"; \
+	  digest="$$(shasum -a 256 -- "$$archive_tmp" | awk '{print $$1}')"; \
 	else \
 	  printf '%s\n' 'sha256sum or shasum -a 256 is required' >&2; \
 	  exit 1; \
 	fi; \
 	printf '%s  %s\n' "$$digest" 'coding_standards.tar.gz' >"$$checksum_tmp"; \
+	mv -- "$$archive_tmp" "$(ARCHIVE)"; \
 	mv -- "$$checksum_tmp" "$(CHECKSUM)"; \
 	cleanup; \
 	trap - EXIT HUP INT TERM
