@@ -7,10 +7,10 @@ Recommended repository governance
 ## Purpose
 
 This document defines repository-level governance for controlling development
-scope, capturing newly discovered ideas, and maintaining a reviewable backlog.
-Its purpose is to preserve task boundaries, planning visibility, and team-style
-engineering discipline even when a project is maintained by one person or worked
-on as a hobby.
+scope, capturing newly discovered ideas, structuring changes for review, and
+maintaining a reviewable backlog.  Its purpose is to preserve task boundaries,
+planning visibility, and team-style engineering discipline even when a project is
+maintained by one person or worked on as a hobby.
 
 Repositories adopting this document SHOULD treat it as governing policy unless a
 repository-specific ADR, policy, security process, or other explicit governance
@@ -26,7 +26,11 @@ This policy is intended to:
 - keep future work visible, prioritizable, and reviewable in the backlog;
 - make scope decisions explicit when reasonable people could classify an idea
   differently;
-- support small, cohesive pull requests and reviewable changes;
+- prefer surgical changes over opportunistic cleanup or expansion;
+- use small, focused commits as understandable review units;
+- collect related commits into cohesive, easily reviewed pull requests;
+- make pull request readiness an explicit project signal;
+- avoid stacked pull requests in repositories that use squash merging;
 - give humans and automated coding agents the same expectations for scope control;
   and
 - encourage professional team practices regardless of project size or staffing.
@@ -75,6 +79,31 @@ adjustments, error handling, and directly necessary supporting changes.
 
 Work MUST NOT be added merely because it is nearby, interesting, cleaner, or
 convenient while the relevant files are already being modified.
+
+## Surgical Changes
+
+Changes SHOULD be surgical: focused specifically on the request and the active
+task, with the smallest practical set of modifications needed to satisfy the
+established contract correctly.
+
+A surgical change is not necessarily a tiny change.  It is a change whose parts
+are all relevant to the task and whose scope can be explained coherently.
+Required tests, documentation, compatibility work, and supporting implementation
+remain appropriate when they are necessary to complete the task correctly.
+
+Contributors SHOULD avoid unrelated:
+
+- cleanup;
+- formatting churn;
+- renaming;
+- modernization;
+- dependency updates;
+- refactoring;
+- feature additions; and
+- architectural changes.
+
+When one of those changes is independently valuable but unnecessary to the active
+task, capture it in the backlog instead of expanding the implementation.
 
 ## New Ideas Discovered During Development
 
@@ -160,9 +189,37 @@ A backlog issue SHOULD describe the problem or desired outcome without premature
 committing the project to a particular implementation unless that implementation
 has already been decided through normal governance.
 
-## Relationship to Pull Requests
+## Commits
 
-A pull request SHOULD remain cohesive around its declared purpose.
+Implementation work SHOULD be divided into small, focused commits when doing so
+makes the development history easier to understand, inspect, review, test, or
+revise.
+
+Each commit SHOULD represent one coherent step in the implementation.  A commit
+should be understandable on its own within the context of the active task and
+should avoid mixing unrelated concerns merely to reduce the number of commits.
+
+Small commits are review structure, not a requirement to fragment naturally
+atomic changes.  A change that must move together to remain valid SHOULD remain
+cohesive.
+
+Repositories SHOULD follow their governing commit-message convention, including
+Conventional Commit requirements where applicable.
+
+Because adopting repositories use squash merges under this policy, intermediate
+commits primarily support development and review.  The final squash commit and its
+pull request title represent the integrated change on the target branch.
+
+## Pull Requests
+
+A pull request SHOULD remain cohesive around its declared purpose and SHOULD be
+sized so that another contributor can review it without reconstructing unrelated
+workstreams.
+
+Related focused commits SHOULD be collected into one sensible pull request when
+they collectively implement the same task.  Splitting one task across several pull
+requests solely to make each pull request smaller SHOULD be avoided when doing so
+creates ordering dependencies or obscures the complete change.
 
 Newly discovered backlog items SHOULD NOT be folded into the pull request merely to
 avoid opening another issue or future pull request.
@@ -174,6 +231,75 @@ intentionally deferred.
 A reviewer SHOULD be able to determine which requirements the pull request intends
 to satisfy without separating unrelated opportunistic changes from the primary
 work.
+
+## Draft and Ready-for-Review Lifecycle
+
+New pull requests SHOULD be opened in draft mode.
+
+Draft status communicates that implementation, verification, documentation,
+cleanup, or author review may still be in progress.  A draft pull request MAY be
+read, discussed, or inspected, but reviewers and maintainers SHOULD NOT interpret
+its existence as a request to perform final review or merge it.
+
+Transitioning a pull request from Draft to Ready for review is an explicit project
+signal.  Once marked Ready for review, the author is declaring that:
+
+- the requested work is complete for the intended scope;
+- the pull request description accurately represents the change;
+- required verification has been performed to the extent available;
+- known relevant documentation has been updated;
+- the pull request is ready for normal review; and
+- the pull request may be merged at any time once repository checks, review
+  requirements, and other merge gates are satisfied.
+
+A pull request SHOULD NOT be marked Ready for review merely to solicit preliminary
+feedback while substantial known implementation work remains.  Discussion during
+implementation belongs on the draft pull request, issue, or other project channel.
+
+If substantive new work makes a Ready pull request incomplete again, the pull
+request SHOULD return to draft status when the hosting platform and permissions
+permit it.
+
+## Squash Merges
+
+Repositories adopting this workflow SHOULD use squash merges unless explicit
+repository-specific governance establishes a different merge strategy.
+
+Under squash merging, the pull request is the primary integration unit.  The
+individual development commits remain useful for review and iteration, while the
+final squash commit provides one coherent target-branch change representing the
+completed pull request.
+
+The squash commit title MUST comply with the repository's governing release and
+commit-title conventions.  When Conventional Commit release governance applies,
+the pull request title and resulting squash commit MUST preserve the reviewed
+semantic classification of the complete change.
+
+## Do Not Stack Pull Requests
+
+Pull requests MUST NOT normally be stacked on top of unmerged pull requests.
+
+Each pull request SHOULD branch from and target the repository's normal integration
+branch, usually the default branch, so that it can be reviewed, tested, merged, or
+abandoned independently.
+
+A pull request SHOULD NOT depend on commits that exist only in another open pull
+request.  Such dependencies make the effective diff contingent on merge order,
+complicate review, obscure which pull request owns a change, and work against the
+single-integration-unit model created by squash merging.
+
+When later work genuinely depends on an unmerged pull request, prefer one of these
+approaches:
+
+1. wait for the prerequisite pull request to merge, then branch from the updated
+   integration branch;
+2. capture the dependent work in the backlog until the prerequisite is available;
+   or
+3. ask the maintainer when sequencing materially affects delivery or correctness.
+
+An explicit repository-specific workflow MAY permit stacked pull requests, but
+that exception SHOULD be deliberate and documented rather than inferred from
+convenience.
 
 ## Relationship to Architecture Decisions
 
@@ -245,21 +371,28 @@ When working on a repository, an agent SHOULD:
 
 1. identify the current task and its acceptance criteria before implementation;
 2. distinguish required supporting work from newly discovered independent work;
-3. avoid unrelated cleanup, feature additions, refactoring, or architectural
-   changes;
-4. capture valuable out-of-scope ideas as backlog issues when repository access
+3. prefer surgical changes that avoid unrelated cleanup, features, refactoring,
+   or architectural work;
+4. organize implementation into small, focused commits when that improves
+   inspectability and review;
+5. collect those commits into a cohesive pull request for the task;
+6. open new pull requests in draft mode;
+7. mark a pull request Ready for review only when it can be reviewed and merged at
+   any time once normal repository gates are satisfied;
+8. avoid stacking a pull request on another unmerged pull request;
+9. capture valuable out-of-scope ideas as backlog issues when repository access
    permits;
-5. link backlog issues to the context in which they were discovered when useful;
-6. ask when a material idea could reasonably belong either to the active task or
+10. link backlog issues to the context in which they were discovered when useful;
+11. ask when a material idea could reasonably belong either to the active task or
    to the backlog;
-7. prefer the narrower task boundary when clarification is unavailable and the
+12. prefer the narrower task boundary when clarification is unavailable and the
    task can be completed correctly without expansion;
-8. follow private security-reporting procedures instead of public issue creation
+13. follow private security-reporting procedures instead of public issue creation
    for sensitive findings;
-9. avoid assuming that a maintainer's hobby project permits lower process
+14. avoid assuming that a maintainer's hobby project permits lower process
    discipline; and
-10. preserve enough written context that another contributor or later agent can
-    understand why work was included, deferred, or separated.
+15. preserve enough written context that another contributor or later agent can
+   understand why work was included, deferred, or separated.
 
 An agent MUST NOT treat autonomy as permission to expand scope silently.
 
@@ -317,6 +450,26 @@ shared serialization abstraction may make the implementation substantially easie
 to maintain.  If the abstraction is a material design change and it is unclear
 whether it belongs in the task, ask before expanding the implementation.
 
+### Dependent Follow-Up Work
+
+Pull request A introduces a new manifest parser and has not yet merged.  A separate
+idea would add a reporting feature that depends on that parser.
+
+Do not branch pull request B from pull request A merely to begin the reporting
+feature immediately.  Record the reporting work in the backlog or wait for pull
+request A to merge, then create the follow-up branch from the updated integration
+branch.
+
+### Draft Pull Request
+
+An agent has implemented most of a task but still needs to finish tests and update
+usage documentation.  The pull request may remain open in draft mode so its work
+is visible and discussion can occur.
+
+Once the implementation, verification, and documentation are complete, the agent
+marks the pull request Ready for review.  That transition means a maintainer may
+review and merge it whenever the repository's normal gates permit.
+
 ### Security Finding
 
 Current task:
@@ -332,9 +485,14 @@ process and escalated according to that policy.
 
 ## Review Checklist
 
-Before completing or approving a pull request, reviewers SHOULD verify that:
+Before marking a pull request Ready for review or approving it, reviewers SHOULD
+verify that:
 
 - the change remains aligned with the declared task;
+- the implementation is surgical and avoids unrelated modifications;
+- commits are focused and understandable where multiple commits are used;
+- the pull request is cohesive and independently reviewable;
+- the pull request does not depend on an unmerged stacked pull request;
 - required supporting changes are distinguishable from unrelated improvements;
 - unrelated ideas discovered during development have not been silently included;
 - worthwhile deferred ideas have been captured in the backlog where appropriate;
@@ -342,7 +500,8 @@ Before completing or approving a pull request, reviewers SHOULD verify that:
 - security-sensitive findings were handled through the appropriate process;
 - architectural decisions were not smuggled into implementation without required
   governance; and
-- the resulting change is cohesive and independently reviewable.
+- Ready-for-review status accurately means the pull request can be reviewed and
+  merged once normal repository gates are satisfied.
 
 ## Repository Adoption
 
@@ -351,24 +510,35 @@ A repository adopting this policy SHOULD:
 1. maintain an issue tracker or equivalent visible backlog for deferred work;
 2. make the active task identifiable through issues, pull requests, maintainer
    instructions, or another reviewable mechanism;
-3. tell contributors and coding agents to preserve task boundaries;
+3. tell contributors and coding agents to preserve task boundaries and prefer
+   surgical changes;
 4. require clarification when material scope is ambiguous;
 5. maintain a security reporting path for findings that must not enter the public
    backlog;
-6. encourage pull requests that are cohesive around one declared purpose; and
-7. treat backlog hygiene as normal engineering work rather than optional project
-   administration.
+6. use small, focused commits where they improve development and review;
+7. collect related commits into cohesive pull requests;
+8. open pull requests in draft mode and use Ready for review as the explicit
+   review-and-merge signal;
+9. use squash merges unless repository-specific governance says otherwise;
+10. avoid stacked pull requests and branch new work from the normal integration
+    branch; and
+11. treat backlog hygiene as normal engineering work rather than optional project
+    administration.
 
 Repository-specific governance MAY define additional triage states, issue labels,
-project boards, planning workflows, or thresholds for when a new issue is required.
-Those refinements should preserve the core principle that independent development
-ideas remain visible and separately reviewable rather than being silently merged
-into unrelated work.
+project boards, planning workflows, merge requirements, or thresholds for when a
+new issue is required.  Those refinements should preserve the core principles that
+independent development ideas remain visible and separately reviewable, active
+changes stay focused, and pull request state communicates readiness clearly.
 
 ## Governing Principle
 
 The current task defines what is being changed now.  The backlog preserves what may
 be changed later.
+
+Make the current change surgical, organize it so another contributor can review it,
+and use the pull request lifecycle to communicate whether the work is still in
+progress or ready to merge.
 
 When a useful idea falls outside the current task, record it rather than losing it
 or silently expanding scope.  When the boundary is materially uncertain, ask.
