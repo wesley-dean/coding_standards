@@ -17,6 +17,31 @@ Changes to the standards, release packaging, or adoption contract should also
 follow the governing ADRs beneath `doc/adr/` and the decision summary in
 `doc/decisions.md`.
 
+## Issue Branches
+
+Work that addresses a tracked issue should use the branch created by Create Issue
+Branch when that branch is available.
+
+This repository configures Create Issue Branch to create issue branches
+immediately and to use its `full` branch naming scheme:
+
+```text
+issue-<issue-number>-<slugified-issue-title>
+```
+
+For example, issue 15 titled `Fix nasty bug!` produces a branch similar to:
+
+```text
+issue-15-Fix_nasty_bug
+```
+
+The branch is created asynchronously after the issue is opened and may not be
+visible immediately.  If an expected issue branch is not yet available, retry
+before creating a separate branch.
+
+Prefer the generated issue branch over creating a different branch for work that
+addresses that issue.
+
 ## Build Verification
 
 The canonical release-artifact build is:
