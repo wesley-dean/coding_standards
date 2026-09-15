@@ -68,6 +68,7 @@ The repository includes standards covering areas such as:
 - clean architecture;
 - clean coding;
 - Conventional Commit and release-versioning governance;
+- development workflow, scope, and backlog governance;
 - AWK documentation;
 - Bash documentation;
 - JavaScript documentation;
