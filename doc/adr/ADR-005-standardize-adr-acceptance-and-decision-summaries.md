@@ -69,3 +69,12 @@ ADR templates and contributor guidance that suggest alternate status values shou
 ## Relationship to Prior ADRs
 
 This decision does not supersede ADR-001 through ADR-004 as historical decisions.  ADR-001 and ADR-002 remain accepted decisions whose distribution approaches were later superseded by subsequent accepted ADRs.  Their status fields are normalized to `Accepted`, while their supersession relationships remain documented in their narrative and in `doc/decisions.md`.
+
+## Superseded By
+
+[ADR-006: Use an ADR Landing Page for the Current Decision Digest](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
+partially supersedes this decision.  ADR-005 continues to govern the `Accepted`
+status convention and the requirement to express supersession and related history
+in ADR narrative.  ADR-006 supersedes the requirement to maintain
+`doc/decisions.md` and the requirement that every ADR receive a maintained
+three-to-five-sentence summary.
