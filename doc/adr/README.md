@@ -41,7 +41,7 @@ See
 [ADR-004](ADR-004-add-javascript-documentation-standard.md)
 for the complete context, alternatives, and consequences.
 
-### ADR-005: Standardize ADR Acceptance and Decision Relationships
+### ADR-005: Standardize ADR Acceptance and Decision Summaries
 
 Every committed ADR uses `Accepted` as its status, including ADRs prepared in a
 pull request intended for merge.  Acceptance records that the repository adopted
