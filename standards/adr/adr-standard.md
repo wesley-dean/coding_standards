@@ -8,7 +8,7 @@ Recommended repository governance
 
 This standard defines how repositories record, accept, relate, summarize, and maintain Architecture Decision Records (ADRs).  It is intended for both human contributors and automated coding agents.
 
-The goals are to keep decision history explicit, make acceptance semantics unambiguous, preserve supersession history without overloading the ADR status field, and maintain a concise decision index that can be reviewed before implementation work begins.
+The goals are to keep decision history explicit, make acceptance semantics unambiguous, preserve supersession history without overloading the ADR status field, and maintain a concise current-decision digest that can be reviewed before implementation work begins.
 
 ## Applicability
 
@@ -76,66 +76,104 @@ For work intended to merge, the ADR and implementation belong to the same review
 The normal lifecycle is:
 
 1. draft or update the ADR with status `Accepted`;
-2. update the corresponding `doc/decisions.md` entry in the same change;
+2. review and update `doc/adr/README.md` when the change affects current governance;
 3. include implementation and documentation governed by that decision as appropriate;
 4. review the pull request as a whole; and
 5. treat merge of the pull request as acceptance of the ADR.
 
 If reviewers do not accept the decision, the pull request should remain unmerged, be revised, or be closed.  The repository should not merge an ADR as `Proposed` with the expectation that a later mechanical status change will make the decision authoritative.
 
-## Decision Summary Index
+## ADR Landing Page
 
 A repository that contains ADRs MUST maintain:
 
 ```text
-doc/decisions.md
+doc/adr/README.md
 ```
 
-`doc/decisions.md` is a concise navigation and orientation layer over the complete ADR record.  It does not replace the ADRs themselves.
+The landing page serves two distinct purposes:
 
-Each ADR MUST have a corresponding summary entry in `doc/decisions.md`.  Each entry SHOULD generally contain three to five sentences that provide enough context for a reader to understand the decision before following the ADR link.
+1. it provides a curated digest of decisions that continue to govern current work in whole or in material part; and
+2. it provides access to the complete ADR corpus, including fully superseded historical decisions.
 
-A useful summary normally includes:
+The landing page does not replace the ADRs themselves.
 
-- the problem or context that caused the decision to be made;
-- the decision or governing rule that resulted;
+### Current Decisions
+
+The maintained portion of `doc/adr/README.md` MUST contain a `Current Decisions` section.  Each accepted decision that continues to govern the repository in whole or in material part MUST have a corresponding digest entry.
+
+Each current-decision entry SHOULD generally contain three to five sentences that provide enough context for a reader to understand the present architectural commitment before following the ADR link.
+
+A useful current-decision entry normally includes:
+
+- the current decision or governing rule;
+- enough reasoning to explain why that rule matters to present work;
 - an important consequence, constraint, or implementation implication; and
-- any important relationship to a later or earlier ADR.
+- any important relationship to another ADR that changes how the decision currently applies.
 
-Each summary entry MUST include a direct reference to its governing ADR.
+Each entry MUST include a direct reference to its governing ADR.
 
-If an ADR is superseded, refined, narrowed, or otherwise changed by another ADR, the relevant `doc/decisions.md` summaries MUST be updated so the relationship is visible without requiring the reader to discover it accidentally.
+A fully superseded historical ADR does not require an entry in `Current Decisions`.  It remains preserved in the repository and discoverable through the complete ADR inventory.
 
-## Maintaining `doc/decisions.md`
+When a decision remains partly applicable, its digest entry SHOULD describe the portion that continues to govern and identify the later ADR that refined, narrowed, or superseded the rest.
 
-Adding an ADR requires adding its decision summary in the same pull request.
+### Maintained and Generated Content
 
-Materially changing an ADR requires reviewing and, when necessary, updating its decision summary in the same pull request.
+The landing page MUST use the marker:
 
-Adding a new ADR that supersedes or refines an earlier ADR requires updating the summaries for both the new decision and any earlier decision whose current interpretation changed.
+```text
+<!-- adrctl-generated-footer -->
+```
 
-Agents and contributors MUST NOT treat `doc/decisions.md` as a write-once historical artifact.  It is maintained documentation of the repository's decision graph and should remain synchronized with the ADR set.
+to separate maintained project knowledge from the complete ADR inventory.
+
+Everything above the marker is curated project documentation.  Everything below the marker is reserved for the complete ADR inventory and MAY be regenerated mechanically from the ADR corpus.
+
+Repositories using `adrctl` SHOULD generate the inventory with:
+
+```bash
+adrctl.bash generate toc
+```
+
+Equivalent tooling MAY be used when it produces a complete inventory of the ADR corpus.  Inventory tooling MUST preserve the maintained content above the marker and MUST fail rather than append blindly when the marker cannot be found.
+
+The generated or mechanically maintained inventory is exhaustive.  The curated `Current Decisions` section is intentionally selective.
+
+## Maintaining the Current-Decision Digest
+
+Adding an ADR requires reviewing whether the new decision belongs in `Current Decisions`.
+
+Materially changing an ADR requires reviewing and, when necessary, updating its current-decision entry in the same pull request.
+
+Adding a new ADR that supersedes or refines an earlier ADR requires reviewing the digest entries for both the new decision and every earlier decision whose current applicability changed.
+
+A fully superseded decision SHOULD be removed from `Current Decisions` once the later ADR governs the relevant subject completely.  Removing the digest entry MUST NOT delete or rewrite the historical ADR itself.
+
+Agents and contributors MUST NOT treat the landing page as a write-once historical artifact.  The maintained portion is current project governance and should remain synchronized with what actually governs.
 
 A repository-wide ADR review SHOULD verify that:
 
 - every ADR status is `Accepted`;
-- every ADR has a `doc/decisions.md` entry;
-- every decision summary references its ADR;
-- summaries are generally three to five sentences rather than title-only index entries;
+- every currently governing decision is represented in `Current Decisions`;
+- every current-decision entry references its ADR;
+- digest entries are generally three to five sentences rather than title-only index entries;
+- fully superseded decisions remain in the complete inventory without requiring current-decision entries;
+- partial supersession is reflected accurately in both ADR narrative and the current digest;
 - supersession and related-decision relationships are represented in narrative form; and
 - no current guidance incorrectly depends on `Proposed`, `Superseded`, or another alternate ADR status.
 
 ## Guidance for Automated Tools and Agents
 
-Before consequential repository work, an agent SHOULD read `doc/decisions.md` and the ADRs relevant to the requested change.
+Before consequential repository work, an agent SHOULD read `doc/adr/README.md` and the ADRs relevant to the requested change.  The current-decision digest provides an initial orientation layer; linked ADRs remain authoritative for the complete reasoning, scope, alternatives, and consequences.
 
 When an agent creates or materially changes an ADR, it MUST:
 
 1. use `Accepted` as the ADR status;
 2. record supersession or related-decision information in narrative sections;
-3. update `doc/decisions.md` in the same change;
-4. keep the summary to roughly three to five useful sentences unless additional context is genuinely necessary; and
-5. include a direct reference from the summary to the ADR.
+3. review and update `doc/adr/README.md` in the same change when current governance changes;
+4. keep each affected current-decision entry to roughly three to five useful sentences unless additional context is genuinely necessary;
+5. include a direct reference from each current-decision entry to its ADR; and
+6. preserve or regenerate the complete ADR inventory below `<!-- adrctl-generated-footer -->`.
 
 An agent MUST NOT create a follow-up pull request whose sole purpose is to change an ADR from `Proposed` to `Accepted` after the governing pull request has already been merged.
 
@@ -145,12 +183,14 @@ Before merging a pull request that adds or changes ADR governance, verify:
 
 - [ ] Every affected ADR says `Accepted` under `## Status`.
 - [ ] Supersession, replacement, or deprecation relationships are preserved in narrative form.
-- [ ] Every new ADR has a `doc/decisions.md` summary.
-- [ ] Every materially changed ADR has had its decision summary reviewed and updated where necessary.
-- [ ] Each summary is generally three to five sentences and links directly to its ADR.
-- [ ] Earlier summaries affected by a new superseding or refining decision have also been updated.
+- [ ] `doc/adr/README.md` accurately represents every decision that continues to govern current work.
+- [ ] Every affected current-decision entry has been reviewed and updated where necessary.
+- [ ] Each current-decision entry is generally three to five sentences and links directly to its ADR.
+- [ ] Fully superseded ADRs remain preserved and discoverable in the complete inventory.
+- [ ] Partial supersession is reflected accurately in both the ADR narrative and current-decision digest.
+- [ ] The maintained/generated ownership marker is present and the complete ADR inventory remains below it.
 - [ ] The pull request is sufficient to treat merge as acceptance of every ADR it introduces or materially changes.
 
 ## Governing Principle
 
-An ADR records an accepted decision and remains part of the repository's decision history.  Later decisions may change what governs now, but they do not erase the fact that an earlier decision was accepted.  Keep acceptance in the status field, keep evolution in the narrative, and keep `doc/decisions.md` synchronized so the decision history remains usable.
+An ADR records an accepted decision and remains part of the repository's decision history.  Later decisions may change what governs now, but they do not erase the fact that an earlier decision was accepted.  Keep acceptance in the status field, keep evolution in the narrative, keep current governance in `doc/adr/README.md`, and keep the complete historical corpus discoverable beneath the same landing page.

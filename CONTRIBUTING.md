@@ -14,8 +14,8 @@ To ensure a welcoming environment for all of our project, I request that
 all contributors should adhere to the [code of conduct](CODE_OF_CONDUCT.md).
 
 Changes to the standards, release packaging, or adoption contract should also
-follow the governing ADRs beneath `doc/adr/` and the decision summary in
-`doc/decisions.md`.
+follow the governing ADRs beneath `doc/adr/` and the current-decision digest in
+[`doc/adr/README.md`](doc/adr/README.md).
 
 ## Issue Branches
 

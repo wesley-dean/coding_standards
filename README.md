@@ -313,7 +313,9 @@ of adoption operation being proposed.
 ## Governance
 
 Consequential repository decisions are recorded as ADRs beneath `doc/adr/`.
-Concise decision summaries are maintained in [doc/decisions.md](doc/decisions.md).
+The curated digest of decisions that currently govern is maintained in
+[doc/adr/README.md](doc/adr/README.md), which also provides access to the complete
+ADR corpus.
 
 The current release and consumer-adoption contract is governed by
 [ADR-003](doc/adr/ADR-003-release-artifacts-and-agent-mediated-adoption.md).
@@ -321,6 +323,11 @@ The current release and consumer-adoption contract is governed by
 Language-specific standards may have additional accepted decisions.  The
 JavaScript documentation standard is governed by
 [ADR-004](doc/adr/ADR-004-add-javascript-documentation-standard.md).
+
+ADR acceptance semantics and narrative decision relationships are governed by
+[ADR-005](doc/adr/ADR-005-standardize-adr-acceptance-and-decision-summaries.md).
+The current-decision landing-page model is governed by
+[ADR-006](doc/adr/ADR-006-use-adr-landing-page-for-current-decision-digest.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
 
