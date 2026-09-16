@@ -2,7 +2,7 @@
 
 ## Status
 
-Superseded by [ADR-002: Use One Standards Archive and a Consumer Update Workflow](ADR-002-single-archive-consumer-workflow.md).
+Accepted
 
 ## Context
 
@@ -40,7 +40,9 @@ unused language does not make those standards applicable to a repository.
 Applicability is a governance question for the consumer rather than a packaging
 question.
 
-ADR-002 therefore replaced profile-specific archives with one complete release
-archive and moved consumer updates away from Bashdeps-driven materialization.
-The repository's current distribution and adoption contract is governed by the
-latest accepted ADR in this series.
+ADR-002 therefore superseded this decision by replacing profile-specific archives
+with one complete release archive and moving consumer updates away from
+Bashdeps-driven materialization.  This ADR remains an accepted historical decision;
+its supersession changes what currently governs without changing the fact that the
+decision was accepted when made.  The repository's current distribution and
+adoption contract is governed by the latest accepted ADR in this series.

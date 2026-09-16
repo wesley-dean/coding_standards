@@ -2,7 +2,7 @@
 
 ## Status
 
-Superseded by [ADR-003: Release Artifacts and Agent-Mediated Standards Adoption](ADR-003-release-artifacts-and-agent-mediated-adoption.md).
+Accepted
 
 ## Supersedes
 
@@ -53,8 +53,10 @@ coding agent can perform the update externally and propose the same reviewable P
 without carrying a permanent downloader, workflow, Make target, or standards
 manifest in every consumer.
 
-ADR-003 therefore retains the single complete release archive and committed
-consumer snapshot while replacing the consumer-installed updater with an
-agent- or maintainer-mediated adoption protocol.  It also defines the current
-release artifact names, `.codingstandardrc`, and the requirement that applicable
-standards be treated as governance rather than suggestions.
+ADR-003 therefore superseded this decision while retaining the single complete
+release archive and committed consumer snapshot.  ADR-003 replaces the
+consumer-installed updater with an agent- or maintainer-mediated adoption protocol
+and defines the current release artifact names, `.codingstandardrc`, and the
+requirement that applicable standards be treated as governance rather than
+suggestions.  This ADR remains an accepted historical decision even though ADR-003
+now governs the current adoption model.
