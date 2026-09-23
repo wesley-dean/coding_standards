@@ -63,7 +63,24 @@ curated digest of decisions that continue to govern current work.  Current
 decision entries generally contain three to five sentences and link to the full
 ADR, while fully superseded decisions remain discoverable through the complete
 inventory instead of occupying the maintained digest.  The
-`<!-- adrctl-generated-footer -->` marker separates curated project knowledge
+`### ADR-007: Adopt General Testing and Bats Driver Standards
+
+The standards library defines one cross-language testing model centered on
+deterministic observable behavior, canonical repository-level test entry points,
+direct validation of generated artifacts, explicit failure semantics, and
+maintained test code.  A Bash-specific refinement treats Bats as a black-box
+process driver that may test Bash, AWK, Python, compiled tools, Doxygen, or other
+command-line subjects, while preserving TAP as the canonical Bats console stream
+and allowing JUnit to be generated from the same execution.  Structured reports
+are disposable state beneath `test-results/`, and privileged GitHub publication
+is separated from pull-request code execution so richer review feedback does not
+weaken the validation trust boundary.
+
+See
+[ADR-007](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
+for the complete context, alternatives, and consequences.
+
+<!-- adrctl-generated-footer -->` marker separates curated project knowledge
 from inventory content that may be regenerated mechanically.  This model
 supersedes ADR-005's requirement for a separate `doc/decisions.md` summary of
 every ADR.
@@ -87,3 +104,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-004: Add a JavaScript Documentation Standard Based on JSDoc](ADR-004-add-javascript-documentation-standard.md)
 - [ADR-005: Standardize ADR Acceptance and Decision Summaries](ADR-005-standardize-adr-acceptance-and-decision-summaries.md)
 - [ADR-006: Use an ADR Landing Page for the Current Decision Digest](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
+- [ADR-007: Adopt General Testing and Bats Driver Standards](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
