@@ -63,7 +63,21 @@ curated digest of decisions that continue to govern current work.  Current
 decision entries generally contain three to five sentences and link to the full
 ADR, while fully superseded decisions remain discoverable through the complete
 inventory instead of occupying the maintained digest.  The
-`### ADR-007: Adopt General Testing and Bats Driver Standards
+`<!-- adrctl-generated-footer -->` marker separates curated project knowledge
+from inventory content that may be regenerated mechanically.  This model
+supersedes ADR-005's requirement for a separate `doc/decisions.md` summary of
+every ADR.
+
+See
+[ADR-006](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
+for the complete context, alternatives, and consequences.
+
+The content above the marker below is maintained project knowledge.  The content
+below it is the complete ADR inventory and may be regenerated from the corpus.
+Automation that refreshes the inventory must preserve the maintained content and
+must fail rather than append blindly when the marker is missing.
+
+### ADR-007: Adopt General Testing and Bats Driver Standards
 
 The standards library defines one cross-language testing model centered on
 deterministic observable behavior, canonical repository-level test entry points,
@@ -79,20 +93,6 @@ weaken the validation trust boundary.
 See
 [ADR-007](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
 for the complete context, alternatives, and consequences.
-
-<!-- adrctl-generated-footer -->` marker separates curated project knowledge
-from inventory content that may be regenerated mechanically.  This model
-supersedes ADR-005's requirement for a separate `doc/decisions.md` summary of
-every ADR.
-
-See
-[ADR-006](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
-for the complete context, alternatives, and consequences.
-
-The content above the marker below is maintained project knowledge.  The content
-below it is the complete ADR inventory and may be regenerated from the corpus.
-Automation that refreshes the inventory must preserve the maintained content and
-must fail rather than append blindly when the marker is missing.
 
 <!-- adrctl-generated-footer -->
 
