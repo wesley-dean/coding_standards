@@ -69,8 +69,10 @@ The repository includes standards covering areas such as:
 - clean coding;
 - Conventional Commit and release-versioning governance;
 - development workflow, scope, and backlog governance;
+- cross-language testing, CI reporting, and test-result publication;
 - AWK documentation;
 - Bash documentation;
+- Bash/Bats behavioral testing, including Bats as a cross-language black-box driver;
 - JavaScript documentation;
 - PHP documentation;
 - Python documentation;
@@ -328,6 +330,8 @@ ADR acceptance semantics and narrative decision relationships are governed by
 [ADR-005](doc/adr/ADR-005-standardize-adr-acceptance-and-decision-summaries.md).
 The current-decision landing-page model is governed by
 [ADR-006](doc/adr/ADR-006-use-adr-landing-page-for-current-decision-digest.md).
+The shared testing model and Bash/Bats refinement are governed by
+[ADR-007](doc/adr/ADR-007-adopt-general-testing-and-bats-driver-standards.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
 

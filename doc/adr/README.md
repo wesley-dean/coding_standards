@@ -72,6 +72,23 @@ See
 [ADR-006](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
 for the complete context, alternatives, and consequences.
 
+### ADR-007: Adopt General Testing and Bats Driver Standards
+
+The standards library defines one cross-language testing model centered on
+deterministic observable behavior, canonical repository-level test entry points,
+direct validation of generated artifacts, explicit failure semantics, and
+maintained test code.  A Bash-specific refinement treats Bats as a black-box
+process driver that may test Bash, AWK, Python, compiled tools, Doxygen, or other
+command-line subjects, while preserving TAP as the canonical Bats console stream
+and allowing JUnit to be generated from the same execution.  Structured reports
+are disposable state beneath `test-results/`, and privileged GitHub publication
+is separated from pull-request code execution so richer review feedback does not
+weaken the validation trust boundary.
+
+See
+[ADR-007](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
+for the complete context, alternatives, and consequences.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -87,3 +104,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-004: Add a JavaScript Documentation Standard Based on JSDoc](ADR-004-add-javascript-documentation-standard.md)
 - [ADR-005: Standardize ADR Acceptance and Decision Summaries](ADR-005-standardize-adr-acceptance-and-decision-summaries.md)
 - [ADR-006: Use an ADR Landing Page for the Current Decision Digest](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
+- [ADR-007: Adopt General Testing and Bats Driver Standards](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
