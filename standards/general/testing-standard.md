@@ -20,8 +20,10 @@ with continuous-integration systems.
 This standard applies to repositories that maintain automated tests.
 
 Language- or framework-specific testing standards MAY refine these rules.
-Repository-specific ADRs or explicit policy MAY also refine them, but deviations
-MUST be visible governance rather than silent exceptions.
+The [Bash Testing Standard](../bash/testing-standard.md) defines Bats-specific
+practice when that framework is used.  Repository-specific ADRs or explicit
+policy MAY also refine these rules, but deviations MUST be visible governance
+rather than silent exceptions.
 
 Not every repository requires every category of test described here.  The
 appropriate test surface follows the software's risks, public contracts,
