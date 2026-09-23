@@ -30,6 +30,19 @@ standards continue to govern the subject under test.
 Repository-specific ADRs MAY preserve a different test framework or reporting
 contract when that decision remains appropriate.
 
+## Bats Version Compatibility
+
+A repository using Bats SHOULD declare, pin, or otherwise verify a version that
+supports the framework features its suite relies on.
+
+This standard does not mandate one global Bats version.  Repositories using
+features such as `bats_test_function`, expected-status forms of `run`, console
+and report formatters, or other version-sensitive behavior SHOULD ensure that
+local development and CI resolve a compatible version.
+
+A suite SHOULD fail clearly when a required framework capability is unavailable
+rather than silently degrade to different reporting or execution semantics.
+
 ## Bats as a Black-Box Driver
 
 Bats SHOULD be considered a process-oriented test driver rather than a Bash-only
@@ -366,3 +379,7 @@ repository contains Bash.  Keep TAP human- and automation-readable, derive JUnit
 without a second execution, preserve observable fixture contracts, and let the
 same black-box testing vocabulary apply to any command-line subject that Bats can
 exercise cleanly.
+
+See the non-normative
+[dynamic Bats example](../examples/bash/testing/example.bats) for one compact
+artifact-matrix pattern.
