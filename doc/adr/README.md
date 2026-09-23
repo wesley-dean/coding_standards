@@ -72,11 +72,6 @@ See
 [ADR-006](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
 for the complete context, alternatives, and consequences.
 
-The content above the marker below is maintained project knowledge.  The content
-below it is the complete ADR inventory and may be regenerated from the corpus.
-Automation that refreshes the inventory must preserve the maintained content and
-must fail rather than append blindly when the marker is missing.
-
 ### ADR-007: Adopt General Testing and Bats Driver Standards
 
 The standards library defines one cross-language testing model centered on
@@ -93,6 +88,11 @@ weaken the validation trust boundary.
 See
 [ADR-007](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
 for the complete context, alternatives, and consequences.
+
+The content above the marker below is maintained project knowledge.  The content
+below it is the complete ADR inventory and may be regenerated from the corpus.
+Automation that refreshes the inventory must preserve the maintained content and
+must fail rather than append blindly when the marker is missing.
 
 <!-- adrctl-generated-footer -->
 
