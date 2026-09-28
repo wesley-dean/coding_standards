@@ -76,6 +76,8 @@ The repository includes standards covering areas such as:
 - Conventional Commit and release-versioning governance;
 - development workflow, scope, and backlog governance;
 - cross-language testing, CI reporting, and test-result publication;
+- AI safety centered on model fallibility, evidence, uncertainty, and deterministic
+  mediation of consequential side effects;
 - zero-trust security organized through the IDEA framework for Identity Management,
   Disclosure, Engineering, and Architecture, with stable security commandments and
   a semantic requirements index for reference consumption;
@@ -349,6 +351,10 @@ The shared testing model and Bash/Bats refinement are governed by
 The general security corpus, broadened zero-trust model, and IDEA framework are
 governed by
 [ADR-008](doc/adr/ADR-008-adopt-idea-zero-trust-security-framework.md).
+The reusable template corpus is governed by
+[ADR-009](doc/adr/ADR-009-add-reusable-reference-templates.md).
+The cross-cutting AI safety model is governed by
+[ADR-010](doc/adr/ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
 

@@ -127,6 +127,24 @@ See
 [ADR-009](ADR-009-add-reusable-reference-templates.md)
 for the complete context, alternatives, and consequences.
 
+### ADR-010: Adopt an AI Safety Standard Focused on Model Fallibility
+
+AI-assisted engineering treats model output as fallible and distinguishes
+observation, inference, assumption, recommendation, and uncertainty so plausible
+language does not silently become evidence.  Material claims are verified
+proportionately to consequence, current state is refreshed when freshness matters,
+and fabricated claims of tests, inspection, or tool execution are prohibited.
+Consequential network, filesystem, process, credential, publication, deployment,
+and mutation effects should cross deterministic validation and authorization
+boundaries rather than be owned directly by the AI reasoning component.  The
+standard complements the existing security, testing, and workflow standards while
+keeping human judgment focused on decisions that cannot be established
+mechanically.
+
+See
+[ADR-010](ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md)
+for the complete context, alternatives, and consequences.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -145,3 +163,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-007: Adopt General Testing and Bats Driver Standards](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
 - [ADR-008: Adopt the IDEA Zero Trust Security Framework](ADR-008-adopt-idea-zero-trust-security-framework.md)
 - [ADR-009: Add Reusable Reference Templates](ADR-009-add-reusable-reference-templates.md)
+- [ADR-010: Adopt an AI Safety Standard Focused on Model Fallibility](ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md)

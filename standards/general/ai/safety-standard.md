@@ -553,7 +553,16 @@ semantics.
 This standard adds AI-specific guidance about what should be verified and how
 model-generated conclusions should relate to evidence.
 
+## Examples
+
+The non-normative
+[AI Safety Examples](../../examples/general/ai/safety.md)
+show how these principles apply to hallucination, stale state, source grounding,
+deterministic network and filesystem mediation, constrained process execution,
+publication boundaries, capability expansion, and human judgment.
+
 ## Review Checklist
+
 
 Before relying on AI-assisted work for a material engineering outcome, review as
 applicable:
