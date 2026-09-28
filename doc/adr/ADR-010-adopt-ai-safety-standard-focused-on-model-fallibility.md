@@ -50,6 +50,11 @@ consequential effects.
 - Keep AI reasoning distinct from authorization and execution authority.
 - Prefer deterministic mediation for network, filesystem, process, credential,
   publication, deployment, and other consequential side effects.
+- Express AI-requested effects through narrow semantic operations rather than
+  unnecessarily broad destructive primitives.
+- Validate material mutation preconditions, postconditions, and resulting diffs.
+- Treat behavioral instructions as guidance rather than enforcement of technical
+  safety properties.
 - Keep AI capabilities narrow and prevent self-expansion of authority.
 - Preserve existing ownership boundaries in the security, testing, workflow, and
   ADR standards.
@@ -147,9 +152,18 @@ The preferred architecture SHALL distinguish:
 An AI's ability to request an operation SHALL NOT grant the technical capability
 or policy authorization to perform it.
 
+Behavioral instructions to the model SHALL NOT be treated as enforcement of a
+safety property when violation could have material consequences.  Technical
+capability boundaries, validation, authorization, or deterministic mediation
+SHOULD enforce those properties outside the AI reasoning component.
+
+AI-facing operations SHOULD express semantic intent at the narrowest practical
+level.  When a narrow semantic operation can express a requested effect, the AI
+SHALL NOT require a broader destructive primitive solely for convenience.
+
 ### Network Capability
 
-AI reasoning components SHOULD NOT possess general network capability.
+AI reasoning components SHALL NOT initiate arbitrary network connections directly.
 
 When network access is required, deterministic mediation SHOULD constrain
 protocol, destination, method, authentication, TLS validation, redirects, timeouts,
@@ -158,23 +172,34 @@ as data.
 
 ### Filesystem Capability
 
-AI reasoning components SHOULD NOT possess unrestricted filesystem read or write
-authority when narrower deterministic interfaces can provide the required
-operation.
+AI reasoning components SHALL NOT possess unrestricted filesystem access when
+narrower deterministic interfaces can provide the required read or mutation.
 
 Filesystem mediation SHOULD constrain allowed roots, target paths, traversal,
 symbolic links, file types, sizes, overwrite behavior, permissions, and other
 relevant filesystem properties.
 
+Filesystem mutations SHOULD use semantic operations, validated patches, or other
+narrow requests rather than arbitrary shell redirection or whole-file replacement
+when a narrower operation can express the intent.
+
+Material filesystem mutations SHOULD carry preconditions that establish expected
+current state and postconditions that verify the requested outcome.
+
+Repository mutations SHOULD validate the resulting diff before commit,
+publication, merge, deployment, or other consequential use.
+
 ### Process Capability
 
-AI reasoning components SHOULD NOT receive unrestricted shell execution when
-named deterministic operations or constrained executors can express the required
-work.
+AI reasoning components SHALL NOT receive unrestricted shell execution when named
+deterministic operations or constrained executors can express the required work.
 
 Deterministic execution SHOULD prefer fixed executables, explicit argument vectors,
 constrained working directories, minimal environment, timeouts, resource limits,
 and explicit exit-status handling.
+
+General-purpose destructive primitives SHOULD remain behind deterministic
+interfaces when narrower semantic operations are available.
 
 ### Credentials and External Mutation
 
@@ -187,6 +212,9 @@ credential itself.
 Publication, deployment, merge, release, repository mutation, infrastructure
 change, account mutation, and similar consequential effects SHOULD cross
 deterministic validation and authorization boundaries.
+
+Successful execution of the low-level operation SHALL NOT by itself be treated as
+proof that the requested semantic transformation was correct.
 
 ### Capability Expansion
 
@@ -317,6 +345,11 @@ corpus grows enough to benefit from them.
   side effects.
 - Broad network, filesystem, shell, credential, and mutation capability is
   discouraged in favor of narrow mediated interfaces.
+- Semantic operations reduce the chance that a mistaken implementation primitive
+  can produce effects much broader than the user's request.
+- Preconditions, postconditions, and diff validation can detect stale state,
+  truncation, unintended replacement, and unrelated mutation before consequential
+  use.
 - Existing security, testing, workflow, and ADR governance remains authoritative
   rather than being duplicated.
 - Human judgment remains focused where judgment is actually required.

@@ -283,21 +283,48 @@ The preferred flow is:
 AI reasoning
     |
     v
-structured proposal or request
+structured semantic request
     |
     v
 deterministic policy and validation
     |
     v
+capability-constrained executor
+    |
+    v
 deterministic side effect
+    |
+    v
+postcondition verification
     |
     v
 result returned as data
 ```
 
-The AI may decide what it wants to request.  Deterministic code decides whether
-the request is allowed, whether its inputs satisfy required invariants, and how
-the side effect is performed.
+The AI may decide what effect it wants to request.  Deterministic code decides
+whether the request is allowed, whether its inputs satisfy required invariants,
+which implementation primitive is safe, and whether the resulting effect matches
+the approved intent.
+
+### Behavioral Instructions Are Not Safety Controls
+
+A behavioral instruction to an AI MUST NOT be treated as enforcement of a safety
+property.
+
+Instructions such as:
+
+- "do not write files";
+- "do not access the network";
+- "do not touch production";
+- "ask before executing";
+- "stay inside this directory"; or
+- "only make a plan"
+
+may guide model behavior, but they do not remove the underlying capability.
+
+When violating an instruction could cause a material consequence, the boundary
+SHOULD be enforced by deterministic capability restriction, validation,
+authorization, or mediation outside the AI reasoning component.
 
 ### Reasoning Authority, Execution Authority, and Authorization
 
@@ -311,9 +338,29 @@ These concepts MUST remain distinct.
 The ability to request an operation MUST NOT grant the capability or authorization
 to perform it.
 
+### Prefer Semantic Operations Over General Primitives
+
+AI-facing operations SHOULD express the intended effect at the narrowest practical
+semantic level.
+
+For example, a request to replace one known value in a file SHOULD prefer an
+operation such as:
+
+```text
+replace_literal(path, expected, replacement, expected_count)
+```
+
+over a general shell, arbitrary redirection, or unrestricted whole-file write.
+
+When a narrow semantic operation can express the requested effect, an AI MUST NOT
+be given a more general destructive primitive solely for convenience.
+
+The deterministic mediator SHOULD select or implement the low-level primitive
+needed to realize the approved semantic operation.
+
 ### Network Access
 
-AI reasoning components SHOULD NOT possess general network capability.
+AI reasoning components MUST NOT initiate arbitrary network connections directly.
 
 When network access is required, a deterministic network mediator SHOULD perform
 the request and constrain, as applicable:
@@ -334,8 +381,8 @@ client capability.
 
 ### Filesystem Reads
 
-AI reasoning components SHOULD NOT receive unrestricted filesystem read access
-when a narrower deterministic interface can provide the required data.
+AI reasoning components MUST NOT receive unrestricted filesystem read access when
+a narrower deterministic interface can provide the required data.
 
 A filesystem mediator SHOULD constrain, as applicable:
 
@@ -348,24 +395,81 @@ A filesystem mediator SHOULD constrain, as applicable:
 - device or special files; and
 - sensitive locations.
 
+The AI SHOULD request the data it needs rather than traverse the host filesystem
+freely.
+
 ### Filesystem Writes
 
-AI reasoning components SHOULD NOT possess unrestricted filesystem write access.
+AI reasoning components MUST NOT directly mutate arbitrary filesystem paths.
 
 When AI-assisted work requires mutation, deterministic code SHOULD mediate the
 operation.
 
-Preferred patterns include proposing a patch, proposing replacement content for a
-known file, requesting creation beneath an approved root, or requesting a named
-repository operation.
+Preferred patterns include:
 
-The mediator SHOULD enforce allowed roots, constrained targets, traversal
-prevention, symbolic-link policy, overwrite policy, size limits, permissions,
-working-tree scope, and post-write verification as applicable.
+- replacing a specific expected value;
+- applying a validated patch;
+- proposing replacement content for a known file;
+- creating a file beneath an approved root; or
+- requesting another named repository operation.
+
+The mediator SHOULD enforce, as applicable:
+
+- allowed roots;
+- constrained targets;
+- path normalization and traversal prevention;
+- symbolic-link policy;
+- expected file type and size;
+- overwrite policy;
+- permissions;
+- working-tree scope;
+- current-state preconditions;
+- maximum permitted change size; and
+- post-write verification.
+
+### Preconditions
+
+Filesystem mutations SHOULD carry preconditions sufficient to detect stale or
+unexpected state before modification.
+
+Useful preconditions MAY include:
+
+- expected file hash;
+- expected original text;
+- expected occurrence count;
+- expected file size or type;
+- expected base revision;
+- expected working-tree state; and
+- expected target existence or nonexistence.
+
+If a material precondition fails, the mediator SHOULD reject the request rather
+than reinterpret the model's intent.
+
+### Postconditions and Diff Validation
+
+Filesystem mutations SHOULD carry postconditions sufficient to detect unintended
+changes before the result becomes durable or externally visible.
+
+Useful postconditions MAY include:
+
+- only the requested literal or region changed;
+- unrelated bytes or lines remain unchanged;
+- the resulting file parses or validates;
+- the file was not unexpectedly truncated;
+- the resulting size change remains within an allowed bound;
+- the resulting diff is limited to approved paths and scope; and
+- the expected semantic outcome is present.
+
+For repository changes, deterministic code SHOULD inspect the resulting diff
+against the approved operation before publication, commit, merge, deployment, or
+other consequential use.
+
+A generic write that succeeds is not evidence that the requested transformation
+was performed correctly.
 
 ### Command and Process Execution
 
-AI reasoning components SHOULD NOT receive unrestricted shell execution when a
+AI reasoning components MUST NOT receive unrestricted shell execution when a
 narrow deterministic executor can perform the required operations.
 
 A deterministic executor SHOULD prefer named operations, fixed executables,
@@ -374,6 +478,10 @@ timeouts, resource limits, controlled output, and explicit exit-status handling.
 
 AI-generated or externally influenced text SHOULD NOT be interpolated into an
 arbitrary shell command when a structured operation can express the same intent.
+
+Shell redirection, recursive deletion, broad file replacement, and similar
+high-impact primitives SHOULD remain behind deterministic interfaces rather than
+being exposed as general-purpose AI tools.
 
 ### Credentials
 
@@ -394,6 +502,10 @@ deterministic components that independently validate and authorize the request.
 
 The AI SHOULD provide structured intent rather than unrestricted mutation
 authority.
+
+Where practical, the executor SHOULD validate the resulting state against the
+requested semantic outcome rather than treating successful API or tool execution
+as sufficient evidence.
 
 ### Capability Expansion
 
@@ -577,8 +689,12 @@ applicable:
 - [ ] Verification depth is proportional to consequence and uncertainty.
 - [ ] Evidence is reasonably independent of the failure mode it should detect.
 - [ ] Tool output is interpreted only as broadly as the result supports.
-- [ ] Broad network access is absent where deterministic mediation is practical.
-- [ ] Broad filesystem access is absent where deterministic mediation is practical.
+- [ ] Behavioral instructions are not being mistaken for enforced safety boundaries.
+- [ ] Arbitrary network initiation is absent from the AI reasoning component.
+- [ ] Unrestricted filesystem access is absent where deterministic mediation can provide the required data or mutation.
+- [ ] AI-facing mutation tools express semantic intent rather than unnecessarily broad destructive primitives.
+- [ ] Filesystem mutations carry appropriate preconditions and postconditions.
+- [ ] Repository mutations receive diff validation before consequential use.
 - [ ] Arbitrary shell execution is absent where named operations can express the work.
 - [ ] Credentials remain outside the reasoning component where practical.
 - [ ] External mutation crosses deterministic validation and authorization.

@@ -182,6 +182,54 @@ Only then is the write performed.
 If the base content changed after the model generated the patch, the operation
 fails rather than applying the patch to unexpected state.
 
+## Semantic File Edit Prevents Whole-File Truncation
+
+A user asks an AI agent to replace one word in a file with a shortened form.
+
+The model incorrectly translates that semantic request into a shell command
+equivalent to:
+
+```sh
+echo "replacement" > filename
+```
+
+The shell performs the command correctly and truncates the file, replacing all
+existing content with one line.
+
+The safety failure is not merely that the model chose the wrong shell syntax.  The
+model was allowed to choose and execute a destructive implementation primitive
+whose effect was much broader than the requested edit.
+
+A safer interface exposes the semantic operation:
+
+```json
+{
+  "operation": "replace_literal",
+  "path": "filename",
+  "expected": "original",
+  "replacement": "replacement",
+  "expected_count": 1
+}
+```
+
+The deterministic mediator:
+
+1. resolves the path beneath the approved root;
+2. verifies the file's current hash or expected base state;
+3. verifies that the expected value occurs exactly once;
+4. computes the proposed replacement without mutating the original;
+5. verifies that the resulting diff contains only the requested substitution;
+6. verifies that unrelated content remains unchanged;
+7. writes the result atomically; and
+8. re-reads or otherwise validates the final state.
+
+If the expected value is absent, appears an unexpected number of times, the file
+changed after the request was prepared, or the proposed diff would replace
+unrelated content, the operation fails closed.
+
+The model requests the transformation.  Deterministic code owns the destructive
+primitive.
+
 ## Deterministic Command Execution
 
 An AI wants to run the project's test suite.
