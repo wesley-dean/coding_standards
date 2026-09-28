@@ -36,7 +36,9 @@ would create a second managed surface, complicate upgrades, and risk overwriting
 repository-specific policy.
 
 The repository therefore needs an explicit contract for template semantics,
-distribution, local adoption, examples, and maintenance.
+distribution, local adoption, examples, and maintenance.  Existing repository-local
+templates may serve as source material for reusable references without requiring
+those active local files to change.
 
 ## Decision Drivers
 
@@ -193,15 +195,6 @@ These files are intended to guide humans and automated agents.  They SHALL NOT
 imply that standards adoption configures `commit.template`, Git hooks, hosting
 platform settings, or merge behavior automatically.
 
-### Repository Dogfooding
-
-This repository MAY deliberately use its own reference templates in active
-repository locations.
-
-Such use SHALL be performed as an ordinary repository change.  The active copy
-remains repository-local and is not automatically synchronized from the template
-corpus.
-
 ## Initial Template Set
 
 The initial implementation SHALL include reference templates for:
@@ -297,9 +290,6 @@ Repositories with existing local templates may compare them with the new
 references and adopt selected improvements through ordinary pull requests.
 There is no requirement to replace local templates merely because reference
 templates are present.
-
-The current coding-standards repository may update its own `.github/` files to
-exercise the new references.  Those files remain local repository configuration.
 
 ## Expected Outcome
 

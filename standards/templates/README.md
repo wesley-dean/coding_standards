@@ -45,6 +45,12 @@ The initial corpus contains:
 Additional families may be added as reusable structures become sufficiently
 established.
 
+## Source Material
+
+Existing repository-local templates may be used as source material when designing
+reusable references.  The reusable template should generalize the useful
+structure without requiring the source repository's active template to change.
+
 ## Adoption
 
 These templates are distributed inside the complete coding-standards release and

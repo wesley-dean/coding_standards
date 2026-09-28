@@ -1,51 +1,23 @@
 ---
 name: Feature request
-about: Propose a new capability or behavior
+about: Suggest an idea for this project
 title: ""
 labels: enhancement
 assignees: ""
 ---
 
-## Problem or Need
+## Is your feature request related to a problem? Please describe it
 
-<!-- Describe the user, maintainer, or system problem to solve.  Focus on the
-desired outcome before proposing a particular implementation. -->
+<!-- Please provide a clear and concise description of the problem. -->
 
-## Desired Outcome
+## Describe the solution you'd like
 
-<!-- Describe what success would look like from the consumer's perspective. -->
+<!-- A clear and concise description of what you want to happen. -->
 
-## Motivating Examples
+## Describe alternatives you've considered
 
-<!-- Provide concrete examples, scenarios, or workflows that demonstrate the
-need.  Remove this section when examples do not materially improve understanding. -->
+<!-- A clear and concise description of any alternative solutions or features you've considered. -->
 
-## Constraints and Compatibility
+## Additional context
 
-<!-- Identify compatibility requirements, platform constraints, public contracts,
-security boundaries, performance limits, or other conditions that materially
-shape the solution. -->
-
-## Alternatives Considered
-
-<!-- Describe meaningful alternatives already considered and why they may not meet
-the need.  This does not need to be exhaustive. -->
-
-## Security and Trust-Boundary Considerations
-
-<!-- Identify whether the request introduces or changes network access, filesystem
-access, credentials, privileged mutation, external input, data/control
-boundaries, or other consequential capabilities.  Do not include private
-vulnerability details. -->
-
-## Documentation Impact
-
-<!-- Identify documentation, standards, examples, migration guidance, or public
-reference material likely to change. -->
-
-## Acceptance Criteria
-
-<!-- List observable outcomes that would make the request complete.  Avoid locking
-the issue to an implementation unless that implementation is already governed. -->
-
-- [ ] ...
+<!-- Add any other context or screenshots about the feature request here. -->
