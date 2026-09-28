@@ -70,6 +70,9 @@ The repository includes standards covering areas such as:
 - Conventional Commit and release-versioning governance;
 - development workflow, scope, and backlog governance;
 - cross-language testing, CI reporting, and test-result publication;
+- zero-trust security organized through the IDEA framework for Identity Management,
+  Disclosure, Engineering, and Architecture, with stable security commandments and
+  a semantic requirements index for reference consumption;
 - AWK documentation;
 - Bash documentation;
 - Bash/Bats behavioral testing, including Bats as a cross-language black-box driver;
@@ -332,6 +335,9 @@ The current-decision landing-page model is governed by
 [ADR-006](doc/adr/ADR-006-use-adr-landing-page-for-current-decision-digest.md).
 The shared testing model and Bash/Bats refinement are governed by
 [ADR-007](doc/adr/ADR-007-adopt-general-testing-and-bats-driver-standards.md).
+The general security corpus, broadened zero-trust model, and IDEA framework are
+governed by
+[ADR-008](doc/adr/ADR-008-adopt-idea-zero-trust-security-framework.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
 
