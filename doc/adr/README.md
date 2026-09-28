@@ -93,14 +93,19 @@ for the complete context, alternatives, and consequences.
 
 The general standards library uses zero trust as a cross-cutting security
 philosophy and IDEA as its organizing framework: Identity Management, Disclosure,
-Engineering, and Architecture.  The model extends zero-trust reasoning beyond
-network services to externally influenced data, local files, environment values,
-CLI input, generated artifacts, automation, and agentic workflows, with trust
-treated as contextual rather than Boolean.  Disclosure includes proportionate
-threat modeling with STRIDE as the preferred baseline, explicit assumptions and
-residual risk, while Engineering provides taint-style source-to-sink reasoning,
-security testing, cryptographic transport and provenance controls, and
-fail-closed implementation guidance.
+Engineering, and Architecture.  Stable SEC-* commandments provide a compact
+governance surface, a semantic requirements index makes detailed governing
+statements easier to discover, and a high-level review-trigger checklist helps
+reviewers identify where deeper analysis is warranted without treating a checked
+box as proof of a vulnerability or an unchecked box as proof of security.  The
+model extends zero-trust reasoning beyond network services to externally
+influenced data, local files, environment values, CLI input, generated artifacts,
+automation, and agentic workflows, with trust treated as contextual rather than
+Boolean.  Disclosure uses STRIDE as a familiar baseline vocabulary to reduce
+reviewer onboarding cost rather than as a claim of technical superiority, while
+Engineering provides taint-style source-to-sink reasoning, security testing,
+cryptographic transport and provenance controls, and fail-closed implementation
+guidance.
 
 See
 [ADR-008](ADR-008-adopt-idea-zero-trust-security-framework.md)
