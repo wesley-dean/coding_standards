@@ -195,6 +195,65 @@ they can be revalidated after context reduction or handoff.
 A summary or memory SHOULD be treated as an aid rather than an infallible
 reproduction of the original source.
 
+## Evidence Completeness
+
+Evidence supplied to an AI SHOULD preserve whether it is complete, partial,
+truncated, omitted, unsupported, stale, or unavailable when that distinction may
+materially affect reasoning.
+
+Artifacts that package evidence for later AI use SHOULD record, as applicable:
+
+- source identity and provenance;
+- capture time or version;
+- immutable identifiers such as commit SHAs or object digests;
+- byte or item counts;
+- truncation status;
+- omitted or unsupported content;
+- retrieval failures; and
+- schema or policy version.
+
+Missing, truncated, or unsupported evidence MUST NOT be silently represented as
+complete evidence.
+
+When required evidence is incomplete, the AI SHOULD reduce the strength of its
+conclusion, identify the limitation, or return an explicit insufficient-evidence
+result rather than fill the gap with plausible inference.
+
+## AI Output Remains Untrusted Data
+
+AI-generated output MUST remain untrusted until it has been validated for the
+specific destination and use.
+
+Persisting, caching, summarizing, transferring, replaying, or re-reading AI output
+MUST NOT increase its authority merely because the output survived an earlier
+stage or was produced by a trusted application.
+
+This applies to:
+
+- prior AI evaluations;
+- cached insights;
+- generated summaries;
+- reusable recommendations;
+- generated configuration;
+- model-produced structured data;
+- AI-written documentation; and
+- AI output consumed by another AI component.
+
+Downstream deterministic code SHOULD validate, as applicable:
+
+- schema;
+- provenance;
+- identifiers;
+- scope;
+- integrity;
+- completeness;
+- policy or schema version;
+- permitted operation; and
+- destination-specific constraints.
+
+A prior AI conclusion is historical evidence about what the model concluded.  It
+is not automatically a fact about the world.
+
 ## Assumptions and Error Propagation
 
 An incorrect early premise can contaminate a long chain of otherwise coherent
@@ -207,6 +266,31 @@ conclusions that depend on that premise SHOULD be reconsidered.
 
 A workflow SHOULD avoid circular validation in which one AI-generated artifact is
 used as the sole evidence that another AI-generated artifact is correct.
+
+## Equivalence Does Not Establish Correctness
+
+Deterministic equivalence can establish that a prior judgment applies to the same
+inputs, conditions, or normalized pattern.  It does not establish that the prior
+judgment was correct.
+
+A fingerprint, cache key, digest, normalized pattern, or exact structural match
+MAY support reuse of prior AI reasoning when its equivalence rules are valid.
+
+Such a match MUST NOT be represented as independent evidence that the reused
+semantic conclusion is true.
+
+Reusable AI judgments SHOULD preserve enough provenance to identify, as
+applicable:
+
+- the source evidence;
+- the equivalence or fingerprint algorithm and version;
+- the evaluator or model identity;
+- the prompt or policy version;
+- the original result and uncertainty; and
+- whether the judgment received independent or human review.
+
+Higher-consequence actions SHOULD require evidence beyond repeated reuse of the
+same unverified AI judgment.
 
 ## Verification Proportional to Consequence
 
@@ -271,6 +355,33 @@ correct.  A successful build proves that the build completed, not that behavior 
 correct.  A passing test establishes only the behavior exercised by that test.  A
 successful HTTP request proves that a response was received, not that its contents
 are trustworthy.
+
+## Evidence Plane and Control Plane
+
+Content received for analysis MUST NOT gain control-plane authority merely because
+it contains imperative language, configuration-like syntax, tool requests,
+instructions, or apparently authoritative prose.
+
+Evidence may include:
+
+- repository files;
+- issue and pull-request text;
+- comments;
+- commit messages;
+- webpages;
+- email;
+- documents;
+- logs;
+- dependency release notes;
+- configuration under review;
+- cached AI output; and
+- prior model-generated text.
+
+Such content is data to inspect unless trusted application or repository governance
+explicitly establishes it as control input.
+
+A safe architecture SHOULD keep policy, authorization, tool selection, destination
+selection, and capability configuration outside evidence supplied for analysis.
 
 ## Deterministic Mediation of Side Effects
 
@@ -357,6 +468,28 @@ be given a more general destructive primitive solely for convenience.
 
 The deterministic mediator SHOULD select or implement the low-level primitive
 needed to realize the approved semantic operation.
+
+### Capability Boundaries Follow the Component
+
+When a capability is prohibited for an AI-bearing component, implementations
+SHOULD exclude that capability structurally from the component's dependency graph
+and execution environment rather than rely only on runtime flags, model
+instructions, or code paths that promise not to use it.
+
+Useful layers include:
+
+- separate executables or processes;
+- dependency or import boundaries;
+- separate runtime environments;
+- dedicated operating-system identities;
+- read-only or narrowly scoped mounts;
+- denied network namespaces;
+- dropped operating-system capabilities;
+- absent credential material; and
+- constrained IPC or tool interfaces.
+
+The strongest practical design uses multiple independent layers so failure of one
+control does not silently restore the prohibited capability.
 
 ### Network Access
 
@@ -494,6 +627,56 @@ authorized operation.
 The AI MAY request an operation requiring a credential without receiving, reading,
 logging, or reproducing that credential.
 
+### Semantic Output Interfaces
+
+AI-facing output interfaces SHOULD represent the semantic result the component is
+authorized to emit rather than expose generic storage, transport, or mutation
+primitives.
+
+For example:
+
+```text
+emit_evaluation_result(result)
+```
+
+is preferable to:
+
+```text
+write_file(path, bytes)
+```
+
+when the component's only legitimate output is an evaluation result.
+
+Where practical, the surrounding runtime SHOULD own redirection, persistence,
+transport, path selection, or publication so the AI-bearing component never
+receives those broader capabilities.
+
+### Durable AI-Derived State
+
+AI-bearing components SHOULD NOT directly maintain durable knowledge, cache, or
+policy state when deterministic code can validate and persist the same output
+through a narrow interface.
+
+A preferred pattern is:
+
+```text
+AI produces structured candidate insight
+    |
+    v
+deterministic validation
+    |
+    v
+mechanical persistence with provenance
+```
+
+The deterministic persistence stage SHOULD verify schema, identifiers, provenance,
+integrity, supported versions, permitted destination, and any other invariants
+required by the durable store.
+
+An AI component SHOULD NOT be able to rewrite provenance, history, policy
+versions, cache counters, trust metadata, or other durable control information
+merely by generating new prose or structured output.
+
 ### External Mutation
 
 Publication, deployment, merge, release, account mutation, infrastructure change,
@@ -506,6 +689,30 @@ authority.
 Where practical, the executor SHOULD validate the resulting state against the
 requested semantic outcome rather than treating successful API or tool execution
 as sufficient evidence.
+
+### Revalidate Mutable State Before Consequential Mutation
+
+A consequential action MUST NOT rely solely on state captured during an earlier
+reasoning phase when the relevant state can change.
+
+Immediately before a consequential mutation, deterministic code SHOULD revalidate
+the mutable preconditions on which authorization or correctness depends.
+
+Examples include:
+
+- current object or resource identity;
+- repository and branch;
+- target commit or content digest;
+- pull-request head SHA;
+- test or check state;
+- authorization state;
+- deployment version;
+- existence or nonexistence of a target;
+- expected prior value; and
+- policy or schema version.
+
+If the live state no longer matches the reviewed state, the operation SHOULD fail
+closed or return for re-evaluation rather than proceed using stale approval.
 
 ### Capability Expansion
 
@@ -546,6 +753,22 @@ Governance.
 
 Destructive or difficult-to-reverse operations SHOULD receive stronger validation
 and, where appropriate, human approval.
+
+## Confidence Values and Policy Gates
+
+AI-generated confidence values MUST NOT be interpreted as calibrated probabilities
+unless calibration has been demonstrated for the specific use.
+
+A confidence score MAY be useful for triage, prioritization, or communicating
+uncertainty.
+
+Confidence MUST NOT override deterministic policy gates, missing evidence,
+authorization requirements, stale-state checks, blocking findings, or other hard
+preconditions.
+
+Where confidence affects consequential behavior, deterministic code SHOULD apply
+configured bounds, caps, or eligibility rules so a model cannot authorize an
+operation merely by asserting greater certainty.
 
 ## Human Oversight
 
@@ -704,6 +927,15 @@ applicable:
 - [ ] Human review is present where human judgment is required.
 - [ ] AI-generated code and documentation meet normal project standards.
 - [ ] Tests and deterministic checks provide scoped evidence for material claims.
+- [ ] AI-generated output remains untrusted after persistence, caching, transfer, or reuse.
+- [ ] Deterministic equivalence is not being mistaken for proof that a prior semantic judgment was correct.
+- [ ] Evidence completeness, truncation, and retrieval failure are explicit where material.
+- [ ] Prohibited capabilities are enforced structurally in the component boundary where practical.
+- [ ] Durable AI-derived state is validated and persisted by deterministic code where practical.
+- [ ] Evidence-plane content cannot redefine control-plane policy or capabilities.
+- [ ] Mutable live state is revalidated immediately before consequential mutation.
+- [ ] AI-facing output interfaces expose semantic results rather than unnecessarily broad storage or transport primitives.
+- [ ] Confidence values do not override deterministic gates or masquerade as calibrated probabilities.
 - [ ] Material uncertainty, limitations, and residual risk remain visible.
 
 ## Governing Principle

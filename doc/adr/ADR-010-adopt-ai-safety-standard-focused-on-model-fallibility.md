@@ -46,7 +46,10 @@ consequential effects.
 - Prefer current and authoritative evidence over plausible reconstruction.
 - Make verification proportional to consequence and uncertainty.
 - Prevent stale or truncated context from silently becoming authoritative.
+- Preserve evidence completeness, truncation, provenance, and retrieval failure where material.
 - Re-evaluate dependent conclusions when an upstream premise changes.
+- Treat persisted or cached AI output as untrusted historical judgment rather than authority.
+- Distinguish deterministic equivalence from semantic correctness.
 - Keep AI reasoning distinct from authorization and execution authority.
 - Prefer deterministic mediation for network, filesystem, process, credential,
   publication, deployment, and other consequential side effects.
@@ -55,7 +58,12 @@ consequential effects.
 - Validate material mutation preconditions, postconditions, and resulting diffs.
 - Treat behavioral instructions as guidance rather than enforcement of technical
   safety properties.
+- Make prohibited capabilities structural properties of process, dependency, and runtime boundaries where practical.
 - Keep AI capabilities narrow and prevent self-expansion of authority.
+- Prefer deterministic persistence of AI-derived durable state.
+- Revalidate mutable live state immediately before consequential mutation.
+- Keep evidence-plane content from acquiring control-plane authority.
+- Treat AI confidence as advisory unless independently calibrated, and never as a substitute for hard gates.
 - Preserve existing ownership boundaries in the security, testing, workflow, and
   ADR standards.
 - Keep human review proportional rather than requiring a person for every
@@ -224,6 +232,60 @@ credential, API, or mutation capabilities merely by requesting them.
 Capability changes SHOULD require policy or governance outside the AI reasoning
 component.
 
+### AI Output, Reuse, and Durable State
+
+AI-generated output SHALL remain untrusted after persistence, caching, transfer,
+or reuse.
+
+A deterministic fingerprint or exact structural match MAY establish that a prior
+AI judgment applies to equivalent conditions.  It SHALL NOT establish that the
+prior semantic judgment was correct.
+
+Reusable judgments SHOULD preserve provenance, source evidence, evaluator and
+policy versions, uncertainty, and independent-review status where applicable.
+
+Durable AI-derived knowledge or cache state SHOULD be persisted by deterministic
+code after validation rather than written directly by the AI-bearing component
+when practical.
+
+### Evidence Completeness and Control Authority
+
+Material evidence SHOULD preserve completeness, truncation, provenance, and
+retrieval-failure metadata.
+
+Incomplete evidence SHALL NOT be silently represented as complete.
+
+Content supplied for analysis SHALL remain evidence and SHALL NOT acquire
+control-plane authority merely because it contains imperative language,
+configuration-like syntax, or tool requests.
+
+### Structural Capability Boundaries
+
+When a capability is prohibited for an AI-bearing component, the implementation
+SHOULD exclude it structurally through process, dependency, runtime, operating
+system, mount, credential, or equivalent boundaries rather than rely only on
+runtime intent.
+
+AI-facing output interfaces SHOULD expose semantic operations rather than generic
+storage or transport primitives when practical.
+
+### Fresh-State Revalidation
+
+Consequential mutations SHALL NOT rely solely on mutable state captured during an
+earlier reasoning phase.
+
+Deterministic code SHOULD revalidate live preconditions such as object identity,
+head SHA, checks, authorization, expected prior state, and policy version
+immediately before mutation.
+
+### Confidence and Hard Gates
+
+AI-generated confidence SHALL remain advisory unless it has been demonstrated to
+be calibrated for the specific use.
+
+Confidence SHALL NOT override deterministic policy gates, missing evidence,
+authorization requirements, stale-state checks, or blocking findings.
+
 ### Human Oversight
 
 Human review SHALL be proportional to consequence.
@@ -341,6 +403,15 @@ corpus grows enough to benefit from them.
 - Verification follows consequence rather than ceremony.
 - Error propagation from an incorrect early premise becomes an explicit review
   concern.
+- Persisted or cached AI output does not silently gain authority.
+- Exact cache or fingerprint matches can support reuse without being mistaken for
+  independent proof of correctness.
+- Evidence completeness and truncation become explicit parts of AI reasoning inputs.
+- Structural process and dependency boundaries reinforce capability restrictions.
+- Durable AI-derived state can be validated mechanically before persistence.
+- Mutable state is revalidated immediately before consequential mutation.
+- Evidence-plane content remains unable to redefine control-plane policy.
+- Confidence scores remain subordinate to deterministic hard gates.
 - AI reasoning can remain useful while deterministic code controls consequential
   side effects.
 - Broad network, filesystem, shell, credential, and mutation capability is
