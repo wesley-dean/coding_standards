@@ -45,15 +45,11 @@ required invariant.
 
 For example:
 
-~~~text
-CLI value
-   |
-   v
-concatenate suffix
-   |
-   v
-derived pathname
-~~~
+```mermaid
+flowchart TD
+    A["CLI value"] --> B["Concatenate suffix"]
+    B --> C["Derived pathname"]
+```
 
 Adding a trusted suffix does not make the pathname generally trustworthy.
 

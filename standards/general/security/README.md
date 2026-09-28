@@ -108,20 +108,15 @@ Identity Management establishes the identities and authorities involved.
 
 A useful conceptual flow is:
 
-~~~text
-Identity Management
-        |
-        v
-Architecture
-        |
-        v
-Disclosure
-        |
-        v
-Engineering
-        |
-        +------> discoveries feed back into every earlier domain
-~~~
+```mermaid
+flowchart TD
+    I["Identity Management"] --> A["Architecture"]
+    A --> D["Disclosure"]
+    D --> E["Engineering"]
+    E -. "discoveries feed back" .-> I
+    E -. "discoveries feed back" .-> A
+    E -. "discoveries feed back" .-> D
+```
 
 This is an iterative reasoning loop rather than a mandatory sequence.
 

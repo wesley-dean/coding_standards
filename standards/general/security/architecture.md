@@ -70,24 +70,14 @@ doing so reduces authority or blast radius.
 
 For example:
 
-~~~text
-fetch
-  |
-  v
-staging
-  |
-  v
-analysis
-  |
-  v
-restricted output
-  |
-  v
-validation
-  |
-  v
-publication
-~~~
+```mermaid
+flowchart TD
+    A["Fetch"] --> B["Staging"]
+    B --> C["Analysis"]
+    C --> D["Restricted output"]
+    D --> E["Validation"]
+    E --> F["Publication"]
+```
 
 A component that fetches data need not publish it.
 
@@ -206,24 +196,14 @@ which provenance must survive them.
 
 For important artifacts, consider a chain such as:
 
-~~~text
-source
-   |
-   v
-build
-   |
-   v
-artifact
-   |
-   v
-package
-   |
-   v
-distribution
-   |
-   v
-consumer
-~~~
+```mermaid
+flowchart TD
+    A["Source"] --> B["Build"]
+    B --> C["Artifact"]
+    C --> D["Package"]
+    D --> E["Distribution"]
+    E --> F["Consumer"]
+```
 
 Each stage should have only the authority required for its role.
 

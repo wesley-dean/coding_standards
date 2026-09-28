@@ -69,18 +69,12 @@ boundary.
 
 For example:
 
-~~~text
-authenticated service
-        |
-        v
-signed response
-        |
-        v
-parser
-        |
-        v
-filesystem operation
-~~~
+```mermaid
+flowchart TD
+    A["Authenticated service"] --> B["Signed response"]
+    B --> C["Parser"]
+    C --> D["Filesystem operation"]
+```
 
 Authentication of the service does not prove that the response is suitable as a
 filesystem path.  Signature verification does not prove semantic correctness.
