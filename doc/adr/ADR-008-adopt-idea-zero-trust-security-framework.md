@@ -102,6 +102,32 @@ iterative model in which discoveries during engineering, threat modeling,
 operations, or incident response may revise identity assumptions, architecture,
 controls, and disclosure.
 
+### Security Commandments and Reference Consumption
+
+The security landing page SHALL maintain a compact set of stable security
+commandments with `SEC-` identifiers.
+
+The commandments SHALL provide concise governing principles suitable for routine
+human and automated-agent reference.  Their identifiers SHALL remain stable so
+ADRs, threat models, reviews, issues, and implementation discussions can refer to
+the same principle over time.  Existing identifiers SHALL NOT be renumbered or
+reused for materially different principles.
+
+The detailed zero-trust and IDEA standards remain authoritative for scope,
+normative strength, exceptions, tradeoffs, and implementation guidance.
+
+The security corpus SHALL also maintain a semantic requirements index at
+`standards/general/security/requirements.md`.
+
+The requirements index SHALL be curated by security intent rather than generated
+solely by lexical matching of normative keywords.  It may therefore surface
+governing declarative statements in addition to sentences containing `MUST`,
+`SHOULD`, `MAY`, and their negative forms.
+
+The index is a discovery and reference surface, not an independent source of
+requirements.  When an indexed statement and its detailed source disagree, the
+detailed source governs and the index SHALL be corrected.
+
 ### Zero Trust
 
 The zero-trust standard SHALL reject implicit trust based solely on location,
@@ -326,6 +352,9 @@ remain visible.
   repository content, automation, and generated artifacts.
 - Humans and coding agents gain a shared vocabulary for explicit trust,
   non-transitivity, taint, trust anchors, sources, sinks, and capability.
+- Stable security commandments provide a compact governance surface for routine
+  reference, while a semantic requirements index makes detailed governing
+  statements discoverable without reducing the corpus to keyword extraction.
 - Identity and authorization receive dedicated governance instead of being
   implied by transport security.
 - STRIDE provides a repeatable baseline for threat-modeling trust boundaries.

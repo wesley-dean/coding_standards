@@ -71,7 +71,8 @@ The repository includes standards covering areas such as:
 - development workflow, scope, and backlog governance;
 - cross-language testing, CI reporting, and test-result publication;
 - zero-trust security organized through the IDEA framework for Identity Management,
-  Disclosure, Engineering, and Architecture;
+  Disclosure, Engineering, and Architecture, with stable security commandments and
+  a semantic requirements index for reference consumption;
 - AWK documentation;
 - Bash documentation;
 - Bash/Bats behavioral testing, including Bats as a cross-language black-box driver;
