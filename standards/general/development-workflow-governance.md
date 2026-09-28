@@ -545,3 +545,17 @@ or silently expanding scope.  When the boundary is materially uncertain, ask.
 
 Professional engineering discipline is valuable even when the entire team is one
 person.
+
+
+## Related Templates
+
+The non-normative repository templates provide reusable structures for work
+governed by this document:
+
+- [Pull Request](../templates/repository/github/pull-request.md)
+- [Bug Report](../templates/repository/github/bug-report.md)
+- [Feature Request](../templates/repository/github/feature-request.md)
+- [General Issue](../templates/repository/github/general-issue.md)
+
+Repositories may adapt these references through ordinary reviewed changes.
+Standards adoption does not install them into active repository locations.
