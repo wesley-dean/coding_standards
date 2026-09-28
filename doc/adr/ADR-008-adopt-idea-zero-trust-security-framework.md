@@ -67,6 +67,8 @@ methods.
   administrative control.
 - Make threat modeling proportionate and repeatable without turning the standards
   into a compliance checklist.
+- Provide a high-level capability-oriented review surface that helps reviewers
+  identify where deeper security analysis is warranted.
 - Prefer a commonly recognized threat-modeling vocabulary so reviewers can get
   up to speed quickly without implying that the preferred framework is superior
   to suitable alternatives.
@@ -86,6 +88,8 @@ The standards library SHALL add the general security namespace:
 ~~~text
 standards/general/security/
 ├── README.md
+├── requirements.md
+├── review-checklist.md
 ├── zero-trust.md
 ├── identity-management.md
 ├── disclosure.md
@@ -133,6 +137,27 @@ governing declarative statements in addition to sentences containing `MUST`,
 The index is a discovery and reference surface, not an independent source of
 requirements.  When an indexed statement and its detailed source disagree, the
 detailed source governs and the index SHALL be corrected.
+
+### Security Review Trigger Checklist
+
+The security corpus SHALL maintain a high-level review trigger checklist at
+`standards/general/security/review-checklist.md`.
+
+The checklist SHALL identify capabilities, trust boundaries, and failure
+consequences that warrant deeper review without attempting to encode a complete
+security audit.
+
+A positive answer SHALL identify review scope rather than be treated as proof of
+a vulnerability.  A negative answer SHALL NOT be treated as evidence that the
+project is secure.
+
+Checklist prompts SHOULD remain capability-oriented and implementation-neutral so
+they can be applied across languages and repositories.  Detailed controls belong
+in the relevant IDEA standards and project-specific review.
+
+The checklist SHOULD direct reviewers toward deeper IDEA, STRIDE or governed
+alternative, trust-boundary, source-to-sink, and evidence analysis according to
+the risk exposed by the answer.
 
 ### Zero Trust
 
@@ -367,6 +392,9 @@ remain visible.
 - Stable security commandments provide a compact governance surface for routine
   reference, while a semantic requirements index makes detailed governing
   statements discoverable without reducing the corpus to keyword extraction.
+- A high-level security review trigger checklist helps reviewers discover attack
+  surface, authority, and trust boundaries before deciding where deeper analysis
+  is necessary.
 - Identity and authorization receive dedicated governance instead of being
   implied by transport security.
 - STRIDE provides a repeatable baseline for threat-modeling trust boundaries.

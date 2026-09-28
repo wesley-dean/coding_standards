@@ -482,6 +482,23 @@ reference layer, not a second place to edit requirements.
   be simpler."  
   [Architecture: Guidance for Automated Agents](architecture.md#guidance-for-automated-agents)
 
+## Security Review Trigger Checklist
+
+- "Reviewers SHOULD use this checklist to decide where deeper IDEA, STRIDE,
+  trust-boundary, source-to-sink, or control-specific analysis is warranted."  
+  [Security Review Trigger Checklist: Purpose](review-checklist.md#purpose)
+- "A positive answer identifies review scope; it does not establish that a
+  vulnerability exists."  
+  [Security Review Trigger Checklist: Purpose](review-checklist.md#purpose)
+- "A negative answer is not evidence that the project is secure."  
+  [Security Review Trigger Checklist: Purpose](review-checklist.md#purpose)
+- "A positive or uncertain answer to one of these questions SHOULD trigger a
+  deeper review of the relevant assumption or boundary."  
+  [Security Review Trigger Checklist: Negative-Space Questions](review-checklist.md#negative-space-questions)
+- "Review depth SHOULD be proportionate to consequence, privilege, exposure,
+  sensitivity, and uncertainty."  
+  [Security Review Trigger Checklist: Moving From Trigger to Analysis](review-checklist.md#moving-from-trigger-to-analysis)
+
 ## Maintenance
 
 This index is curated by intent.

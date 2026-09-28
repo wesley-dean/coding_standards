@@ -140,6 +140,22 @@ its source.
 The index SHOULD be reviewed whenever a detailed security standard materially
 changes.
 
+## Security Review Trigger Checklist
+
+The [Security Review Trigger Checklist](review-checklist.md) provides a
+high-level capability-oriented review surface for deciding where deeper security
+analysis is warranted.
+
+It asks broad questions about network exposure, filesystem access, external
+input, process execution, credentials, privileged mutation, supply-chain
+transforms, sensitive data, cryptography, availability, and automation.
+
+A positive answer identifies review scope; it does not establish a
+vulnerability.  A negative answer is not evidence that the project is secure.
+
+Use the checklist to decide where to apply the detailed IDEA standards, STRIDE or
+another governed threat-modeling method, and source-to-sink analysis.
+
 ## The Security Corpus
 
 ### Zero Trust
