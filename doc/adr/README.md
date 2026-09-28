@@ -89,6 +89,23 @@ See
 [ADR-007](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
 for the complete context, alternatives, and consequences.
 
+### ADR-008: Adopt the IDEA Zero Trust Security Framework
+
+The general standards library uses zero trust as a cross-cutting security
+philosophy and IDEA as its organizing framework: Identity Management, Disclosure,
+Engineering, and Architecture.  The model extends zero-trust reasoning beyond
+network services to externally influenced data, local files, environment values,
+CLI input, generated artifacts, automation, and agentic workflows, with trust
+treated as contextual rather than Boolean.  Disclosure includes proportionate
+threat modeling with STRIDE as the preferred baseline, explicit assumptions and
+residual risk, while Engineering provides taint-style source-to-sink reasoning,
+security testing, cryptographic transport and provenance controls, and
+fail-closed implementation guidance.
+
+See
+[ADR-008](ADR-008-adopt-idea-zero-trust-security-framework.md)
+for the complete context, alternatives, and consequences.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -105,3 +122,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-005: Standardize ADR Acceptance and Decision Summaries](ADR-005-standardize-adr-acceptance-and-decision-summaries.md)
 - [ADR-006: Use an ADR Landing Page for the Current Decision Digest](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
 - [ADR-007: Adopt General Testing and Bats Driver Standards](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
+- [ADR-008: Adopt the IDEA Zero Trust Security Framework](ADR-008-adopt-idea-zero-trust-security-framework.md)
