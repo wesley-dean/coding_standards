@@ -270,7 +270,19 @@ decision MUST be explicit.  The project SHOULD identify the preferred stronger
 control, the reason it is not used, compensating controls, residual risk, and a
 condition or trigger for reconsidering the decision.
 
+## Related Template
+
+The non-normative
+[Security / STRIDE Disclosure Template](../../templates/general/security/stride-disclosure.md)
+provides a reusable structure for documenting claims, assumptions, trust
+boundaries, STRIDE threats, controls, evidence, limitations, residual risk, and
+review triggers.
+
+The template is a reference structure; the security standards remain
+authoritative.
+
 ## Examples
+
 
 The non-normative
 [STRIDE-Flavored Security Disclosure Example](../../examples/general/security/stride-disclosure.md)

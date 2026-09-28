@@ -46,6 +46,7 @@ standards/
 ├── markdown/
 ├── repository/
 ├── adr/
+├── templates/
 └── examples/
 ```
 
@@ -56,10 +57,15 @@ precedence.
 Language-specific standards refine general standards for maintained content in
 that language where applicable.
 
+The `standards/templates/` tree contains reusable, non-normative reference
+structures for recurring engineering and governance artifacts.  Templates are
+distributed with the standards snapshot but are not automatically installed into
+active repository locations.
+
 The `standards/examples/` tree contains illustrative material demonstrating how
-the standards may be applied.  Examples are non-normative.  If an example and a
-standard disagree, the standard is authoritative and the example should be
-corrected.
+the standards or templates may be applied.  Examples are non-normative.  If a
+template or example disagrees with a governing standard, the standard is
+authoritative and the derivative material should be corrected.
 
 ## Current Standards
 
@@ -81,7 +87,9 @@ The repository includes standards covering areas such as:
 - Python documentation;
 - Markdown;
 - repository structure and GitHub conventions; and
-- architecture decision records.
+- architecture decision records; and
+- reusable Markdown templates for recurring repository, security, ADR, commit,
+  and merge artifacts.
 
 The maintained files beneath `standards/` are the source of truth.  Generated
 release artifacts and copies adopted into consuming repositories are derivative
@@ -125,6 +133,7 @@ python/
 markdown/
 repository/
 adr/
+templates/
 examples/
 ```
 
@@ -280,8 +289,10 @@ A suitable baseline rule is:
 Presence does not imply applicability.  The complete standards library is included
 in every release.  General and cross-cutting standards apply where relevant.
 Language-specific standards apply to maintained content in that language.
-Content under `examples/` is illustrative and non-normative unless another
-standard explicitly states otherwise.
+Content under `templates/` and `examples/` is non-normative unless another
+standard explicitly states otherwise.  Templates are reference structures only;
+standards adoption does not automatically copy them into active repository
+locations such as `.github/`, configure Git, install hooks, or modify workflows.
 
 Repository-specific accepted ADRs or explicit local policies may refine or
 supersede shared standards for that repository.  Such exceptions should be visible
@@ -343,8 +354,8 @@ Earlier superseded distribution ADRs remain as architectural history.
 
 ## Source of Truth
 
-The maintained files beneath `standards/` are the canonical standards and
-examples.
+The maintained files beneath `standards/` are the canonical standards,
+reference templates, and examples.
 
 Changes to a shared standard are made here, reviewed here, released here, and then
 adopted explicitly by consuming repositories through a reviewed change to their

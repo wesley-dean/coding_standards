@@ -111,6 +111,22 @@ See
 [ADR-008](ADR-008-adopt-idea-zero-trust-security-framework.md)
 for the complete context, alternatives, and consequences.
 
+### ADR-009: Add Reusable Reference Templates
+
+The standards library distributes reusable Markdown templates as a distinct
+non-normative artifact class alongside governing standards and completed
+examples.  Template guidance lives in HTML comments, while visible Markdown
+represents the structure intended to remain in a completed artifact.  Templates
+travel inside the normal managed standards snapshot but are never automatically
+installed into active repository locations, Git configuration, hooks, or
+workflows; local adoption is a separate reviewed repository change.  Parallel
+worked examples demonstrate intended use, while governing standards remain
+authoritative when any derivative artifact disagrees.
+
+See
+[ADR-009](ADR-009-add-reusable-reference-templates.md)
+for the complete context, alternatives, and consequences.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -128,3 +144,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-006: Use an ADR Landing Page for the Current Decision Digest](ADR-006-use-adr-landing-page-for-current-decision-digest.md)
 - [ADR-007: Adopt General Testing and Bats Driver Standards](ADR-007-adopt-general-testing-and-bats-driver-standards.md)
 - [ADR-008: Adopt the IDEA Zero Trust Security Framework](ADR-008-adopt-idea-zero-trust-security-framework.md)
+- [ADR-009: Add Reusable Reference Templates](ADR-009-add-reusable-reference-templates.md)
