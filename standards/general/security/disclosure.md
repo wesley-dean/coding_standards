@@ -106,6 +106,16 @@ substantial documented model.
 STRIDE is the preferred baseline threat-modeling taxonomy unless
 repository-specific governance selects another method.
 
+This preference is based on common recognition and reviewer familiarity rather
+than a claim of technical superiority.  A frequently encountered framework
+reduces the amount of framework-specific explanation a reviewer must absorb and
+makes threat models easier to compare across repositories and teams.
+
+Another threat-modeling method MAY be used when repository-specific governance,
+domain needs, or the nature of the system makes it a better fit.  Reviewers
+SHOULD NOT treat the use of STRIDE itself as evidence that a threat model is more
+complete, rigorous, or correct than one produced with another suitable method.
+
 For each material boundary or flow, consider:
 
 - **Spoofing**: can an actor, service, workload, or signer be impersonated?
@@ -122,8 +132,9 @@ For each material boundary or flow, consider:
 Not every STRIDE category is meaningful for every boundary.  A category MAY be
 marked not applicable when the reasoning is evident.
 
-STRIDE is a prompt for systematic reasoning, not a substitute for engineering
-judgment.
+STRIDE is a shared prompt for systematic reasoning, not a substitute for
+engineering judgment and not a quality ranking over other threat-modeling
+frameworks.
 
 ## Taint and Data-Flow Analysis
 

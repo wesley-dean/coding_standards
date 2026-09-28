@@ -381,6 +381,16 @@ reference layer, not a second place to edit requirements.
 - "STRIDE is the preferred baseline threat-modeling taxonomy unless
   repository-specific governance selects another method."  
   [Disclosure: STRIDE](disclosure.md#stride)
+- "This preference is based on common recognition and reviewer familiarity
+  rather than a claim of technical superiority."  
+  [Disclosure: STRIDE](disclosure.md#stride)
+- "Another threat-modeling method MAY be used when repository-specific
+  governance, domain needs, or the nature of the system makes it a better fit."  
+  [Disclosure: STRIDE](disclosure.md#stride)
+- "Reviewers SHOULD NOT treat the use of STRIDE itself as evidence that a
+  threat model is more complete, rigorous, or correct than one produced with
+  another suitable method."  
+  [Disclosure: STRIDE](disclosure.md#stride)
 - "Threat models SHOULD consider externally influenced data from source to sink."  
   [Disclosure: Taint and Data-Flow Analysis](disclosure.md#taint-and-data-flow-analysis)
 - "The threat model SHOULD identify where the invariant required by a

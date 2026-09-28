@@ -44,9 +44,12 @@ compromises should be visible so maintainers and users can make informed
 decisions rather than infer stronger assurance than the implementation provides.
 
 Threat modeling is the natural mechanism for examining trust boundaries.  STRIDE
-provides a useful baseline vocabulary for spoofing, tampering, repudiation,
-information disclosure, denial of service, and elevation of privilege without
-requiring every repository to adopt a large formal risk-management process.
+provides a commonly recognized baseline vocabulary for spoofing, tampering,
+repudiation, information disclosure, denial of service, and elevation of
+privilege.  It is selected because repeated use of a familiar framework reduces
+reviewer onboarding and translation cost across repositories, not because this
+decision establishes STRIDE as technically superior to other threat-modeling
+methods.
 
 ## Decision Drivers
 
@@ -64,6 +67,9 @@ requiring every repository to adopt a large formal risk-management process.
   administrative control.
 - Make threat modeling proportionate and repeatable without turning the standards
   into a compliance checklist.
+- Prefer a commonly recognized threat-modeling vocabulary so reviewers can get
+  up to speed quickly without implying that the preferred framework is superior
+  to suitable alternatives.
 - Record assumptions, evidence, limitations, compromises, compensating controls,
   and residual risk.
 - Treat security testing as evidence for scoped claims rather than proof of
@@ -205,6 +211,12 @@ security or certainty.
 
 STRIDE SHALL be the preferred baseline threat-modeling taxonomy unless
 repository-specific governance selects another method.
+
+The preference for STRIDE SHALL be understood as a choice for common vocabulary
+and reviewer familiarity, not as a claim that STRIDE is more complete, rigorous,
+or technically superior to other suitable threat-modeling methods.  Alternative
+methods MAY be selected when local governance, domain needs, or system
+characteristics justify them.
 
 Threat-modeling depth SHALL be proportionate to consequence, privilege, attack
 surface, and data sensitivity.

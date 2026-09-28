@@ -176,7 +176,11 @@ is safe or that every requested action is authorized.
 evidence, limitations, accepted compromises, compensating controls, and residual
 risk.
 
-STRIDE is the preferred baseline threat-modeling method.  Sensitive vulnerability
+STRIDE is the preferred baseline threat-modeling method because it provides a
+commonly recognized vocabulary that reviewers are more likely to encounter
+repeatedly across systems and organizations.  The preference is intended to
+reduce reviewer onboarding and translation cost, not to claim that STRIDE is
+technically superior to other threat-modeling methods.  Sensitive vulnerability
 details remain subject to the repository's security-reporting policy; disclosure
 does not require publishing exploit details that should remain private.
 
