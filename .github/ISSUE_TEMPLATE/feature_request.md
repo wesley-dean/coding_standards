@@ -1,23 +1,51 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Propose a new capability or behavior
 title: ""
 labels: enhancement
 assignees: ""
 ---
 
-## Is your feature request related to a problem? Please describe it
+## Problem or Need
 
-<!-- Please provide a clear and concise description of the problem. -->
+<!-- Describe the user, maintainer, or system problem to solve.  Focus on the
+desired outcome before proposing a particular implementation. -->
 
-## Describe the solution you'd like
+## Desired Outcome
 
-<!-- A clear and concise description of what you want to happen. -->
+<!-- Describe what success would look like from the consumer's perspective. -->
 
-## Describe alternatives you've considered
+## Motivating Examples
 
-<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+<!-- Provide concrete examples, scenarios, or workflows that demonstrate the
+need.  Remove this section when examples do not materially improve understanding. -->
 
-## Additional context
+## Constraints and Compatibility
 
-<!-- Add any other context or screenshots about the feature request here. -->
+<!-- Identify compatibility requirements, platform constraints, public contracts,
+security boundaries, performance limits, or other conditions that materially
+shape the solution. -->
+
+## Alternatives Considered
+
+<!-- Describe meaningful alternatives already considered and why they may not meet
+the need.  This does not need to be exhaustive. -->
+
+## Security and Trust-Boundary Considerations
+
+<!-- Identify whether the request introduces or changes network access, filesystem
+access, credentials, privileged mutation, external input, data/control
+boundaries, or other consequential capabilities.  Do not include private
+vulnerability details. -->
+
+## Documentation Impact
+
+<!-- Identify documentation, standards, examples, migration guidance, or public
+reference material likely to change. -->
+
+## Acceptance Criteria
+
+<!-- List observable outcomes that would make the request complete.  Avoid locking
+the issue to an implementation unless that implementation is already governed. -->
+
+- [ ] ...

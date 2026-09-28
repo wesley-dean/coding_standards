@@ -1,3 +1,11 @@
+---
+name: General issue
+about: Capture work that does not fit a specialized issue type
+title: ""
+labels: ""
+assignees: ""
+---
+
 ## Context
 
 The repository has several generated documentation artifacts, but no single
