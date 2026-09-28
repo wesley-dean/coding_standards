@@ -254,6 +254,15 @@ decision MUST be explicit.  The project SHOULD identify the preferred stronger
 control, the reason it is not used, compensating controls, residual risk, and a
 condition or trigger for reconsidering the decision.
 
+## Examples
+
+The non-normative
+[STRIDE-Flavored Security Disclosure Example](../../examples/general/security/stride-disclosure.md)
+shows how the Disclosure Standard can be applied to a hypothetical privileged
+automation workflow.  It connects assets, identities, trust boundaries, STRIDE
+threats, controls, evidence, limitations, accepted compromises, residual risk,
+and review triggers in one worked example.
+
 ## Guidance for Automated Agents
 
 Automated agents working under these standards MUST:
