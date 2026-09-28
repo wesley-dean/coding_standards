@@ -136,6 +136,20 @@ detect.
 Model self-review or multi-model agreement MAY provide perspective but SHALL NOT
 be represented as independent proof when common failure modes remain plausible.
 
+### Authoritative Objectives and Success Criteria
+
+The standard SHALL keep authoritative objectives, constraints, acceptance
+criteria, evaluators, and definitions of completion outside the AI-controlled
+trust domain.
+
+An AI MAY propose changes to those artifacts, but SHALL NOT silently weaken tests,
+scanner configuration, policy gates, or other success criteria to make its own
+output appear successful.
+
+AI-generated tests MAY provide useful evidence, but SHOULD NOT be the sole evidence
+for AI-generated behavior when common assumptions or failure modes remain
+plausible.
+
 ### Error Propagation
 
 Material assumptions SHOULD remain identifiable.
@@ -159,6 +173,15 @@ The preferred architecture SHALL distinguish:
 
 An AI's ability to request an operation SHALL NOT grant the technical capability
 or policy authorization to perform it.
+
+When multiple deterministic steps are required to establish a safety property,
+their ordering, failure handling, and success conditions SHALL be enforced by
+deterministic orchestration rather than by model instructions.
+
+An AI assertion that an operation ran or succeeded SHALL NOT establish
+authoritative workflow state.  Deterministic execution records, receipts,
+postcondition checks, or equivalent independent evidence SHOULD establish that
+state.
 
 Behavioral instructions to the model SHALL NOT be treated as enforcement of a
 safety property when violation could have material consequences.  Technical
@@ -224,13 +247,51 @@ deterministic validation and authorization boundaries.
 Successful execution of the low-level operation SHALL NOT by itself be treated as
 proof that the requested semantic transformation was correct.
 
-### Capability Expansion
+### Capability Scope and Monotonic Attenuation
 
 An AI component SHALL NOT be able to broaden its own filesystem, network, process,
-credential, API, or mutation capabilities merely by requesting them.
+credential, API, mutation, delegation, output, or other effective capabilities
+merely by requesting them.
 
-Capability changes SHOULD require policy or governance outside the AI reasoning
-component.
+AI-bearing execution contexts SHOULD begin with the minimum practical authority.
+
+AI-controlled transitions MAY preserve or reduce effective authority but SHALL NOT
+increase it.  Authority expansion SHALL originate outside the AI-controlled trust
+domain and SHOULD begin a new execution context where practical.
+
+Effective authority SHALL be evaluated by what a component can actually cause,
+not merely by tool names or tool count.
+
+Delegated child agents and subprocesses SHALL NOT receive effective authority
+greater than the delegating AI-controlled context.
+
+### Bounded Consequence and Aggregate Authority
+
+The standard SHALL distinguish narrow permission from narrow consequence.
+
+AI-assisted systems SHOULD bound plausible failure across applicable dimensions
+including rate, resource count, transaction value, fan-out, concurrency, duration,
+data scope, output scope, and reversibility.
+
+Aggregate authority across repeated actions, concurrent agents, and descendants
+SHALL be considered when material.  Quotas, rate limits, staged rollout, bounded
+fan-out, circuit breakers, rollback, snapshots, or equivalent containment SHOULD
+be used according to consequence.
+
+### Safety Controls and Delivery Velocity
+
+The standard SHALL recognize that AI generation can outpace both human review and
+conventional verification pipelines.
+
+Safety controls SHOULD minimize avoidable latency and routine approval burden so
+normal delivery pressure does not create a persistent incentive to bypass them.
+
+Deterministic pre-fixing, incremental analysis, trustworthy caching, parallel
+checks, changed-scope analysis, targeted checks, and staged verification MAY be
+used when they preserve required assurance.
+
+Required assurance SHALL NOT be silently reduced merely because generation is
+faster than verification or because a control is inconvenient.
 
 ### AI Output, Reuse, and Durable State
 
@@ -298,12 +359,32 @@ other non-mechanical judgment.
 Human approval SHALL NOT substitute for deterministic technical controls where
 those controls are practical.
 
+Human attention SHALL be treated as a scarce safety resource and SHOULD remain
+focused on judgments that cannot be established mechanically.
+
+Every consequential AI workflow SHALL retain an identifiable human or
+organizational owner appropriate to its delegated authority.
+
+Delegating reasoning, execution, or discretion to AI SHALL NOT be treated as
+delegating away accountability for granting and governing that authority.
+
+Human approval of a large generated artifact SHALL NOT be represented as proof of
+exhaustive inspection when realistic review capacity does not support that claim.
+
 ### AI-Generated Maintained Content
 
 AI-generated source code, tests, configuration, and documentation SHALL satisfy
 the same applicable standards as equivalent human-authored maintained content.
 
 AI origin SHALL NOT reduce required verification.
+
+Accepted AI-generated code becomes ordinary maintained code and SHALL carry normal
+ownership, maintainability, documentation, security, operability, and
+compatibility obligations.
+
+When AI-generated artifacts exceed realistic human review capacity, workflows
+SHOULD increase independent automated evidence or decompose the change rather than
+treat approval as exhaustive inspection.
 
 ### Relationship to Existing Standards
 
@@ -401,6 +482,12 @@ corpus grows enough to benefit from them.
 - Fabricated verification claims are explicitly prohibited.
 - Current-state checks become a first-class safeguard against stale model context.
 - Verification follows consequence rather than ceremony.
+- Authoritative objectives and success criteria remain outside the AI-controlled trust domain.
+- Deterministic orchestration rather than model narration establishes workflow completion.
+- AI-controlled authority can remain constant or shrink but cannot expand itself.
+- Aggregate rate, fan-out, concurrency, value, and other blast-radius dimensions become explicit containment concerns.
+- Verification latency can be optimized without silently lowering assurance.
+- Delegated AI authority retains identifiable human or organizational accountability.
 - Error propagation from an incorrect early premise becomes an explicit review
   concern.
 - Persisted or cached AI output does not silently gain authority.
@@ -435,6 +522,9 @@ corpus grows enough to benefit from them.
 - AI-generated work may require additional source inspection or test execution
   before consequential use.
 - Context refreshes and independent checks can add latency.
+- Bounding aggregate authority may require quotas, coordination, and state shared across otherwise independent agents.
+- Preserving independent acceptance criteria can require separate ownership of requirements, tests, or policy gates.
+- Optimizing verification latency without reducing assurance may require investment in caching, incremental analysis, and pipeline architecture.
 
 ## Compatibility and Migration
 

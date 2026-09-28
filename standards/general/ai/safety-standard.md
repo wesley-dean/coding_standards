@@ -73,6 +73,38 @@ Agreement from another model is not necessarily independent evidence.
 A plausible result MUST NOT be treated as verified merely because it is detailed,
 confident, or internally consistent.
 
+## Foundational Design Principles
+
+The detailed requirements in this standard can be understood through a small set
+of design principles.  These principles summarize the safety model; they do not
+replace the normative requirements that follow.
+
+- **Trust, but verify independently.**  Material claims and consequential outcomes
+  SHOULD be established with evidence reasonably independent of the failure mode
+  being checked.
+- **AI may only reduce its permissions scope, never increase it.**  AI-controlled
+  execution MAY preserve or reduce effective authority, but MUST NOT expand it.
+  Any expansion of effective authority MUST originate outside the AI-controlled
+  trust domain.
+- **AI may solve the problem; it may not decide what counts as solved.**
+  Authoritative objectives, constraints, acceptance criteria, and policy gates
+  MUST remain outside the AI-controlled trust domain.  An AI MAY propose changes
+  to them, but MUST NOT silently weaken them to make its work appear successful.
+- **Use AI for judgment; use deterministic systems for rules.**  A safety property
+  that can be enforced deterministically SHOULD be enforced outside the model
+  rather than delegated to model behavior.
+- **No single AI failure should have an unbounded consequence.**  Capability,
+  rate, fan-out, duration, value, data scope, concurrency, and reversibility
+  SHOULD be constrained according to consequence.
+- **Make the safe path the fast path.**  Safety controls SHOULD minimize avoidable
+  friction and redundant verification while preserving required assurance.
+- **Authority may be delegated; accountability may not.**  Consequential AI
+  workflows MUST retain an identifiable human or organizational owner accountable
+  for the authority delegated to the system.
+
+These principles are intentionally human-readable.  They are not stable
+commandment identifiers and MAY be refined as the AI standards corpus matures.
+
 ## Epistemic Vocabulary
 
 AI-assisted work SHOULD distinguish among the following when the distinction
@@ -267,6 +299,26 @@ conclusions that depend on that premise SHOULD be reconsidered.
 A workflow SHOULD avoid circular validation in which one AI-generated artifact is
 used as the sole evidence that another AI-generated artifact is correct.
 
+## Authoritative Objectives and Success Criteria
+
+An AI MUST NOT silently redefine the objective, constraints, acceptance criteria,
+evaluator, tests, policy, or definition of completion so that its own output
+appears successful.
+
+An AI MAY identify a conflict, recommend a requirement change, propose revised
+tests, or draft a policy change.  A change that materially alters what counts as
+success MUST become authoritative through a control or governance path outside
+the AI-controlled trust domain.
+
+AI-generated tests MAY contribute useful evidence, but they SHOULD NOT be the
+sole evidence for AI-generated behavior when the implementation and tests can
+share the same misunderstanding or failure mode.
+
+Changing a test, linter configuration, scanner exclusion, policy gate, or other
+evaluator merely to make generated work pass is a change to the definition of
+success and MUST receive the same authorization appropriate to changing that
+requirement directly.
+
 ## Equivalence Does Not Establish Correctness
 
 Deterministic equivalence can establish that a prior judgment applies to the same
@@ -448,6 +500,21 @@ These concepts MUST remain distinct.
 
 The ability to request an operation MUST NOT grant the capability or authorization
 to perform it.
+
+### Deterministic Orchestration Owns Workflow Success
+
+When multiple operations are required to establish a safety property, their
+required ordering, failure handling, and success conditions MUST be enforced by
+deterministic orchestration rather than by instructions asking the AI to invoke
+the steps correctly.
+
+An AI assertion that an operation ran, succeeded, or produced a particular state
+MUST NOT itself establish that fact.  Authoritative workflow state SHOULD be
+derived from deterministic execution records, verified postconditions, receipts,
+or equivalent evidence outside the model.
+
+The AI MAY explain or summarize authoritative workflow state after it has been
+established, but its explanation MUST NOT replace that state.
 
 ### Prefer Semantic Operations Over General Primitives
 
@@ -714,13 +781,30 @@ Examples include:
 If the live state no longer matches the reviewed state, the operation SHOULD fail
 closed or return for re-evaluation rather than proceed using stale approval.
 
-### Capability Expansion
+### Capability Scope and Monotonic Attenuation
 
 An AI component MUST NOT be able to broaden its own filesystem, network, process,
-credential, API, or mutation capabilities merely by requesting them.
+credential, API, mutation, delegation, output, or other effective capabilities
+merely by requesting them.
 
-Capability changes SHOULD require governance or mediation outside the AI reasoning
-component.
+An AI-bearing execution context SHOULD begin with the minimum effective authority
+practical for the task.
+
+For an AI-controlled transition from effective capability set `P(n)` to
+`P(n+1)`, `P(n+1)` MUST be a subset of or equal to `P(n)`.  AI-controlled
+execution MAY voluntarily reduce authority but MUST NOT increase it.
+
+Any increase in effective authority MUST originate from governance or mediation
+outside the AI-controlled trust domain and SHOULD begin a new execution context
+where practical.
+
+Capability comparisons MUST consider effective authority rather than the number
+or names of exposed tools.  A narrow-looking interface that permits arbitrary
+shell execution, unrestricted network access, broad mutation, or equivalent
+effects carries the authority of those effects.
+
+A delegated child agent or subprocess MUST NOT receive effective authority beyond
+that available to the delegating AI-controlled context.
 
 ## Fail Closed on Invalid Requests
 
@@ -754,6 +838,46 @@ Governance.
 Destructive or difficult-to-reverse operations SHOULD receive stronger validation
 and, where appropriate, human approval.
 
+## Bounded Consequence and Aggregate Authority
+
+Narrow permission does not by itself guarantee a narrow blast radius.
+
+AI-assisted systems SHOULD bound the consequence of a plausible single error
+across relevant dimensions such as resource count, request rate, transaction
+value, fan-out, concurrency, duration, data volume, output destinations, and
+reversibility.
+
+Repeated individually permitted actions MUST be evaluated for their aggregate
+effect.  Multi-agent or delegated workflows MUST consider aggregate authority
+across concurrent agents and descendants rather than evaluating each agent in
+isolation.
+
+Where consequence warrants, deterministic controls SHOULD provide quotas, rate
+limits, transaction ceilings, bounded fan-out, bounded concurrency, staged
+rollout, circuit breakers, snapshots, rollback, or equivalent containment.
+
+## Safety Controls and Delivery Velocity
+
+AI can generate changes faster than humans or conventional verification pipelines
+can meaningfully inspect them.  Safety architecture SHOULD account for that
+asymmetry rather than assume that routine human review will scale with generation
+speed.
+
+The safe workflow SHOULD be practical enough that normal delivery pressure does
+not create a persistent incentive to bypass it.
+
+Implementations SHOULD reduce avoidable verification latency through deterministic
+pre-fixing, incremental analysis, changed-scope analysis, trustworthy caching,
+parallel execution, targeted checks, or staged verification when those techniques
+preserve the required assurance.
+
+A faster workflow MUST NOT obtain its speed merely by silently reducing required
+assurance, skipping applicable controls, weakening acceptance criteria, or
+treating an incomplete check as complete.
+
+When cached or incremental verification is used, deterministic invalidation rules
+SHOULD establish whether prior evidence remains applicable.
+
 ## Confidence Values and Policy Gates
 
 AI-generated confidence values MUST NOT be interpreted as calibrated probabilities
@@ -785,6 +909,19 @@ Human approval MUST NOT be treated as proof that a technical control is correct.
 Deterministic containment SHOULD complement rather than be replaced by human
 oversight where practical.
 
+Human attention is a scarce safety resource.  Humans SHOULD NOT be used as routine
+checksums for properties that deterministic systems can establish more reliably
+and economically.
+
+Every consequential AI workflow MUST have an identifiable human or organizational
+owner appropriate to the scope of delegated authority.  Delegating execution,
+reasoning, or operational discretion to AI MUST NOT be treated as delegating away
+accountability for granting and governing that authority.
+
+An AI system's unpredictability does not reduce the need for accountable
+ownership.  Greater uncertainty about behavior SHOULD instead motivate narrower
+authority, stronger containment, and stronger verification.
+
 ## AI-Generated Code and Documentation
 
 AI-generated code is maintained code and MUST satisfy the same applicable coding,
@@ -800,6 +937,16 @@ public interfaces, and source material.
 A generated summary MUST NOT silently change the meaning of the authoritative
 source it summarizes.
 
+Once accepted into a maintained system, generated code becomes ordinary maintained
+code.  AI provenance does not reduce ownership, maintainability, documentation,
+security, operability, compatibility, or verification obligations.
+
+When an AI-generated artifact exceeds realistic human review capacity, human
+approval MUST NOT be represented as evidence that the artifact was exhaustively
+inspected.  The workflow SHOULD compensate with decomposition, independent tests,
+static analysis, architectural constraints, bounded execution, staged rollout, or
+other evidence appropriate to consequence.
+
 ## Testing AI-Assisted Work
 
 AI-assisted changes SHOULD receive the same project-owned test and verification
@@ -814,6 +961,12 @@ governance review, mediator tests, and tests demonstrating that unsupported
 capability requests are rejected.
 
 Passing tests remain scoped evidence rather than proof of complete correctness.
+
+When the same AI materially influences both an implementation and its tests, the
+tests SHOULD be treated as potentially sharing the implementation's assumptions.
+Independent project-owned tests, requirements-derived tests, deterministic
+analysis, or other differently failing evidence SHOULD be added when consequence
+warrants.
 
 ## Testing Deterministic Mediators
 
@@ -911,6 +1064,9 @@ applicable:
 - [ ] Dependent conclusions were revisited when upstream premises changed.
 - [ ] Verification depth is proportional to consequence and uncertainty.
 - [ ] Evidence is reasonably independent of the failure mode it should detect.
+- [ ] Authoritative objectives and acceptance criteria were not silently changed to make the AI's output pass.
+- [ ] AI-generated tests are not the sole evidence where they plausibly share the implementation's failure mode.
+- [ ] Required workflow sequencing and authoritative success state are owned by deterministic orchestration where practical.
 - [ ] Tool output is interpreted only as broadly as the result supports.
 - [ ] Behavioral instructions are not being mistaken for enforced safety boundaries.
 - [ ] Arbitrary network initiation is absent from the AI reasoning component.
@@ -922,9 +1078,15 @@ applicable:
 - [ ] Credentials remain outside the reasoning component where practical.
 - [ ] External mutation crosses deterministic validation and authorization.
 - [ ] The AI cannot broaden its own capabilities.
+- [ ] AI-controlled capability transitions preserve or reduce effective authority.
+- [ ] Delegated child agents and subprocesses do not receive greater effective authority than their parent context.
+- [ ] Aggregate rate, fan-out, concurrency, duration, value, and other blast-radius dimensions are bounded where consequence warrants.
 - [ ] Invalid or ambiguous consequential requests fail closed.
 - [ ] Changes remain narrow, reviewable, and reversible where practical.
 - [ ] Human review is present where human judgment is required.
+- [ ] Human attention is not being used as a routine substitute for deterministic verification.
+- [ ] Consequential AI workflows retain an identifiable accountable human or organizational owner.
+- [ ] Verification latency has been reduced through safe optimization rather than by silently weakening assurance.
 - [ ] AI-generated code and documentation meet normal project standards.
 - [ ] Tests and deterministic checks provide scoped evidence for material claims.
 - [ ] AI-generated output remains untrusted after persistence, caching, transfer, or reuse.
@@ -942,8 +1104,10 @@ applicable:
 
 AI systems are useful reasoning tools and unreliable authorities.
 
-Use them to propose, interpret, compare, and assist.  Require evidence for material
-claims.  Keep consequential side effects behind deterministic validation and
-authorization boundaries.  Make uncertainty visible, keep authority narrow, and
-design workflows so that a plausible mistake does not silently become a
-consequential one.
+Use them to propose, interpret, compare, and assist.  Require independent evidence
+for material claims.  Keep authoritative objectives, permission expansion,
+workflow success, and consequential side effects outside the AI-controlled trust
+domain.  Use deterministic systems for enforceable rules, bound the consequence
+of plausible mistakes, make the safe path practical enough to survive delivery
+pressure, and retain accountable human or organizational ownership for delegated
+authority.

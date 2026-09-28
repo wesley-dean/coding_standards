@@ -129,17 +129,17 @@ for the complete context, alternatives, and consequences.
 
 ### ADR-010: Adopt an AI Safety Standard Focused on Model Fallibility
 
-AI-assisted engineering treats model output as fallible and distinguishes
-observation, inference, assumption, recommendation, and uncertainty so plausible
-language does not silently become evidence.  Material claims are verified
-proportionately to consequence, current state is refreshed when freshness matters,
-and fabricated claims of tests, inspection, or tool execution are prohibited.
-Consequential network, filesystem, process, credential, publication, deployment,
-and mutation effects should cross deterministic validation and authorization
-boundaries rather than be owned directly by the AI reasoning component.  The
-standard complements the existing security, testing, and workflow standards while
-keeping human judgment focused on decisions that cannot be established
-mechanically.
+AI-assisted engineering treats model output as fallible and requires material
+claims and consequential outcomes to be verified with appropriately independent
+evidence.  Authoritative objectives, permission expansion, workflow success, and
+enforceable safety rules remain outside the AI-controlled trust domain; AI may
+preserve or reduce its effective authority but cannot increase it.  Deterministic
+orchestration owns consequential side effects and success state, while containment
+bounds aggregate rate, fan-out, value, concurrency, and reversibility so one
+plausible failure cannot become unbounded harm.  The standard also treats human
+attention as scarce, calls for safe workflows that remain practical under delivery
+pressure, and preserves identifiable human or organizational accountability when
+authority is delegated to AI.
 
 See
 [ADR-010](ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md)

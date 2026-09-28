@@ -451,6 +451,64 @@ decision.
 The human decision does not prove either implementation correct; normal
 verification still applies.
 
+## AI Does Not Redefine Success
+
+A coding agent is asked to fix a parser defect.  Its implementation still fails
+an existing regression test.
+
+An unsafe workflow allows the agent to edit the regression test until the new
+implementation passes and then declare the task complete.
+
+A safer workflow treats the regression test and the requirement it represents as
+authoritative inputs.  The agent may explain why it believes the test is wrong and
+may propose a revised test, but changing what counts as success requires an
+independent governance or review path.
+
+## Deterministic Workflow Owns Success
+
+An AI requests creation of a repository issue.
+
+A deterministic workflow generates an operation identifier, creates the issue,
+reads the resulting issue back, verifies the identifier and expected repository,
+records a receipt, and only then marks the operation successful.
+
+The AI may summarize the result.  Its statement that the issue was created is not
+the authoritative success signal.
+
+## Narrow Permission Can Still Produce Broad Harm
+
+An AI is allowed to issue refunds of at most five dollars.
+
+The permission appears narrow, but an unconstrained loop could issue millions of
+individually permitted refunds.
+
+A safer system constrains transaction value, aggregate spend, request rate,
+concurrency, and time window.  It evaluates the aggregate consequence rather than
+assuming that narrow per-call authority implies a narrow blast radius.
+
+## Make the Safe Path the Fast Path
+
+An AI generates a small Python change in a few minutes.  The full lint and security
+pipeline takes substantially longer and fails because a deterministic formatter
+would change indentation.
+
+A safer and faster workflow runs deterministic formatting before the expensive
+validation stage, uses targeted checks during iteration, and retains the complete
+required verification before promotion.  It reduces redundant work without
+weakening the assurance required for the final artifact.
+
+## Delegated Authority Retains Accountability
+
+An organization authorizes an AI agent to operate a production workflow within
+defined limits.
+
+The agent takes an action the organization did not individually pre-approve.
+
+The organization does not treat the agent's autonomy as an accountability sink.
+The workflow retains an identifiable accountable owner, records the delegated
+authority, and evaluates whether the granted capability, containment, policy, and
+verification were appropriate.
+
 ## Takeaway
 
 Safe AI-assisted engineering does not require assuming that models are hostile.
