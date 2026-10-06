@@ -74,7 +74,7 @@ The repository includes standards covering areas such as:
 - clean architecture;
 - clean coding;
 - Conventional Commit and release-versioning governance;
-- development workflow, scope, and backlog governance;
+- development workflow, scope, backlog, and branch-naming governance;
 - cross-language testing, CI reporting, and test-result publication;
 - AI safety centered on model fallibility, evidence, uncertainty, and deterministic
   mediation of consequential side effects;
@@ -355,6 +355,9 @@ The reusable template corpus is governed by
 [ADR-009](doc/adr/ADR-009-add-reusable-reference-templates.md).
 The cross-cutting AI safety model is governed by
 [ADR-010](doc/adr/ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md).
+Human and agent branch naming, including the preferred `agent/` namespace and
+compatibility handling for `ai/` and `codex/`, is governed by
+[ADR-011](doc/adr/ADR-011-adopt-conventional-branch-naming-for-agent-work.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
 
