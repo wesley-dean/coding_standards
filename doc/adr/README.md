@@ -145,6 +145,19 @@ See
 [ADR-010](ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md)
 for the complete context, alternatives, and consequences.
 
+### ADR-011: Adopt Conventional Branch Naming With an Agent Provenance Namespace
+
+Development branches use purpose-oriented names aligned with the repository's
+Conventional Commit vocabulary, while agent-owned work prefers the vendor-neutral
+`agent/<type>/<description>` namespace.  The `ai/` and `codex/` namespaces remain
+accepted compatibility routes for existing automation and historical branches,
+and branch names remain routing metadata rather than proof of authorship or
+authorization.  Issue numbers are not required in branch names, and automatic
+issue-branch creation is no longer part of the repository's workflow.
+
+See
+[ADR-011](ADR-011-adopt-conventional-branch-naming-for-agent-work.md)
+for the complete context, alternatives, and consequences.
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -164,3 +177,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-008: Adopt the IDEA Zero Trust Security Framework](ADR-008-adopt-idea-zero-trust-security-framework.md)
 - [ADR-009: Add Reusable Reference Templates](ADR-009-add-reusable-reference-templates.md)
 - [ADR-010: Adopt an AI Safety Standard Focused on Model Fallibility](ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md)
+- [ADR-011: Adopt Conventional Branch Naming With an Agent Provenance Namespace](ADR-011-adopt-conventional-branch-naming-for-agent-work.md)
