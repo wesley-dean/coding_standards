@@ -74,7 +74,8 @@ The repository includes standards covering areas such as:
 - clean architecture;
 - clean coding;
 - Conventional Commit and release-versioning governance;
-- development workflow, scope, backlog, and branch-naming governance;
+- development workflow, scope, backlog, branch naming, and review-gated
+  auto-merge governance;
 - cross-language testing, CI reporting, and test-result publication;
 - AI safety centered on model fallibility, evidence, uncertainty, and deterministic
   mediation of consequential side effects;
@@ -358,6 +359,8 @@ The cross-cutting AI safety model is governed by
 Human and agent branch naming, including the preferred `agent/` namespace and
 compatibility handling for `ai/` and `codex/`, is governed by
 [ADR-011](doc/adr/ADR-011-adopt-conventional-branch-naming-for-agent-work.md).
+Review-gated auto-merge for Ready pull requests is governed by
+[ADR-012](doc/adr/ADR-012-enable-auto-merge-after-repository-review-gates.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
 
