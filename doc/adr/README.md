@@ -158,6 +158,20 @@ issue-branch creation is no longer part of the repository's workflow.
 See
 [ADR-011](ADR-011-adopt-conventional-branch-naming-for-agent-work.md)
 for the complete context, alternatives, and consequences.
+### ADR-012: Enable Auto-Merge After Repository Review Gates
+
+Ready pull requests may use hosting-platform auto-merge when the repository
+permits it and all normal review, CI, branch-protection, CODEOWNERS, security, and
+other merge gates remain authoritative.  Auto-merge delegates only the mechanical
+merge operation; it is not approval and does not allow an automated coding agent
+to waive or satisfy its own authorization requirements.  Repositories may retain
+manual merge when they intentionally require a separate final decision beyond
+their configured gates.
+
+See
+[ADR-012](ADR-012-enable-auto-merge-after-repository-review-gates.md)
+for the complete context, alternatives, and consequences.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -178,3 +192,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-009: Add Reusable Reference Templates](ADR-009-add-reusable-reference-templates.md)
 - [ADR-010: Adopt an AI Safety Standard Focused on Model Fallibility](ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md)
 - [ADR-011: Adopt Conventional Branch Naming With an Agent Provenance Namespace](ADR-011-adopt-conventional-branch-naming-for-agent-work.md)
+- [ADR-012: Enable Auto-Merge After Repository Review Gates](ADR-012-enable-auto-merge-after-repository-review-gates.md)
