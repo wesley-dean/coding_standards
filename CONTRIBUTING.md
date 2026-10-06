@@ -17,31 +17,42 @@ Changes to the standards, release packaging, or adoption contract should also
 follow the governing ADRs beneath `doc/adr/` and the current-decision digest in
 [`doc/adr/README.md`](doc/adr/README.md).
 
-## Issue Branches
+## Branch Names
 
-Work that addresses a tracked issue should use the branch created by Create Issue
-Branch when that branch is available.
+This repository follows the branch-naming guidance in
+[Development Workflow and Backlog Governance](standards/general/development-workflow-governance.md).
 
-This repository configures Create Issue Branch to create issue branches
-immediately and to use its `full` branch naming scheme:
-
-```text
-issue-<issue-number>-<slugified-issue-title>
-```
-
-For example, issue 15 titled `Fix nasty bug!` produces a branch similar to:
+Human-created development branches use a Conventional Commit-aligned purpose
+type followed by a lowercase, hyphen-separated description:
 
 ```text
-issue-15-Fix_nasty_bug
+<type>/<description>
 ```
 
-The branch is created asynchronously after the issue is opened and may not be
-visible immediately.  If an expected issue branch is not yet available, retry
-before creating a separate branch.
+Agent-created development branches should prefer the vendor-neutral `agent/`
+namespace:
 
-Prefer the generated issue branch over creating a different branch for work that
-addresses that issue.
+```text
+agent/<type>/<description>
+```
 
+The `ai/` and `codex/` namespaces are also recognized for compatibility with
+existing agent workflows:
+
+```text
+ai/<type>/<description>
+codex/<type>/<description>
+```
+
+Typical purpose types include `feat`, `fix`, `docs`, `test`, `refactor`,
+`perf`, `build`, `ci`, `chore`, `revert`, and `style`.
+
+Issue numbers are not required in branch names.  Link issues through pull
+requests, commits, or other reviewable metadata when that traceability is
+useful.
+
+Existing branches do not need to be renamed solely to satisfy the current
+convention.
 ## Build Verification
 
 The canonical release-artifact build is:
