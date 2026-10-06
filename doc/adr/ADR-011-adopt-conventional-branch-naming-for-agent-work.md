@@ -41,10 +41,12 @@ with lowercase, hyphen-separated descriptions and purpose prefixes including
 It also defines AI source prefixes such as `ai/`, `claude/`, `codex/`, and
 `copilot/`.
 
-The project requires one vendor-neutral provenance namespace, `agent/`, while
-also retaining the semantic purpose classification.  The resulting nested form is
-therefore an intentional project extension of Conventional Branch rather than a
-claim of strict conformance with the upstream grammar.
+The project prefers one vendor-neutral provenance namespace, `agent/`, while
+also retaining the semantic purpose classification.  Existing automation already
+recognizes `ai/` and `codex/`, so those prefixes remain accepted compatibility
+namespaces while new generic agent work should prefer `agent/`.  The resulting
+nested form is therefore an intentional project extension of Conventional Branch
+rather than a claim of strict conformance with the upstream grammar.
 
 References:
 
@@ -61,7 +63,8 @@ References:
 - Preserve compatibility with deterministic agent-branch signing and review tools.
 - Keep provenance signaling separate from proof of commit identity.
 - Prefer lowercase, URL-friendly, shell-friendly, hyphen-separated descriptions.
-- Avoid vendor-specific agent prefixes in repository governance.
+- Prefer a vendor-neutral agent prefix while preserving compatibility with
+  established `ai/` and `codex/` automation.
 - Keep branch naming advisory to release classification; pull-request and final
   commit titles remain the governed release signals.
 
@@ -74,16 +77,21 @@ SHOULD use Conventional Branch naming for non-agent development branches:
 <type>/<description>
 ```
 
-The supported purpose types are:
+The supported purpose types SHOULD align with the repository's Conventional
+Commit vocabulary.  Common types include:
 
 ```text
-feature
 feat
-bugfix
 fix
-hotfix
-release
+docs
+test
+refactor
+perf
+build
+ci
 chore
+revert
+style
 ```
 
 Descriptions SHALL follow Conventional Branch description rules: lowercase
@@ -102,7 +110,7 @@ release/v2.1.0
 
 ### Agent-Owned Branches
 
-A branch created and owned by an automated coding agent SHALL begin with the
+A branch created and owned by an automated coding agent SHOULD begin with the
 vendor-neutral `agent/` namespace and SHALL retain the Conventional Branch
 purpose classification as the next path component:
 
@@ -123,9 +131,11 @@ The `agent/` namespace is a project extension to Conventional Branch 1.1.0.
 The nested form intentionally preserves both provenance and purpose even though
 the upstream grammar defines one prefix component.
 
-Vendor-specific prefixes such as `codex/`, `claude/`, or `copilot/` SHALL
-NOT be required by this governance.  Repository tooling SHOULD key generic
-agent-owned workflows from `agent/*`.
+Repository tooling SHOULD use `agent/*` as the preferred generic namespace for
+new agent-owned work.  The `ai/*` and `codex/*` namespaces MAY remain recognized
+for compatibility with existing automation and historical branches.  Other
+vendor-specific namespaces such as `claude/*` or `copilot/*` are not required by
+this governance.
 
 ### Provenance Is a Routing Signal
 
@@ -195,13 +205,15 @@ without burdening the branch grammar.
 
 ### Use Conventional Branch AI Prefixes Directly
 
-Using `ai/<description>`, `codex/<description>`, or another upstream AI source
-prefix was considered.
+Using only `ai/<description>`, `codex/<description>`, or another upstream AI
+source prefix was considered.
 
-The project instead needs one stable provenance namespace that is independent of
+The project instead prefers one stable provenance namespace that is independent of
 model vendor or agent implementation, and it needs to preserve the purpose type as
 a separately parseable component.  `agent/<type>/<description>` satisfies those
-requirements at the cost of becoming an explicit project extension.
+requirements at the cost of becoming an explicit project extension.  `ai/*` and
+`codex/*` remain compatibility routes because existing automation already
+recognizes them.
 
 ### Use `agent/<description>` Only
 
@@ -238,8 +250,9 @@ New human-created development branches will use Conventional Branch purpose
 prefixes, while new agent-owned branches will use the same purpose vocabulary
 beneath `agent/`.
 
-Repository automation can use `agent/*` for broad provenance routing and inspect
-the second component when purpose-specific behavior is needed.
+Repository automation can use `agent/*` as the preferred broad provenance route,
+while optionally accepting `ai/*` and `codex/*` for compatibility.  Automation
+can inspect the second component when purpose-specific behavior is needed.
 
 Create Issue Branch automation and its `issue-*` naming guidance will be removed
 from this repository.
