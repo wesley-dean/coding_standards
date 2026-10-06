@@ -170,6 +170,78 @@ The size of a change is not the deciding factor.  A one-line unrelated cleanup m
 still be out of scope, while a larger supporting change may be necessary to fulfill
 the active task correctly.
 
+## Branch Naming
+
+Repositories adopting this standard SHOULD use a purpose-oriented branch name
+that communicates the kind of work being performed without requiring an issue
+number.
+
+Human-created development branches SHOULD use:
+
+```text
+<type>/<description>
+```
+
+Agent-created branches SHOULD prefer the vendor-neutral provenance namespace:
+
+```text
+agent/<type>/<description>
+```
+
+The `ai/` and `codex/` namespaces MAY be accepted for compatibility with
+existing automation and agent workflows:
+
+```text
+ai/<type>/<description>
+codex/<type>/<description>
+```
+
+The purpose type SHOULD align with the repository's Conventional Commit
+vocabulary.  Common types include:
+
+```text
+feat
+fix
+docs
+test
+refactor
+perf
+build
+ci
+chore
+revert
+style
+```
+
+Descriptions SHOULD use lowercase words separated by hyphens.  Branch names
+SHOULD avoid spaces, underscores, unnecessary punctuation, and issue numbers
+used only to satisfy a naming template.
+
+Examples include:
+
+```text
+feat/add-manifest-validation
+fix/reject-empty-owner
+agent/docs/update-security-guidance
+agent/chore/refresh-release-tooling
+ai/test/add-cache-regression-coverage
+codex/refactor/split-parser-stages
+```
+
+Branch classification is descriptive development metadata.  It MUST NOT be
+treated as proof of authorship, authorization, or release significance.
+Security-sensitive automation MUST independently verify the properties on
+which it relies.
+
+Issue numbers SHALL NOT be required in branch names.  Issue linkage MAY be
+preserved in pull requests, commit messages, or other reviewable metadata.
+
+Branch creation SHOULD occur when work begins rather than automatically when an
+issue is opened.  Existing branches are not required to be renamed solely to
+match this convention.
+
+See ADR-011 for the decision context, alternatives, compatibility implications,
+and relationship to Conventional Commit release governance.
 ## Backlog Issues
 
 A backlog issue SHOULD contain enough information for another contributor to
