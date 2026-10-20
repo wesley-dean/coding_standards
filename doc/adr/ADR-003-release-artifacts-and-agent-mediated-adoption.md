@@ -144,7 +144,7 @@ A consuming repository records its selected standards release in a project-root
 `.codingstandardrc` file.
 
 The file is repository configuration data, not executable shell input.  The
-canonical fields are:
+canonical standards-provenance fields are:
 
 ```toml
 source = "https://github.com/wesley-dean/coding_standards.git"
@@ -163,6 +163,13 @@ The fields have these meanings:
 
 The recorded hash is the digest of the release archive, not a digest calculated
 from a potentially modified materialized directory.
+
+An optional repository-owned Boolean `three_phase_development` MAY select the
+additional phase-gated development policy.  Absence or `false` means disabled;
+`true` explicitly enables it.  This field is not provenance and MUST be
+preserved by standards adoption, refresh, upgrade, downgrade, and repair.
+It MUST NOT be silently added as `true` to existing consumers.  See ADR-013
+for the complementary governance and migration decision.
 
 A consumer must never persist `latest` as its version.
 
