@@ -172,6 +172,22 @@ See
 [ADR-012](ADR-012-enable-auto-merge-after-repository-review-gates.md)
 for the complete context, alternatives, and consequences.
 
+### ADR-013: Adopt Opt-In Three-Phase Development Governance
+
+Repositories may opt into an additional Product Management, Technical Planning,
+and Development lifecycle by explicitly setting `three_phase_development = true`
+in the repository-root `.codingstandardrc`; omitted or false settings preserve
+existing development governance.  The profile defines separate human approval
+gates for user stories and technical tasks, labels for work authorization and
+priority, milestone-based epics, and a documented approach to new discoveries,
+blocked work, and completion evidence.  Agents may propose additional work but
+cannot independently authorize it.  Existing consumers are not silently enrolled
+when upgrading standards, and no custom project-management tooling is required.
+
+See
+[ADR-013](ADR-013-adopt-opt-in-three-phase-development-governance.md)
+for the full decision and tradeoffs.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -193,3 +209,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-010: Adopt an AI Safety Standard Focused on Model Fallibility](ADR-010-adopt-ai-safety-standard-focused-on-model-fallibility.md)
 - [ADR-011: Adopt Conventional Branch Naming With an Agent Provenance Namespace](ADR-011-adopt-conventional-branch-naming-for-agent-work.md)
 - [ADR-012: Enable Auto-Merge After Repository Review Gates](ADR-012-enable-auto-merge-after-repository-review-gates.md)
+- [ADR-013: Adopt Opt-In Three-Phase Development Governance](ADR-013-adopt-opt-in-three-phase-development-governance.md)

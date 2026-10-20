@@ -244,6 +244,19 @@ match this convention.
 
 See ADR-011 for the decision context, alternatives, compatibility implications,
 and relationship to Conventional Commit release governance.
+## Opt-In Three-Phase Development
+
+Repositories MAY explicitly adopt the companion
+[Opt-In Three-Phase Development Governance](three-phase-development-governance.md)
+standard by setting `three_phase_development = true` in the repository-root
+`.codingstandardrc`.  This adds separate Product Owner and Technical Architect
+approval gates, issue-based story/task traceability, and a defined task queue.
+Absent or `false` settings preserve the baseline workflow described here.
+Standards upgrades MUST NOT silently change an existing repository's explicit
+selection.  The optional profile's more specific requirements govern where
+it has been deliberately enabled, without weakening this document's core
+scope, security, or review requirements.
+
 ## Backlog Issues
 
 A backlog issue SHOULD contain enough information for another contributor to
@@ -669,6 +682,11 @@ person.
 
 
 ## Related Templates
+
+When the optional three-phase profile is enabled, its non-normative
+[User Story](../templates/repository/github/user-story.md) and
+[Technical Task](../templates/repository/github/technical-task.md) templates
+provide reference issue structures.
 
 The non-normative repository templates provide reusable structures for work
 governed by this document:
