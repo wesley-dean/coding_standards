@@ -76,6 +76,8 @@ The repository includes standards covering areas such as:
 - Conventional Commit and release-versioning governance;
 - development workflow, scope, backlog, branch naming, and review-gated
   auto-merge governance;
+- optional, explicit three-phase product and technical planning with
+  issue-based approval gates;
 - cross-language testing, CI reporting, and test-result publication;
 - AI safety centered on model fallibility, evidence, uncertainty, and deterministic
   mediation of consequential side effects;
@@ -254,6 +256,20 @@ The fields mean:
 
 The configuration file is data, not executable shell input.
 
+Repositories MAY explicitly select the optional three-phase development
+workflow in the same configuration file:
+
+```toml
+three_phase_development = true
+```
+
+The field is an optional Boolean: absent or `false` means disabled.
+Existing repositories remain opted out unless explicitly changed; new-project
+initialization SHOULD explicitly opt in.  Standards upgrades MUST preserve any
+existing selection.  See
+[Opt-In Three-Phase Development Governance](standards/general/three-phase-development-governance.md)
+for the workflow, authorization rules, and issue conventions.
+
 ### Managed Standards Tree
 
 The normal destination is:
@@ -361,6 +377,9 @@ compatibility handling for `ai/` and `codex/`, is governed by
 [ADR-011](doc/adr/ADR-011-adopt-conventional-branch-naming-for-agent-work.md).
 Review-gated auto-merge for Ready pull requests is governed by
 [ADR-012](doc/adr/ADR-012-enable-auto-merge-after-repository-review-gates.md).
+
+The opt-in three-phase planning process and compatibility rules are governed by
+[ADR-013](doc/adr/ADR-013-adopt-opt-in-three-phase-development-governance.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
 
