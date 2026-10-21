@@ -181,12 +181,29 @@ existing development governance.  The profile defines separate human approval
 gates for user stories and technical tasks, labels for work authorization and
 priority, milestone-based epics, and a documented approach to new discoveries,
 blocked work, and completion evidence.  Agents may propose additional work but
-cannot independently authorize it.  Existing consumers are not silently enrolled
-when upgrading standards, and no custom project-management tooling is required.
+cannot independently authorize it.  ADR-014 supersedes ADR-013's separate
+approval-comment/evidence requirement by making the issue's `approved` label
+authoritative.  Existing consumers are not silently enrolled when upgrading
+standards, and no custom project-management tooling is required.
 
 See
 [ADR-013](ADR-013-adopt-opt-in-three-phase-development-governance.md)
 for the full decision and tradeoffs.
+
+### ADR-014: Make the Approved Issue Label Authoritative
+
+For repositories opting into three-phase governance, the `approved` label is
+the sufficient, authoritative approval state for each particular story or
+technical task.  No issue-body authorization section, comment, or separate
+approval evidence is required to select that issue for its next phase.  A human
+holding the appropriate project role makes the approval decision; an agent may
+apply a label only when explicitly directed and may not approve its own work.
+Materially changed scope requires removing and reapplying the label, while
+accepted ADRs, security controls, and PR review gates remain separate.
+
+See
+[ADR-014](ADR-014-make-approved-issue-label-authoritative.md)
+for its scope, risks, and the partial supersession of ADR-013.
 
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
@@ -210,3 +227,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-011: Adopt Conventional Branch Naming With an Agent Provenance Namespace](ADR-011-adopt-conventional-branch-naming-for-agent-work.md)
 - [ADR-012: Enable Auto-Merge After Repository Review Gates](ADR-012-enable-auto-merge-after-repository-review-gates.md)
 - [ADR-013: Adopt Opt-In Three-Phase Development Governance](ADR-013-adopt-opt-in-three-phase-development-governance.md)
+- [ADR-014: Make the Approved Issue Label Authoritative](ADR-014-make-approved-issue-label-authoritative.md)
