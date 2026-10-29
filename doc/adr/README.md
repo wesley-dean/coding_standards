@@ -213,8 +213,8 @@ stories and their technical tasks** directly to the milestone, but not PRs.
 This supersedes ADR-013's story-only milestone convention.  Tasks remain
 sized for one cohesive, reviewable PR with sufficient context for a junior
 developer or new AI agent.  Each merged task PR produces equal-weight task-only
-progress for its story and feature, independently of GitHub's combined issue
-closure percentage.  Kanban states, story acceptance, and release readiness
+progress for its story and feature, alongside GitHub's preferred combined
+story-and-task issue-closure milestone view.  Kanban states, story acceptance, and release readiness
 remain distinct from milestone closure metrics.
 
 See
