@@ -26,7 +26,7 @@ As a [role], so that [benefit], I want [capability].
 
 ## Epic / Milestone
 
-<!-- Feature and milestone refer to the same GitHub milestone.  Group three or more closely related ungrouped stories in an existing or new milestone. -->
+<!-- Feature and milestone refer to the same GitHub milestone.  Group three or more closely related ungrouped stories in an existing or new milestone.  Assign both the story issue and each associated technical-task issue directly to that milestone; do not assign implementing PRs. -->
 
 ## Related Technical Tasks
 
