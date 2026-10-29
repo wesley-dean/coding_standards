@@ -205,6 +205,21 @@ See
 [ADR-014](ADR-014-make-approved-issue-label-authoritative.md)
 for its scope, risks, and the partial supersession of ADR-013.
 
+### ADR-015: Clarify Story, Task, Pull Request, and Progress Contracts
+
+The opt-in three-phase workflow treats feature/milestone and issue/ticket as
+interchangeable terms, groups three or more related stories, and sizes technical
+tasks for a single cohesive, reviewable PR with sufficient context for a junior
+developer or new AI agent.  One completed task corresponds to one merged PR, and
+each merged task PR produces equal-weight completed/remaining counts for its
+story and feature.  Kanban states derive from approval, actual work, and verified
+completion, while story acceptance and release readiness remain distinct from
+task implementation progress.
+
+See
+[ADR-015](ADR-015-clarify-story-task-pr-traceability-and-progress.md)
+for the rationale, tradeoffs, and compatibility implications.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -228,3 +243,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-012: Enable Auto-Merge After Repository Review Gates](ADR-012-enable-auto-merge-after-repository-review-gates.md)
 - [ADR-013: Adopt Opt-In Three-Phase Development Governance](ADR-013-adopt-opt-in-three-phase-development-governance.md)
 - [ADR-014: Make the Approved Issue Label Authoritative](ADR-014-make-approved-issue-label-authoritative.md)
+- [ADR-015: Clarify Story, Task, Pull Request, and Progress Contracts](ADR-015-clarify-story-task-pr-traceability-and-progress.md)
