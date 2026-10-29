@@ -179,7 +179,7 @@ and Development lifecycle by explicitly setting `three_phase_development = true`
 in the repository-root `.codingstandardrc`; omitted or false settings preserve
 existing development governance.  The profile defines separate human approval
 gates for user stories and technical tasks, labels for work authorization and
-priority, milestone-based epics, and a documented approach to new discoveries,
+priority, milestone-based epics (with membership refined by ADR-015), and a documented approach to new discoveries,
 blocked work, and completion evidence.  Agents may propose additional work but
 cannot independently authorize it.  ADR-014 supersedes ADR-013's separate
 approval-comment/evidence requirement by making the issue's `approved` label
@@ -205,6 +205,22 @@ See
 [ADR-014](ADR-014-make-approved-issue-label-authoritative.md)
 for its scope, risks, and the partial supersession of ADR-013.
 
+### ADR-015: Clarify Story, Task, Pull Request, and Progress Contracts
+
+The opt-in three-phase workflow treats feature/milestone and issue/ticket as
+interchangeable terms, groups three or more related stories, and assigns **both
+stories and their technical tasks** directly to the milestone, but not PRs.
+This supersedes ADR-013's story-only milestone convention.  Tasks remain
+sized for one cohesive, reviewable PR with sufficient context for a junior
+developer or new AI agent.  Each merged task PR produces equal-weight task-only
+progress for its story and feature, alongside GitHub's preferred combined
+story-and-task issue-closure milestone view.  Kanban states, story acceptance, and release readiness
+remain distinct from milestone closure metrics.
+
+See
+[ADR-015](ADR-015-clarify-story-task-pr-traceability-and-progress.md)
+for the rationale, tradeoffs, and compatibility implications.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -228,3 +244,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-012: Enable Auto-Merge After Repository Review Gates](ADR-012-enable-auto-merge-after-repository-review-gates.md)
 - [ADR-013: Adopt Opt-In Three-Phase Development Governance](ADR-013-adopt-opt-in-three-phase-development-governance.md)
 - [ADR-014: Make the Approved Issue Label Authoritative](ADR-014-make-approved-issue-label-authoritative.md)
+- [ADR-015: Clarify Story, Task, Pull Request, and Progress Contracts](ADR-015-clarify-story-task-pr-traceability-and-progress.md)

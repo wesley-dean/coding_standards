@@ -50,7 +50,7 @@ Stories MUST capture desired behavior with observable acceptance criteria, relev
 
 ## Phase 2: Technical Planning (How)
 
-The Senior Engineer MUST review repository governance and accepted ADRs before proposing the implementation.  Each distinct technical task SHOULD link to its parent approved story and describe implementation boundaries, dependencies, verification, compatibility requirements, and completion criteria.  Stories SHOULD link back to their tasks.
+The Senior Engineer MUST review repository governance and accepted ADRs before proposing the implementation.  Each distinct technical task SHOULD link to its parent approved story and describe implementation boundaries, dependencies, verification, compatibility requirements, and completion criteria.  Every technical task MUST be scoped as one independently reviewable pull request; oversized tasks MUST be decomposed before execution when foreseeable.  Each task MUST explain its purpose and parent feature context, intended outcome, relevant governing decisions, explicit scope exclusions, acceptance criteria, and verification evidence so an informed junior developer or a new AI agent can execute it without relying on prior conversations.  The task's detail SHOULD guide consequential decisions without dictating incidental implementation choices.  Stories SHOULD link back to their tasks.
 
 Consequential architecture, security, persistence, public-interface, deployment, and compatibility decisions MUST follow repository ADR and approval governance.  A task issue cannot replace an ADR.
 
@@ -60,7 +60,7 @@ Consequential architecture, security, persistence, public-interface, deployment,
 
 Before execution, an implementer MUST examine the current approved issues, governing documentation, dependencies, and blockers.  Work MUST follow the priority rules below and remain within authorized task scope.  Routine helpers, tests, documentation, error handling, and other necessary supporting work MAY be done without separate approval if they preserve the approved contract.
 
-Implementers MUST link changes and PRs to tracked tasks, report actual verification evidence, and avoid claiming delivery merely because code has been written or merged.
+Implementers MUST link changes and PRs to tracked tasks, report actual verification evidence, and avoid claiming delivery merely because code has been written or merged.  One completed technical task MUST map to exactly one merged implementing PR, and each merged implementing PR MUST implement exactly one technical task.  Multiple commits and in-scope review corrections MAY remain in that PR.  Closed, unmerged attempts do not count as completion.  After each task PR merges, provide equal-weight story and feature progress counts as specified below.
 
 **Exit gate:** A technical task is Done only after its own Definition of Done; a story is Done only when its acceptance criteria have been independently verified.  Release readiness is assessed separately.  Separate chats MAY represent these phases, but the repository and approval records remain authoritative.
 
@@ -81,7 +81,13 @@ The suggested GitHub labels are:
 
 Neither priority label means normal priority.  The two priority labels MUST NOT coexist, and each issue SHOULD have one type label.  For an **open** issue, `approved` without `in-progress` means TODO; `approved` plus `in-progress` means In Progress.  An open issue without `approved` is **proposed**, not TODO, regardless of any other labels.  Closure with reason completed means Done only after the applicable Definition of Done; issues closed as not planned are excluded from delivered work.
 
-Milestones MAY represent epics.  Assign milestones to product stories rather than implementation tasks so milestone completion reflects capabilities rather than engineering activities.  A GitHub issue has one milestone; cross-cutting feature relationships SHOULD use references rather than double counting.  Story checklists with issue links are useful navigation aids, not automatically authoritative completion measurements.  Each task SHOULD link back to its story, and blockers MUST be recorded visibly.
+For this GitHub profile, *feature* and *milestone* are interchangeable names for the same GitHub milestone; *issue* and *ticket* are interchangeable names for a GitHub issue.  When three or more closely related ungrouped stories share a common outcome, they MUST be assigned to an existing suitable feature/milestone or a newly created one.  One or two stories MAY remain ungrouped.  A milestone is not inherently a delivery-date commitment.
+
+Every story **and technical-task issue** associated with a feature MUST be assigned directly to its GitHub milestone.  Each child task MUST additionally link to its parent story and MUST use the same milestone as that story; a standalone maintenance task MAY be assigned to an applicable feature directly.  An issue with no associated feature need not have a milestone until grouped.  **Implementing PRs MUST NOT be assigned to feature/milestones**; they link to their technical tasks.  An issue has only one GitHub milestone; cross-cutting relationships use issue references.  Story checklists with issue links remain navigation aids rather than automatically authoritative task counts.  Blockers MUST be recorded visibly.  Periodic backlog audits SHOULD identify missing or inconsistent story/task milestone assignments and unintended PR milestone assignments.
+
+The native GitHub milestone percentage consequently measures combined **issue closure** across directly assigned stories and tasks, rather than story acceptance or task-only implementation.  It can also count issues closed as not planned.  Use separate, clearly named story-acceptance and equal-weight technical-task metrics for delivery reporting.  For four stories containing 1, 1, 1, and 5 tasks respectively, finishing the first two stories yields 2/4 accepted stories (50%), 4/12 closed milestone issues (33.3%), and 2/8 completed technical tasks (25%).  The 33.3% combined issue-closure metric is the preferred native milestone overview.  The 25% task-only metric remains the required implementation-progress report after each merged task PR.  Neither is an estimate of labor hours or remaining risk.
+
+The Kanban lifecycle is Backlog (unapproved proposals outside the active board), Todo (open, approved, not yet started), In Progress (approved and started), and Done (verified completion).  Story approval authorizes technical decomposition; task approval authorizes execution.  When decomposition starts on a story, or a child task starts, the story MUST be In Progress; partial completion does not return a started story to Todo.  A story moves to Done only after its independent acceptance criteria are verified, not merely when its final task PR merges.  Approval removal due to material scope change MUST suspend further affected execution; historical work already performed must not be misrepresented as never started.  A consumer MAY show a blocked or paused condition without inventing a fifth Kanban status.
 
 Label creation is a one-time repository setup step where needed.  Reference templates are distributed with the standards but are not activated automatically.
 
@@ -145,7 +151,7 @@ If new work blocks an active task, document the blocker and related proposal or 
 
 **Task Ready:** The task bears its own authoritative `approved` label, its parent story is approved (or the maintenance exception below applies), and agreed technical scope, governing ADRs, dependencies, and a verification plan are recorded.
 
-**Task Done:** The authorized implementation and necessary tests/documentation are complete; relevant checks have passed or their limitations are explicitly documented; and required integration/review gates have been satisfied.
+**Task Done:** The authorized implementation and necessary tests/documentation are complete; relevant checks have passed or their limitations are explicitly documented; and its single implementing PR has been reviewed and merged through required gates.  A task closed without delivery (duplicate, obsolete, or not planned) is not Done.
 
 **Story Done:** Required technical work is completed and its independently verifiable acceptance criteria have been shown to pass.  Closing the final task or merging a PR is not by itself acceptance of the story.
 
@@ -168,6 +174,8 @@ Unless the authorized human reprioritizes work, implementers SHALL:
 Dependencies and blockers take precedence.  Product stories are not execution-queue items.  Prefer one active task per agent unless parallel effort has an explicit benefit.  Add `in-progress` when starting an approved task; remove it and close the task with the completed reason only after verification.
 
 ## Reporting, Handoffs, and Migration
+
+After each merged technical-task PR, report completed, total, and remaining technical tasks for its parent story and feature/milestone, with equal weight per distinct technical task and a percentage calculated as completed/total * 100.  Do not use the combined native GitHub milestone closure count as the denominator for the task-only measure.  A feature with three stories of two tasks each reports 1/2 completed and 1 remaining (50%) for its first story and 1/6 completed and 5 remaining (16.7%) for the feature after the first task merges.  Use the current identified task count, disclose additions or removals that change the denominator, and count closed-not-planned work as neither delivered nor remaining.  If stories have not been fully decomposed, label the result provisional progress against *known* tasks; zero identified tasks means progress is not yet measurable, not 100%.
 
 Reports SHOULD separately show completed versus approved technical tasks, accepted versus approved stories, and accepted stories within each epic.  Include both counts and percentages, explicitly exclude rejected/not-planned work from delivered counts, and disclose any additions or removals from approved scope.  Unweighted issue counts are **not** a measure of effort, delivery date, or production readiness.
 
