@@ -79,7 +79,16 @@ inventory of **all associated issues**, including implementation work.
 GitHub's native milestone percentage therefore represents closed assigned
 issues divided by total assigned issues, combining stories and tasks.
 It SHALL NOT be presented as the story-acceptance percentage or the
-technical-task completion percentage.  Closing an issue as not planned
+technical-task completion percentage.
+
+For example, consider four stories whose task counts are 1, 1, 1, and 5.
+After the first two stories and their respective tasks are completed,
+story-only completion is 2/4 (50%), combined milestone closure is 4/12
+(33.3%), and equal-weight technical-task completion is 2/8 (25%).
+The primary implementation-progress report SHALL show the task-only 25%;
+GitHub's 33.3% remains useful as a secondary combined issue-closure view.
+Even 25% is a task-count fraction, not a claim that 25% of engineering
+hours or remaining risk have been consumed.  Closing an issue as not planned
 may still affect GitHub's native closure percentage; such issues are
 excluded from independently reported *delivered* work.  Missing or
 incorrect milestone fields SHALL be treated as backlog-integrity defects,
