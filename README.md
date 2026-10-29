@@ -380,6 +380,9 @@ Review-gated auto-merge for Ready pull requests is governed by
 
 The opt-in three-phase planning process and compatibility rules are governed by
 [ADR-013](doc/adr/ADR-013-adopt-opt-in-three-phase-development-governance.md).
+The story/task/PR mapping, feature grouping, Kanban lifecycle, and equal-weight
+progress reporting refinements are governed by
+[ADR-015](doc/adr/ADR-015-clarify-story-task-pr-traceability-and-progress.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
 
