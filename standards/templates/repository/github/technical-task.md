@@ -11,6 +11,12 @@ assignees: ""
 <!-- Reference the parent story, e.g. #123, or describe the bounded maintenance
 work when no parent story applies. -->
 
+## Feature / Milestone
+
+<!-- Assign this issue directly to the same GitHub milestone as its parent
+story, if any.  Standalone maintenance tasks may have their own relevant
+milestone.  PRs link to this task but must not carry a feature milestone. -->
+
 ## Purpose and Story Context
 
 <!-- Explain why this task matters, its intended outcome, and how it contributes to the parent story and feature.  A junior developer or new agent should not need prior chats. -->
