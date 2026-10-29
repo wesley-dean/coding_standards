@@ -85,10 +85,12 @@ For example, consider four stories whose task counts are 1, 1, 1, and 5.
 After the first two stories and their respective tasks are completed,
 story-only completion is 2/4 (50%), combined milestone closure is 4/12
 (33.3%), and equal-weight technical-task completion is 2/8 (25%).
-The primary implementation-progress report SHALL show the task-only 25%;
-GitHub's 33.3% remains useful as a secondary combined issue-closure view.
-Even 25% is a task-count fraction, not a claim that 25% of engineering
-hours or remaining risk have been consumed.  Closing an issue as not planned
+The **preferred milestone overview** SHALL be GitHub's combined issue-closure
+view (33.3% in this example), with stories and tasks both assigned to the
+milestone and PRs excluded.  Following each merged task PR, the independent
+**task-only completion report** SHALL still show 25% in this example,
+alongside story-level task progress and remaining counts.  Neither measure
+represents elapsed engineering effort, remaining hours, or remaining risk.  Closing an issue as not planned
 may still affect GitHub's native closure percentage; such issues are
 excluded from independently reported *delivered* work.  Missing or
 incorrect milestone fields SHALL be treated as backlog-integrity defects,
@@ -191,8 +193,9 @@ The independent task-only progress metric SHALL NOT use the combined
 GitHub milestone issue count as its denominator.  Story acceptance SHALL
 be reported separately, using accepted stories against total applicable
 stories, and SHALL NOT be inferred from the milestone's combined closure
-percentage.  The combined issue count may be reported as a third,
-explicitly named native GitHub metric when useful.
+percentage.  The native combined issue count SHALL be treated as the
+preferred GitHub milestone overview, while the task-only measure remains
+the mandatory implementation-progress measure after each merged task PR.
 
 Counts SHALL use the currently identified, linked technical tasks;
 closed-not-planned, duplicate, or superseded tasks SHALL NOT be counted
