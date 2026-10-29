@@ -179,7 +179,7 @@ and Development lifecycle by explicitly setting `three_phase_development = true`
 in the repository-root `.codingstandardrc`; omitted or false settings preserve
 existing development governance.  The profile defines separate human approval
 gates for user stories and technical tasks, labels for work authorization and
-priority, milestone-based epics, and a documented approach to new discoveries,
+priority, milestone-based epics (with membership refined by ADR-015), and a documented approach to new discoveries,
 blocked work, and completion evidence.  Agents may propose additional work but
 cannot independently authorize it.  ADR-014 supersedes ADR-013's separate
 approval-comment/evidence requirement by making the issue's `approved` label
@@ -208,13 +208,14 @@ for its scope, risks, and the partial supersession of ADR-013.
 ### ADR-015: Clarify Story, Task, Pull Request, and Progress Contracts
 
 The opt-in three-phase workflow treats feature/milestone and issue/ticket as
-interchangeable terms, groups three or more related stories, and sizes technical
-tasks for a single cohesive, reviewable PR with sufficient context for a junior
-developer or new AI agent.  One completed task corresponds to one merged PR, and
-each merged task PR produces equal-weight completed/remaining counts for its
-story and feature.  Kanban states derive from approval, actual work, and verified
-completion, while story acceptance and release readiness remain distinct from
-task implementation progress.
+interchangeable terms, groups three or more related stories, and assigns **both
+stories and their technical tasks** directly to the milestone, but not PRs.
+This supersedes ADR-013's story-only milestone convention.  Tasks remain
+sized for one cohesive, reviewable PR with sufficient context for a junior
+developer or new AI agent.  Each merged task PR produces equal-weight task-only
+progress for its story and feature, independently of GitHub's combined issue
+closure percentage.  Kanban states, story acceptance, and release readiness
+remain distinct from milestone closure metrics.
 
 See
 [ADR-015](ADR-015-clarify-story-task-pr-traceability-and-progress.md)
