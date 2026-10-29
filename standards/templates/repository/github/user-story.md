@@ -16,7 +16,7 @@ As a [role], so that [benefit], I want [capability].
 
 ## Acceptance Criteria
 
-<!-- Independently verifiable behavioral outcomes. -->
+<!-- Independently verifiable behavioral outcomes.  Story acceptance is separate from the completion of all technical-task PRs. -->
 
 - [ ] ...
 
@@ -26,7 +26,7 @@ As a [role], so that [benefit], I want [capability].
 
 ## Epic / Milestone
 
-<!-- Assign the agreed milestone when applicable. -->
+<!-- Feature and milestone refer to the same GitHub milestone.  Group three or more closely related ungrouped stories in an existing or new milestone. -->
 
 ## Related Technical Tasks
 
