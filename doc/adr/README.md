@@ -172,6 +172,21 @@ See
 [ADR-012](ADR-012-enable-auto-merge-after-repository-review-gates.md)
 for the complete context, alternatives, and consequences.
 
+### ADR-015: Require Final-Commit PR Handoff Independent of CI Completion
+
+Agent authors must move a PR from Draft to Ready once the final currently
+planned changes are pushed and author-side work is complete, without
+waiting for pending CI. They must enable auto-merge if supported and safe
+under verified enforced required checks and human approval gates, or
+report the blocker. Ready indicates an author handoff, not CI success or
+issue completion; later corrections remain subject to configured review
+protections. This refines ADR-012's conditional agent default from SHOULD
+to MUST without weakening its authorization boundary.
+
+See
+[ADR-015](ADR-015-require-final-commit-pr-handoff.md)
+for the complete context, alternatives, and compatibility implications.
+
 ### ADR-013: Adopt Opt-In Three-Phase Development Governance
 
 Repositories may opt into an additional Product Management, Technical Planning,
@@ -228,3 +243,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-012: Enable Auto-Merge After Repository Review Gates](ADR-012-enable-auto-merge-after-repository-review-gates.md)
 - [ADR-013: Adopt Opt-In Three-Phase Development Governance](ADR-013-adopt-opt-in-three-phase-development-governance.md)
 - [ADR-014: Make the Approved Issue Label Authoritative](ADR-014-make-approved-issue-label-authoritative.md)
+- [ADR-015: Require Final-Commit PR Handoff Independent of CI Completion](ADR-015-require-final-commit-pr-handoff.md)
