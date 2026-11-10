@@ -185,3 +185,11 @@ that review or authorization requirements have been satisfied.
 
 It complements ADR-011's agent workflow guidance by making another aspect of
 agent-created pull-request handling explicit and machine-discoverable.
+
+## Later Refinement
+
+[ADR-015: Require Final-Commit PR Handoff Independent of CI Completion](ADR-015-require-final-commit-pr-handoff.md)
+strengthens the conditional agent default from SHOULD to MUST for a prompt
+Ready handoff and safe auto-merge, without waiting for pending CI.
+This ADR's human-authorization requirements and fail-closed platform
+trust boundaries remain in force.
