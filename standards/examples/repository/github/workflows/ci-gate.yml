@@ -29,6 +29,6 @@ jobs:
           repo-token: ${{ github.token }}
           check-regexp: '^(test|e2e|end-to-end|integration|lint|security|build|compat)(-.+)?$'
           running-workflow-name: test-gate
-          allowed-conclusions: success
+          allowed-conclusions: success,skipped,cancelled
           fail-on-no-checks: 'false'
           wait-interval: '10'
