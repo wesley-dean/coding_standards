@@ -8,7 +8,7 @@ Recommended engineering standard
 
 This standard establishes predictable GitHub Actions check-run names and a
 single, observable aggregate status for repositories that choose to use the
-`lewagon/wait-on-check-action` GitHub Marketplace action. It is designed to
+`matiasalbarello/wait-on-check-action-ts` GitHub Marketplace action. It is designed to
 permit a new repository created from a template to have no matching checks
 yet, without manufacturing a failed build, while accepting matching checks
 **observed by the action** when their conclusions are `success`, `skipped`, or
@@ -119,12 +119,14 @@ The aggregator MUST exclude `test-gate` from its own matched checks using
 It MUST NOT require each test workflow to run its own copy of the waiting action.
 
 The current reference is
-[`lewagon/wait-on-check-action`](https://github.com/lewagon/wait-on-check-action),
-release `v1.9.1`, resolved to commit
-`369769072fe522a3a8a85c03c96af1e5242a1994`. Maintainers MUST review
-any change to the selected action revision and its transitive runtime
-dependencies as a supply-chain change. Pinning identifies code; it does not
-prove that code is trustworthy.
+[`matiasalbarello/wait-on-check-action-ts`](https://github.com/matiasalbarello/wait-on-check-action-ts),
+release `v1.2.0`, resolved to commit
+`8087812521cdb59ebc7751984b31b17209b30eeb`. This native Node.js 24
+GitHub Action uses a bundled JavaScript distribution instead of runtime Ruby
+setup and Bundler installation. It paginates Checks API results across multiple
+pages. Maintainers MUST review any change to the selected action revision and
+its bundled/transitive JavaScript dependencies as a supply-chain change.
+Pinning identifies code; it does not prove that code is trustworthy.
 
 A non-normative [GitHub workflow example](../examples/repository/github/workflows/ci-gate.yml)
 provides a concrete starting point. Copying it from an adopted standards
@@ -160,6 +162,14 @@ before another intended check has been registered. If one check matches,
 check exists. A disabled workflow or job renamed outside the regex might not
 be noticed. These properties are not bugs in the chosen optional-presence
 contract; they are limits of observable-check aggregation.
+
+Unlike the original Ruby action, the selected TypeScript implementation does
+not collapse duplicate check names to the latest run. When old and new check
+runs share a name on the same ref, it can consider both, so a superseded failed
+run may still fail the aggregate even after a newer run succeeds. Conversely,
+its API pagination avoids a first-page-only check inventory. Repositories
+SHOULD verify duplicate check, rerun, and multi-suite behavior against actual
+GitHub check runs before treating the gate as a reliable merge signal.
 
 A repository MUST NOT use this aggregate as the sole evidence of mandatory
 security, release, compliance, or other fail-closed verification unless
