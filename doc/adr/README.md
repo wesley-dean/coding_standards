@@ -220,6 +220,22 @@ See
 [ADR-014](ADR-014-make-approved-issue-label-authoritative.md)
 for its scope, risks, and the partial supersession of ADR-013.
 
+### ADR-016: Adopt a Named, Optional-Presence GitHub CI Check Gate
+
+GitHub Actions jobs using the shared CI convention receive lowercase check-run
+names in a finite taxonomy such as `test`, `e2e`, `integration`, `lint`,
+`security`, `build`, and `compat`, with optional nonempty hyphenated suffixes.
+A separate `test-gate` job uses a pinned Marketplace waiting action with
+`fail-on-no-checks: 'false'`: absent checks are allowed, while observed
+matching checks must conclude `success`. The gate does not prove that tests
+ran or that all expected checks appeared; an importable ruleset example
+requires the literal `test-gate` context only after deliberate local
+activation, without replacing existing independent review and CI gates.
+
+See
+[ADR-016](ADR-016-adopt-optional-presence-github-ci-check-gate.md)
+for the complete rationale, limits, and migration guidance.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -244,3 +260,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-013: Adopt Opt-In Three-Phase Development Governance](ADR-013-adopt-opt-in-three-phase-development-governance.md)
 - [ADR-014: Make the Approved Issue Label Authoritative](ADR-014-make-approved-issue-label-authoritative.md)
 - [ADR-015: Require Final-Commit PR Handoff Independent of CI Completion](ADR-015-require-final-commit-pr-handoff.md)
+- [ADR-016: Adopt a Named, Optional-Presence GitHub CI Check Gate](ADR-016-adopt-optional-presence-github-ci-check-gate.md)
