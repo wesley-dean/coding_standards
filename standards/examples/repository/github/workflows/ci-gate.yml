@@ -23,7 +23,7 @@ jobs:
       checks: read
     steps:
       - name: Wait for observed standardized CI checks
-        uses: lewagon/wait-on-check-action@369769072fe522a3a8a85c03c96af1e5242a1994 # v1.9.1
+        uses: matiasalbarello/wait-on-check-action-ts@8087812521cdb59ebc7751984b31b17209b30eeb # v1.2.0
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ github.token }}
