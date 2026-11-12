@@ -10,8 +10,9 @@ This standard establishes predictable GitHub Actions check-run names and a
 single, observable aggregate status for repositories that choose to use the
 `lewagon/wait-on-check-action` GitHub Marketplace action. It is designed to
 permit a new repository created from a template to have no matching checks
-yet, without manufacturing a failed build, while ensuring that matching checks
-**observed by the action** must succeed.
+yet, without manufacturing a failed build, while accepting matching checks
+**observed by the action** when their conclusions are `success`, `skipped`, or
+`cancelled`.
 
 The aggregation contract is intentionally weaker than a complete expected-test
 inventory. A passing gate MUST NOT be represented as proof that tests ran,
@@ -66,7 +67,7 @@ When a matrix or reusable workflow changes the actual published check name,
 the repository MUST verify the name as reported by GitHub rather than infer
 it from the YAML source.
 
-## Presence Is Optional; Observed Failure Is Not
+## Presence Is Optional; Accepted Conclusions Are Explicit
 
 **No check family is mandatory solely because it is listed here.** In
 particular, a newly created repository MAY have zero test, E2E,
@@ -76,7 +77,7 @@ a successful aggregate result.
 The required Marketplace action configuration is:
 
 ```yaml
-allowed-conclusions: success
+allowed-conclusions: success,skipped,cancelled
 fail-on-no-checks: 'false'
 ```
 
@@ -84,16 +85,19 @@ fail-on-no-checks: 'false'
 to be removed during template initialization. The action's upstream default
 is `true`, so repositories MUST set `false` explicitly when adopting this
 profile. The action's upstream default for `allowed-conclusions` accepts
-both `success` and `skipped`; this profile MUST explicitly restrict it
-to `success`.
+`success` and `skipped`; this profile MUST explicitly configure the three
+accepted conclusions as `success,skipped,cancelled`.
 
 The resulting observational policy is:
 
 - Zero matching check runs: the aggregate MAY succeed.
 - One or more matching check runs: the action waits for the matched checks
-  it observes and MUST reject their unsuccessful conclusions.
-- A matching check that is skipped, cancelled, failed, or timed out once
-  observed MUST NOT be treated as successful.
+  it observes and accepts conclusions of `success`, `skipped`, or `cancelled`.
+- A matching check with a conclusion outside that explicit list, including
+  `failure`, `timed_out`, `action_required`, or `neutral`, MUST NOT be accepted.
+- Accepted `skipped` and `cancelled` conclusions MUST NOT be presented as
+  evidence that test execution completed successfully. Cancellation can result
+  from concurrency supersession or interruption; neither proves coverage.
 - A check that is absent because no job was defined, a workflow was disabled,
   a job was never scheduled, the wrong revision was queried, or an expected
   run has not yet appeared is **not necessarily detected**.
@@ -196,7 +200,8 @@ action's observed-check selection.
 3. Copy and adapt the non-normative aggregate workflow for the repository's
    actual event model, including a suitable check-ref and timeout.
 4. Verify the exact action SHA, permissions, no-match success path, matching
-   failure path, skipped-check handling, and the gate's self-exclusion.
+   failure path, acceptance of `skipped` and `cancelled`, rejection of other
+   conclusions, and the gate's self-exclusion.
 5. Observe actual mixed-event, matrix, and rerun behavior before relying on
    the result in review automation.
 6. Import and enable the reference ruleset only as a separate administrative
