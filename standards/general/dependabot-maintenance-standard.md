@@ -197,6 +197,8 @@ The [Development Workflow and Backlog Governance](development-workflow-governanc
 continues to govern authorized work, PR readiness, review, and auto-merge.
 The [General Testing Standard](testing-standard.md) governs meaningful
 validation and aggregate failure reporting. The
-[GitHub Actions Check Naming and Optional-Presence Gate Standard](github-actions-check-gate-standard.md)
+[GitHub Actions Check Naming and Optional-Presence Gate Standard][check-gate]
 does not prove mandatory tests ran, and a green `test-gate` MUST NOT be
 mistaken for complete dependency compatibility or release-path evidence.
+
+[check-gate]: github-actions-check-gate-standard.md
