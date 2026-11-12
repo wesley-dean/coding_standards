@@ -23,7 +23,7 @@ groups remain subject to deliberate review and must not silently enter
 non-major auto-merge paths.
 
 The canonical requirements live in
-[Consolidated Dependabot Version Update Standard](../../standards/general/dependabot-maintenance-standard.md).
+[Consolidated Dependabot Version Update Standard][dependabot-standard].
 A non-normative `dependabot.yml` example travels with the standards
 archive but is not installed into any active repository by standards adoption.
 
@@ -36,7 +36,7 @@ Repeatedly reviewing, approving, and merging similar PRs consumed attention
 without necessarily improving scrutiny of higher-risk dependency changes.
 
 The pilot implementation in
-[template-bash ADR-018](https://github.com/wesley-dean/template-bash/blob/main/doc/adr/ADR-018-consolidated-dependabot-version-updates.md)
+[template-bash ADR-018][pilot-adr]
 grouped routine GitHub Actions version updates using a wildcard. A
 subsequent pilot PR bundled six non-major dependency updates and passed
 the relevant available PR checks. The pilot established that grouping
@@ -303,3 +303,6 @@ must be classified under the repository's release governance.
   verified human and CI protections.
 - ADR-016: an optional-presence CI gate is not evidence that every
   expected verification check executed.
+
+[dependabot-standard]: ../../standards/general/dependabot-maintenance-standard.md
+[pilot-adr]: https://github.com/wesley-dean/template-bash/blob/main/doc/adr/ADR-018-consolidated-dependabot-version-updates.md
