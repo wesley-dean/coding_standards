@@ -10,7 +10,7 @@ Accepted
 
 Introduce a cross-repository GitHub Actions CI check-name taxonomy and a
 standard **optional-presence** aggregate check implementation using the
-published `lewagon/wait-on-check-action` Marketplace action.
+published `matiasalbarello/wait-on-check-action-ts` Marketplace action.
 
 A consuming repository MAY initially contain zero CI checks matching the
 taxonomy, and this absence is **not a gate failure**. When the action sees
@@ -134,17 +134,22 @@ No standards text or template may claim otherwise.
 
 One separate GitHub Actions workflow publishes the `test-gate` check,
 rather than having every test workflow invoke the waiting action.
-The recommended action is `lewagon/wait-on-check-action`, pinned to
-the full `v1.9.1` source commit
-`369769072fe522a3a8a85c03c96af1e5242a1994`. The job uses a
+The recommended action is `matiasalbarello/wait-on-check-action-ts`, pinned
+to the full `v1.2.0` source commit
+`8087812521cdb59ebc7751984b31b17209b30eeb`. The job uses a
 read-only token with `checks: read` and `contents: read`, excludes
 itself with `running-workflow-name: test-gate`, and has a bounded
 job timeout. Future action revisions require dependency review.
 
 The trusted computing base expands to GitHub Actions, the GitHub Checks
-API, the selected Marketplace action, and its transitive Ruby/Bundler
-runtime and dependencies. Pinning fixes source identity; it is not a
-supply-chain or correctness guarantee.
+API, the selected Marketplace action, the GitHub-hosted Node.js 24 runner,
+and the action's bundled JavaScript and transitive npm dependencies. Pinning
+fixes source identity; it is not a supply-chain or correctness guarantee.
+The TypeScript action paginates Checks API responses, but does not reduce
+duplicate names to the latest check run. An older failed check can therefore
+remain relevant after a newer run succeeds. Its published tests and successful
+release CI provide useful evidence, not proof of complete behavioral
+compatibility with the Ruby original.
 
 The reference workflow selects the PR head SHA, appropriate for
 same-repository branch-push tests. GitHub PR-triggered checks may attach
@@ -190,7 +195,8 @@ reference workflow YAML and ruleset JSON live beneath
 | GitHub reports PR/push checks on different SHAs | Document and verify the intended ref; do not assume universal visibility |
 | A third-party action or dependency is compromised | Pin exact source, limit token authority, review dependency changes; residual transitive supply-chain risk remains |
 | Ruleset import changes merge eligibility | Require separate, reviewed administrative activation, preserving prior check and CODEOWNERS gates |
-| API pagination and rate limits omit checks | Treat as known upstream limitation; do not claim complete coverage |
+| GitHub API rate limits or ref selection omit checks | Use a read-only token, verify the ref, and retain the incomplete-inventory limitation; pagination does not establish expected coverage |
+| Duplicate check names after retries or new suites | The TypeScript action evaluates returned duplicates; an older failed run may keep the gate red after a newer success |
 
 ## Considered Alternatives
 
@@ -221,6 +227,16 @@ including intentional conditional runs and cancelled/superseded work. This
 reduces coverage evidence: an accepted conclusion is not necessarily proof
 that a test ran or completed. Repositories needing strict completion MUST
 retain independently enforced checks or establish stronger local policy.
+
+### Use the original Ruby Marketplace action
+
+Considered because `lewagon/wait-on-check-action` is established and its
+v1.9.1 release can select the latest run when check names are duplicated.
+Rejected for this reference in favor of the TypeScript port's native Node.js 24
+runtime, no per-run Ruby/Bundler installation, and complete API pagination.
+This choice accepts its different duplicate-run behavior and smaller release
+history; it is not evidence that the TypeScript implementation is a drop-in
+replacement for all existing consumers.
 
 ### Require the waiting action in every test workflow
 
