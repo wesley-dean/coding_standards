@@ -79,6 +79,8 @@ The repository includes standards covering areas such as:
 - optional, explicit three-phase product and technical planning with
   issue-based approval gates;
 - cross-language testing, CI reporting, and test-result publication;
+- GitHub Actions check-name categories, optional-presence Marketplace check
+  aggregation, and a reviewed importable status-check ruleset reference;
 - AI safety centered on model fallibility, evidence, uncertainty, and deterministic
   mediation of consequential side effects;
 - zero-trust security organized through the IDEA framework for Identity Management,
@@ -377,6 +379,15 @@ compatibility handling for `ai/` and `codex/`, is governed by
 [ADR-011](doc/adr/ADR-011-adopt-conventional-branch-naming-for-agent-work.md).
 Review-gated auto-merge for Ready pull requests is governed by
 [ADR-012](doc/adr/ADR-012-enable-auto-merge-after-repository-review-gates.md).
+
+GitHub Actions check-name conventions, the optional-presence
+`test-gate` Marketplace aggregation profile, and its explicitly adopted
+ruleset reference are governed by
+[ADR-016](doc/adr/ADR-016-adopt-optional-presence-github-ci-check-gate.md).
+The full standard is
+[GitHub Actions Check Naming and Optional-Presence Gate Standard](standards/general/github-actions-check-gate-standard.md).
+A successful aggregate does not prove that tests ran or that every expected
+check appeared.
 
 The opt-in three-phase planning process and compatibility rules are governed by
 [ADR-013](doc/adr/ADR-013-adopt-opt-in-three-phase-development-governance.md).
