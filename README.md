@@ -81,6 +81,8 @@ The repository includes standards covering areas such as:
 - cross-language testing, CI reporting, and test-result publication;
 - GitHub Actions check-name categories, optional-presence Marketplace check
   aggregation, and a reviewed importable status-check ruleset reference;
+- consolidated Dependabot version-update scheduling and grouping to reduce
+  portfolio-wide PR review load without delaying security updates;
 - AI safety centered on model fallibility, evidence, uncertainty, and deterministic
   mediation of consequential side effects;
 - zero-trust security organized through the IDEA framework for Identity Management,
@@ -393,6 +395,15 @@ The opt-in three-phase planning process and compatibility rules are governed by
 [ADR-013](doc/adr/ADR-013-adopt-opt-in-three-phase-development-governance.md).
 
 Earlier superseded distribution ADRs remain as architectural history.
+
+Consolidated Dependabot version-update grouping and review expectations
+are governed by
+[ADR-017](doc/adr/ADR-017-adopt-consolidated-dependabot-maintenance-baseline.md).
+See the
+[Consolidated Dependabot Version Update Standard](standards/general/dependabot-maintenance-standard.md)
+and its [non-normative GitHub Actions example](standards/examples/repository/github/dependabot.yml).
+Adopting a standards release does not install the example as an active
+`.github/dependabot.yml`; that requires a separate reviewed change.
 
 ## Source of Truth
 

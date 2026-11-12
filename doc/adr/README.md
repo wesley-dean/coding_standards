@@ -237,6 +237,21 @@ See
 [ADR-016](ADR-016-adopt-optional-presence-github-ci-check-gate.md)
 for the complete rationale, limits, and migration guidance.
 
+### ADR-017: Adopt Consolidated Dependabot Maintenance as a Shared Baseline
+
+The coding standards library adopts weekly GitHub Actions version-update
+grouping with a seven-day cooldown and a wildcard group that includes major,
+minor, and patch updates. Security updates remain independent from scheduled
+version-update grouping; major-containing groups retain human review and
+existing auto-merge safeguards. A reusable YAML example is distributed with
+the standards without installing `.github/dependabot.yml` in consuming
+repositories, and monthly scheduling remains an explicitly governed option
+for less-active projects.
+
+See
+[ADR-017](ADR-017-adopt-consolidated-dependabot-maintenance-baseline.md)
+for the complete rationale, risks, and adoption guidance.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -262,3 +277,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-014: Make the Approved Issue Label Authoritative](ADR-014-make-approved-issue-label-authoritative.md)
 - [ADR-015: Require Final-Commit PR Handoff Independent of CI Completion](ADR-015-require-final-commit-pr-handoff.md)
 - [ADR-016: Adopt a Named, Optional-Presence GitHub CI Check Gate](ADR-016-adopt-optional-presence-github-ci-check-gate.md)
+- [ADR-017: Adopt Consolidated Dependabot Maintenance as a Shared Baseline](ADR-017-adopt-consolidated-dependabot-maintenance-baseline.md)
