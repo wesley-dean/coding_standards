@@ -14,16 +14,19 @@ published `lewagon/wait-on-check-action` Marketplace action.
 
 A consuming repository MAY initially contain zero CI checks matching the
 taxonomy, and this absence is **not a gate failure**. When the action sees
-matching checks on the configured revision, their conclusions must be
-`success`. The aggregate's stable published job/check name is
+matching checks on the configured revision, their conclusions must be one
+of `success`, `skipped`, or `cancelled`. The aggregate's stable published
+job/check name is
 `test-gate`. The accompanying ruleset example requires that exact status
 check only when explicitly imported and activated by a repository
 administrator.
 
-The policy is deliberate: this gate establishes only that **no matched
-check observed by the action failed**. It does not establish that a
-required test suite exists, that a workflow is enabled, that all
-expected jobs ran, or that every independent verification boundary passed.
+The policy is deliberate: this gate establishes only that **all matched
+checks observed by the action have one of the configured acceptable
+conclusions**. Skipped or cancelled checks may be accepted without
+executing their intended tests. It does not establish that a required
+test suite exists, that a workflow is enabled, that all expected jobs ran,
+or that every independent verification boundary passed.
 
 ## Context
 
@@ -103,13 +106,16 @@ check identities until they deliberately migrate them.
 The standard configures:
 
 ```yaml
-allowed-conclusions: success
+allowed-conclusions: success,skipped,cancelled
 fail-on-no-checks: 'false'
 ```
 
-The first setting rejects observed failure, cancellation, and skipped
-conclusions; the second tolerates an empty observed check set. No
+The first setting accepts observed `success`, `skipped`, and `cancelled`
+conclusions, while rejecting all other conclusions, including `failure`
+and `timed_out`. The second tolerates an empty observed check set. No
 category is mandatory to exist solely by being included in the regex.
+An accepted cancellation may represent interrupted or superseded work;
+an accepted skip or cancellation MUST NOT be described as tests passing.
 
 This explicitly supersedes, for this new profile, the earlier design
 discussion that proposed at least one ordinary `test` check in every
@@ -175,7 +181,8 @@ reference workflow YAML and ruleset JSON live beneath
 | Threat or failure | Mitigation or explicit limitation |
 | --- | --- |
 | A fresh repository has no tests | `fail-on-no-checks: 'false'` intentionally allows it |
-| A matched job fails or is skipped | Restrict `allowed-conclusions` to `success` |
+| A matched job fails or times out | Restrict `allowed-conclusions` to `success,skipped,cancelled`; neither `failure` nor `timed_out` is accepted |
+| A matched job is skipped or cancelled | Explicitly accept it as a permitted conclusion, without claiming its tests executed or passed |
 | The gate sees its own `test-gate` check | Explicitly exclude that check from matching |
 | A required workflow was disabled | Not independently detected; retain separate mandatory check controls |
 | One check finishes before other expected checks appear | Early success is possible; no complete-inventory claim |
@@ -206,10 +213,14 @@ Deferred in favor of the Marketplace integration's lower maintenance
 burden. A strict expected-inventory contract would require additional
 engineering and cannot be inferred from regex selection alone.
 
-### Treat skipped checks as success
+### Require every observed check to conclude `success`
 
-Rejected. Although the upstream action defaults to accepting skipped
-results, this profile accepts only `success` for matching observed jobs.
+Rejected for the chosen optional-presence profile. The operator explicitly
+permits `skipped` and `cancelled` as acceptable GitHub check conclusions,
+including intentional conditional runs and cancelled/superseded work. This
+reduces coverage evidence: an accepted conclusion is not necessarily proof
+that a test ran or completed. Repositories needing strict completion MUST
+retain independently enforced checks or establish stronger local policy.
 
 ### Require the waiting action in every test workflow
 
@@ -237,10 +248,10 @@ and the ruleset reference is portable to repositories after deliberate
 administrative review.
 
 The tradeoff is intentionally weaker evidence. A green gate states
-only that its observed matching checks succeeded, not that any given
-test suite executed. Adopters cannot claim compliance, complete
-security validation, or successful E2E testing merely because the gate
-is green.
+only that its observed matching checks concluded `success`, `skipped`,
+or `cancelled`, not that any given test suite executed or passed. Adopters
+cannot claim compliance, complete security validation, or successful E2E
+testing merely because the gate is green.
 
 Introducing a new general standard and reference examples is a
 standards-library change that will reach consumers only through a
