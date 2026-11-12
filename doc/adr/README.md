@@ -227,7 +227,8 @@ names in a finite taxonomy such as `test`, `e2e`, `integration`, `lint`,
 `security`, `build`, and `compat`, with optional nonempty hyphenated suffixes.
 A separate `test-gate` job uses a pinned Marketplace waiting action with
 `fail-on-no-checks: 'false'`: absent checks are allowed, while observed
-matching checks must conclude `success`. The gate does not prove that tests
+matching checks may conclude `success`, `skipped`, or `cancelled`. This
+acceptance does not prove those checks actually executed their tests. The gate does not prove that tests
 ran or that all expected checks appeared; an importable ruleset example
 requires the literal `test-gate` context only after deliberate local
 activation, without replacing existing independent review and CI gates.
