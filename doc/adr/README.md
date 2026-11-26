@@ -252,6 +252,19 @@ See
 [ADR-017](ADR-017-adopt-consolidated-dependabot-maintenance-baseline.md)
 for the complete rationale, risks, and adoption guidance.
 
+### ADR-018: Migrate Repository Routine Dependency Updates to Central Renovate
+
+The coding standards repository itself enrolls in the central Jenkins Renovate
+service through an explicit root configuration.  There is no active scheduled
+Dependabot version-update configuration in this repository to disable.
+The shared Dependabot maintenance standard remains published unchanged under
+ADR-017, because changing that distributed contract is a separate versioned
+standards decision.  Existing required reviews, CI checks, security boundaries,
+and released standards artifacts are not modified by this enrollment.
+
+See [ADR-018](ADR-018-migrate-routine-dependency-updates-to-renovate.md)
+for the governing decision and migration assumptions.
+
 The content above the marker below is maintained project knowledge.  The content
 below it is the complete ADR inventory and may be regenerated from the corpus.
 Automation that refreshes the inventory must preserve the maintained content and
@@ -278,3 +291,4 @@ must fail rather than append blindly when the marker is missing.
 - [ADR-015: Require Final-Commit PR Handoff Independent of CI Completion](ADR-015-require-final-commit-pr-handoff.md)
 - [ADR-016: Adopt a Named, Optional-Presence GitHub CI Check Gate](ADR-016-adopt-optional-presence-github-ci-check-gate.md)
 - [ADR-017: Adopt Consolidated Dependabot Maintenance as a Shared Baseline](ADR-017-adopt-consolidated-dependabot-maintenance-baseline.md)
+- [ADR-018: Migrate Repository Routine Dependency Updates to Central Renovate](ADR-018-migrate-routine-dependency-updates-to-renovate.md)
