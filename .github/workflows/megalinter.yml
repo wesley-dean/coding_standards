@@ -66,7 +66,7 @@ jobs:
     steps:
       # Checkout the code
       - name: Checkout Code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN || github.token }}
           fetch-depth: 0
@@ -74,7 +74,7 @@ jobs:
       # Run MegaLinter
       - name: MegaLinter
         id: ml
-        uses: oxsecurity/megalinter/flavors/security@0e3ce9b9c8c10effb9b269509cc47ca17cae31c7 # v9.5.0
+        uses: oxsecurity/megalinter/flavors/security@ef3e84b8b836d76db562d0f3ed7da61e8fd538bc # v9.6.0
         env:
           GITHUB_TOKEN: ${{ secrets.PAT || secrets.GITHUB_TOKEN || github.token }}
 
@@ -114,7 +114,7 @@ jobs:
       # Upload MegaLinter artifacts
       - name: Archive production artifacts
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: MegaLinter reports
           path: |
@@ -134,7 +134,7 @@ jobs:
           && env.APPLY_FIXES_MODE == 'pull_request'
           && (github.event_name == 'push'
             || github.event.pull_request.head.repo.full_name == github.repository)
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         with:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
           commit-message: "[MegaLinter] Apply linter automatic fixes"
