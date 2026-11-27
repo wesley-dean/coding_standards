@@ -67,6 +67,14 @@ the standards or templates may be applied.  Examples are non-normative.  If a
 template or example disagrees with a governing standard, the standard is
 authoritative and the derivative material should be corrected.
 
+## Repository dependency updates
+
+This repository's own routine dependency updates are handled through the
+centrally managed Jenkins Renovate runner, enrolled with `renovate.json`.
+The distributed Dependabot reference standard remains unchanged and is
+separate from repository maintenance. See
+[ADR-018](doc/adr/ADR-018-migrate-routine-dependency-updates-to-renovate.md).
+
 ## Current Standards
 
 The repository includes standards covering areas such as:
